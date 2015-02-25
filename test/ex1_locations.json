@@ -1,0 +1,26 @@
+[
+		{
+			"name" : "small_loc",
+			"provide_resources" : {"Bandwidth" :  20, "CPU" : 2, "Memory" : 60}
+		},
+		{
+			"name" : "small_loc1",
+			"provide_resources" : {"Bandwidth" :  20, "CPU" : 2, "Memory" : 60}
+		},
+		{
+			"name" : "big_loc",
+			"provide_resources" : {"Bandwidth" :  20, "CPU" : 5, "Memory" : 158}
+		},
+		{
+			"name" : "big_loc1",
+			"provide_resources" : {"Bandwidth" :  20, "CPU" : 5, "Memory" : 158}
+		},
+		{
+			"name" : "big_loc2",
+			"provide_resources" : {"Bandwidth" :  20, "CPU" : 5, "Memory" : 158}
+		},
+		{
+			"name" : "big_loc3",
+			"provide_resources" : {"Bandwidth" :  20, "CPU" : 5, "Memory" : 158}
+		}
+]

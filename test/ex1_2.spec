@@ -1,0 +1,1 @@
+(CLASS[CloudProvider.SpikeClient] >= 1) and (CLASS[CloudProvider.DynamicBalancer] >= 1)
