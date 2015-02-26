@@ -299,7 +299,7 @@ def main(argv):
   zephyrus_output = "/tmp/" + pid + "_zephyrus.json"
   metis_output = "/tmp/" + pid + "_metis.txt"
   absfrontend_file = "/tmp/" + pid + "_frontend.json"
-  locations_file = "tmp" + pid + "locations.json"
+  locations_file = "/tmp/" + pid + "locations.json"
 
   log.info("Extracting JSON file from ABS code")
   script_directory = os.path.dirname(os.path.realpath(__file__))
