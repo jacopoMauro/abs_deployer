@@ -10,7 +10,7 @@ spec :
 	expr op expr		# AspecOp ;
 	
 expr :
-  'DC[' resourceFilter ':'  specNoDC ']' 	# AexprDC |
+  'DC[' resourceFilter '|'  specNoDC ']' 	# AexprDC |
   'DC['  specNoDC ']' 						# AexprDCNoFilter |
   expr arithmetic_op expr					# AexprArithmetic |
   exprNoDC									# AexprNoDC ;
