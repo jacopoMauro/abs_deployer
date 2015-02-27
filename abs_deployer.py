@@ -1,4 +1,10 @@
-"""Usage: abs_deployer.py -i <input file> -l <locations file> -s <specificaiton file> [-o <output file> -v -d <dot file>]"""
+"""
+Usage: abs_deployer.py [<options>] <abs program file> <target specification> <deployment components file>
+  Options:
+    -o, --ofile: file where to save the output
+    -d, --dot: dot file where to save the configuration computed by Zephyrus
+    -v, --verbose
+"""
 
 import json
 import re
@@ -17,7 +23,7 @@ DEVNULL = open(os.devnull, 'wb')
 
 def usage():
   """Print usage"""
-  print "Usage: abs_deployer.py -i <input file> -l <deployment comp file> -t <target1,num1,target2,num2,...> [-o <output file> -v -d <dot file>]"
+  print(__doc__)
 
 def read_json(json_file): 
   json_data = open(json_file)
@@ -255,14 +261,11 @@ def main(argv):
   """Main procedure extracting the JSON file from the ABS code,
   generates the universe file, calls Zephyrus and Metis, and
   generates the ABS code"""   
-  input_file = ""
-  depl_file = ""
-  target = ""
   output_file = ""
   dot_file = ""
   
   try:
-    opts, _ = getopt.getopt(argv,"hi:o:l:t:vd:",["ifile=","ofile=","locations=","target=","verbose=","dot="])
+    opts, args = getopt.getopt(argv,"ho:vd:",["help","ofile=","verbose","dot="])
   except getopt.GetoptError as err:
     print str(err)
     usage()
@@ -271,20 +274,23 @@ def main(argv):
     if opt == '-h':
       usage()
       sys.exit()
-    elif opt in ("-i", "--ifile"):
-      input_file = arg
     elif opt in ("-o", "--ofile"):
       output_file = arg
-    elif opt in ("-l", "--locations"):
-      depl_file = arg
-    elif opt in ("-t", "--target"):
-      target = arg
     elif opt in ("-d", "--dot"):
       dot_file = arg
     elif opt in ("-v", "--verbose"):
       log.basicConfig(format="%(levelname)s: %(message)s", level=log.DEBUG)
       log.info("Verbose output.")
-
+  
+  if len(args) != 3:
+    print "3 arguments are required"
+    usage()
+    sys.exit(1)
+    
+  input_file = args[0]
+  target = args[1]
+  depl_file = args[2] 
+  
   if input_file == "" or depl_file == "" or target == "":
     print "Input file not given. Please use -i, -d, -t options"
     usage()

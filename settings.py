@@ -1,5 +1,5 @@
-METIS_COMMAND = "/home/jacopo/programmi/aeolus/metis/metis.native"
-ZEPHYRUS_COMMAND = "/home/jacopo/programmi/aeolus/zephyrus/zephyrus.native"
+METIS_COMMAND = "metis.native"
+ZEPHYRUS_COMMAND = "zephyrus.native"
 
 SEPARATOR = "___"
 
