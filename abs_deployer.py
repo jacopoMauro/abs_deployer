@@ -139,16 +139,29 @@ def process_location_file(in_file, out_file, json_res):
   data = read_json(in_file)
   res = set([])
   
+  counter = 0
+  res_dict = {}
+  res_cost = {}
+  
   locs = { "version" : 1, "locations" : []}
-  for i in data:
-    rs = {}
+  for i in data["DC_description"]:
+    res_dict[i["name"]] = {}
     for j in i["provide_resources"].keys():
       res.add(settings.RESOURCE_PREFIX + j)
-      rs[settings.RESOURCE_PREFIX + j] = i["provide_resources"][j] 
-    locs["locations"].append({ "name" : i["name"],
+      res_dict[i["name"]][settings.RESOURCE_PREFIX + j] = i["provide_resources"][j]
+      
+    res_cost[i["name"]] = i["cost"]
+       
+  for i in data["DC_availability"].keys():
+    if i not in res_dict:
+      log.critical("Description of Deployment component " + i + " not found in the deployment component file")
+      log.critical("Exiting")
+      sys.exit(1)
+    for j in range(int(data["DC_availability"][i])):
+      locs["locations"].append({ "name" : i + settings.SEPARATOR +  str(counter),
                          "repository" : "mbs",
-                         "provide_resources" : rs,
-                         "cost" : i["cost"] })
+                         "provide_resources" : res_dict[i],
+                         "cost" : res_cost[i] })
   
   log.debug("New location data")
   log.debug(locs)
@@ -188,7 +201,7 @@ def abs_id_rename(string):
   """Rename the string replacing dots and minus with underscores"""
   return "o" + string.replace(".","_").replace("-", "_")
 
-def generate_abs_code(data, zephyrus, metis, output_stream):
+def generate_abs_code(data, zephyrus, metis, dep_comp, output_stream):
   """Generate the ABS code from the Zephyrus and Metis outputs"""
 
   class_locations = {}
@@ -221,7 +234,16 @@ def generate_abs_code(data, zephyrus, metis, output_stream):
   for i in zephyrus["locations"]:
     if i["name"] in used_locations:
       output_stream.write("\tDeploymentComponent " + i["name"] +
-                        " = new DeploymentComponent(\"" + i["name"] + "\", map[]);\n") 
+                        " = new DeploymentComponent(\"" + i["name"] + "\", map[")
+      name = i["name"].split(settings.SEPARATOR)[0]
+      res = filter( lambda x: x["name"] == name, dep_comp["DC_description"])[0]["provide_resources"]
+      resKeys = res.keys()
+      while len(resKeys) > 0:
+        j = resKeys.pop()
+        output_stream.write("Pair(" + j + "," + str(res[j]) + ")")
+        if len(resKeys) > 0:
+          output_stream.write(", ")
+      output_stream.write("]);\n") 
   
   for i in metis:
     name = i["component_name"]
@@ -402,11 +424,11 @@ def main(argv):
   log.debug("---ABS Code---")
   
   if output_file == "":
-    generate_abs_code(data, read_json(zephyrus_output), plan_to_json(metis_output), sys.stdout)
+    generate_abs_code(data, read_json(zephyrus_output), plan_to_json(metis_output), read_json(depl_file), sys.stdout)
   else:
     log.info("Writing to " + output_file)
     output_stream = open(output_file, 'w')
-    generate_abs_code(data, read_json(zephyrus_output), plan_to_json(metis_output), output_stream)
+    generate_abs_code(data, read_json(zephyrus_output), plan_to_json(metis_output), read_json(depl_file), output_stream)
     output_stream.close()
       
   log.info("Removing temp files")
