@@ -5,8 +5,8 @@ from antlr4 import *
 
 class SpecificationGrammarVisitor(ParseTreeVisitor):
 
-    # Visit a parse tree produced by SpecificationGrammarParser#AspecBool2Op.
-    def visitAspecBool2Op(self, ctx):
+    # Visit a parse tree produced by SpecificationGrammarParser#AspecOp.
+    def visitAspecOp(self, ctx):
         return self.visitChildren(ctx)
 
 
@@ -20,18 +20,18 @@ class SpecificationGrammarVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by SpecificationGrammarParser#AspecOp.
-    def visitAspecOp(self, ctx):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by SpecificationGrammarParser#AspecBoolFact.
     def visitAspecBoolFact(self, ctx):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by SpecificationGrammarParser#AexprNoDC.
-    def visitAexprNoDC(self, ctx):
+    # Visit a parse tree produced by SpecificationGrammarParser#AspecBool2Op.
+    def visitAspecBool2Op(self, ctx):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by SpecificationGrammarParser#AexprArithmetic.
+    def visitAexprArithmetic(self, ctx):
         return self.visitChildren(ctx)
 
 
@@ -45,13 +45,8 @@ class SpecificationGrammarVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by SpecificationGrammarParser#AexprArithmetic.
-    def visitAexprArithmetic(self, ctx):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by SpecificationGrammarParser#AresourceFilterOp.
-    def visitAresourceFilterOp(self, ctx):
+    # Visit a parse tree produced by SpecificationGrammarParser#AexprNoDC.
+    def visitAexprNoDC(self, ctx):
         return self.visitChildren(ctx)
 
 
@@ -60,18 +55,8 @@ class SpecificationGrammarVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by SpecificationGrammarParser#AspecNoDCBool2Op.
-    def visitAspecNoDCBool2Op(self, ctx):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by SpecificationGrammarParser#AspecNoDCOp.
-    def visitAspecNoDCOp(self, ctx):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by SpecificationGrammarParser#AspecNoDCBoolFact.
-    def visitAspecNoDCBoolFact(self, ctx):
+    # Visit a parse tree produced by SpecificationGrammarParser#AresourceFilterOp.
+    def visitAresourceFilterOp(self, ctx):
         return self.visitChildren(ctx)
 
 
@@ -85,8 +70,18 @@ class SpecificationGrammarVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by SpecificationGrammarParser#AexprNoDCInt.
-    def visitAexprNoDCInt(self, ctx):
+    # Visit a parse tree produced by SpecificationGrammarParser#AspecNoDCBool2Op.
+    def visitAspecNoDCBool2Op(self, ctx):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by SpecificationGrammarParser#AspecNoDCBoolFact.
+    def visitAspecNoDCBoolFact(self, ctx):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by SpecificationGrammarParser#AspecNoDCOp.
+    def visitAspecNoDCOp(self, ctx):
         return self.visitChildren(ctx)
 
 
@@ -95,13 +90,23 @@ class SpecificationGrammarVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by SpecificationGrammarParser#AexprNoDCClass.
+    def visitAexprNoDCClass(self, ctx):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by SpecificationGrammarParser#AexprNoDCArithmetic.
+    def visitAexprNoDCArithmetic(self, ctx):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by SpecificationGrammarParser#AexprNoDCClassScenario.
     def visitAexprNoDCClassScenario(self, ctx):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by SpecificationGrammarParser#AexprNoDCClass.
-    def visitAexprNoDCClass(self, ctx):
+    # Visit a parse tree produced by SpecificationGrammarParser#AexprNoDCInt.
+    def visitAexprNoDCInt(self, ctx):
         return self.visitChildren(ctx)
 
 

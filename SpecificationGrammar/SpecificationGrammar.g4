@@ -27,16 +27,17 @@ specNoDC:
 	exprNoDC op exprNoDC 		# AspecNoDCOp ;
 
 exprNoDC :
-  INT 						# AexprNoDCInt	|
-  'INTERFACE[' ID ']' 		# AexprNoDCInterface	|
-  'CLASS[' ID ':' ID ']'	# AexprNoDCClassScenario	|
-  'CLASS[' ID ']'		    # AexprNoDCClass ;
+  INT 								# AexprNoDCInt	|
+  'INTERFACE[' ID ']' 				# AexprNoDCInterface	|
+  'CLASS[' ID ':' ID ']'			# AexprNoDCClassScenario	|
+  'CLASS[' ID ']'		    		# AexprNoDCClass |
+  exprNoDC arithmetic_op exprNoDC 	# AexprNoDCArithmetic ;
 	
 op : LEQ | EQ | GEQ | LT | GT | NEQ ;
 
 arithmetic_op : PLUS | MINUS | TIMES ;
 
-bool2Op : AND | OR;
+bool2Op : AND | OR | IMPL | IFF;
 bool1Op : NOT;
 boolFact : TRUE;
 
@@ -45,6 +46,8 @@ OR : 'or';
 NOT : 'not';
 TRUE : 'true';
 FALSE : 'false';
+IMPL: 'impl';
+IFF: 'iff';
 
 LEQ : '<=';
 EQ : '=';

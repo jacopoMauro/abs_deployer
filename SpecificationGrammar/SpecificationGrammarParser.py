@@ -13,7 +13,7 @@ else:
 def serializedATN():
     with StringIO() as buf:
         buf.write(u"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3")
-        buf.write(u"\34\u0083\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7")
+        buf.write(u"\36\u008d\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7")
         buf.write(u"\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t\13\3\2\3\2\3\2\3")
         buf.write(u"\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\5\2$\n\2\3\2\3")
         buf.write(u"\2\3\2\3\2\7\2*\n\2\f\2\16\2-\13\2\3\3\3\3\3\3\3\3\3")
@@ -22,38 +22,43 @@ def serializedATN():
         buf.write(u"\4\3\4\7\4N\n\4\f\4\16\4Q\13\4\3\5\3\5\3\5\3\5\3\5\3")
         buf.write(u"\5\3\5\3\5\3\5\3\5\3\5\3\5\3\5\5\5`\n\5\3\5\3\5\3\5\3")
         buf.write(u"\5\7\5f\n\5\f\5\16\5i\13\5\3\6\3\6\3\6\3\6\3\6\3\6\3")
-        buf.write(u"\6\3\6\3\6\3\6\3\6\3\6\5\6w\n\6\3\7\3\7\3\b\3\b\3\t\3")
-        buf.write(u"\t\3\n\3\n\3\13\3\13\3\13\2\6\2\4\6\b\f\2\4\6\b\n\f\16")
-        buf.write(u"\20\22\24\2\5\3\2\21\26\3\2\27\31\3\2\f\r\u0087\2#\3")
-        buf.write(u"\2\2\2\4:\3\2\2\2\6E\3\2\2\2\b_\3\2\2\2\nv\3\2\2\2\f")
-        buf.write(u"x\3\2\2\2\16z\3\2\2\2\20|\3\2\2\2\22~\3\2\2\2\24\u0080")
-        buf.write(u"\3\2\2\2\26\27\b\2\1\2\27\30\5\22\n\2\30\31\5\2\2\6\31")
-        buf.write(u"$\3\2\2\2\32\33\7\3\2\2\33\34\5\2\2\2\34\35\7\4\2\2\35")
-        buf.write(u"$\3\2\2\2\36$\5\24\13\2\37 \5\4\3\2 !\5\f\7\2!\"\5\4")
-        buf.write(u"\3\2\"$\3\2\2\2#\26\3\2\2\2#\32\3\2\2\2#\36\3\2\2\2#")
-        buf.write(u"\37\3\2\2\2$+\3\2\2\2%&\f\7\2\2&\'\5\20\t\2\'(\5\2\2")
-        buf.write(u"\b(*\3\2\2\2)%\3\2\2\2*-\3\2\2\2+)\3\2\2\2+,\3\2\2\2")
-        buf.write(u",\3\3\2\2\2-+\3\2\2\2./\b\3\1\2/\60\7\5\2\2\60\61\5\6")
-        buf.write(u"\4\2\61\62\7\6\2\2\62\63\5\b\5\2\63\64\7\7\2\2\64;\3")
-        buf.write(u"\2\2\2\65\66\7\5\2\2\66\67\5\b\5\2\678\7\7\2\28;\3\2")
-        buf.write(u"\2\29;\5\n\6\2:.\3\2\2\2:\65\3\2\2\2:9\3\2\2\2;B\3\2")
-        buf.write(u"\2\2<=\f\4\2\2=>\5\16\b\2>?\5\4\3\5?A\3\2\2\2@<\3\2\2")
-        buf.write(u"\2AD\3\2\2\2B@\3\2\2\2BC\3\2\2\2C\5\3\2\2\2DB\3\2\2\2")
-        buf.write(u"EF\b\4\1\2FG\7\32\2\2GH\5\f\7\2HI\7\33\2\2IO\3\2\2\2")
-        buf.write(u"JK\f\3\2\2KL\7\b\2\2LN\5\6\4\4MJ\3\2\2\2NQ\3\2\2\2OM")
-        buf.write(u"\3\2\2\2OP\3\2\2\2P\7\3\2\2\2QO\3\2\2\2RS\b\5\1\2ST\5")
-        buf.write(u"\22\n\2TU\5\b\5\6U`\3\2\2\2VW\7\3\2\2WX\5\b\5\2XY\7\4")
-        buf.write(u"\2\2Y`\3\2\2\2Z`\5\24\13\2[\\\5\n\6\2\\]\5\f\7\2]^\5")
-        buf.write(u"\n\6\2^`\3\2\2\2_R\3\2\2\2_V\3\2\2\2_Z\3\2\2\2_[\3\2")
-        buf.write(u"\2\2`g\3\2\2\2ab\f\7\2\2bc\5\20\t\2cd\5\b\5\bdf\3\2\2")
-        buf.write(u"\2ea\3\2\2\2fi\3\2\2\2ge\3\2\2\2gh\3\2\2\2h\t\3\2\2\2")
-        buf.write(u"ig\3\2\2\2jw\7\33\2\2kl\7\t\2\2lm\7\32\2\2mw\7\7\2\2")
-        buf.write(u"no\7\n\2\2op\7\32\2\2pq\7\13\2\2qr\7\32\2\2rw\7\7\2\2")
-        buf.write(u"st\7\n\2\2tu\7\32\2\2uw\7\7\2\2vj\3\2\2\2vk\3\2\2\2v")
-        buf.write(u"n\3\2\2\2vs\3\2\2\2w\13\3\2\2\2xy\t\2\2\2y\r\3\2\2\2")
-        buf.write(u"z{\t\3\2\2{\17\3\2\2\2|}\t\4\2\2}\21\3\2\2\2~\177\7\16")
-        buf.write(u"\2\2\177\23\3\2\2\2\u0080\u0081\7\17\2\2\u0081\25\3\2")
-        buf.write(u"\2\2\n#+:BO_gv")
+        buf.write(u"\6\3\6\3\6\3\6\3\6\3\6\3\6\5\6x\n\6\3\6\3\6\3\6\3\6\7")
+        buf.write(u"\6~\n\6\f\6\16\6\u0081\13\6\3\7\3\7\3\b\3\b\3\t\3\t\3")
+        buf.write(u"\n\3\n\3\13\3\13\3\13\2\7\2\4\6\b\n\f\2\4\6\b\n\f\16")
+        buf.write(u"\20\22\24\2\5\3\2\23\30\3\2\31\33\4\2\f\r\21\22\u0092")
+        buf.write(u"\2#\3\2\2\2\4:\3\2\2\2\6E\3\2\2\2\b_\3\2\2\2\nw\3\2\2")
+        buf.write(u"\2\f\u0082\3\2\2\2\16\u0084\3\2\2\2\20\u0086\3\2\2\2")
+        buf.write(u"\22\u0088\3\2\2\2\24\u008a\3\2\2\2\26\27\b\2\1\2\27\30")
+        buf.write(u"\5\22\n\2\30\31\5\2\2\6\31$\3\2\2\2\32\33\7\3\2\2\33")
+        buf.write(u"\34\5\2\2\2\34\35\7\4\2\2\35$\3\2\2\2\36$\5\24\13\2\37")
+        buf.write(u" \5\4\3\2 !\5\f\7\2!\"\5\4\3\2\"$\3\2\2\2#\26\3\2\2\2")
+        buf.write(u"#\32\3\2\2\2#\36\3\2\2\2#\37\3\2\2\2$+\3\2\2\2%&\f\7")
+        buf.write(u"\2\2&\'\5\20\t\2\'(\5\2\2\b(*\3\2\2\2)%\3\2\2\2*-\3\2")
+        buf.write(u"\2\2+)\3\2\2\2+,\3\2\2\2,\3\3\2\2\2-+\3\2\2\2./\b\3\1")
+        buf.write(u"\2/\60\7\5\2\2\60\61\5\6\4\2\61\62\7\6\2\2\62\63\5\b")
+        buf.write(u"\5\2\63\64\7\7\2\2\64;\3\2\2\2\65\66\7\5\2\2\66\67\5")
+        buf.write(u"\b\5\2\678\7\7\2\28;\3\2\2\29;\5\n\6\2:.\3\2\2\2:\65")
+        buf.write(u"\3\2\2\2:9\3\2\2\2;B\3\2\2\2<=\f\4\2\2=>\5\16\b\2>?\5")
+        buf.write(u"\4\3\5?A\3\2\2\2@<\3\2\2\2AD\3\2\2\2B@\3\2\2\2BC\3\2")
+        buf.write(u"\2\2C\5\3\2\2\2DB\3\2\2\2EF\b\4\1\2FG\7\34\2\2GH\5\f")
+        buf.write(u"\7\2HI\7\35\2\2IO\3\2\2\2JK\f\3\2\2KL\7\b\2\2LN\5\6\4")
+        buf.write(u"\4MJ\3\2\2\2NQ\3\2\2\2OM\3\2\2\2OP\3\2\2\2P\7\3\2\2\2")
+        buf.write(u"QO\3\2\2\2RS\b\5\1\2ST\5\22\n\2TU\5\b\5\6U`\3\2\2\2V")
+        buf.write(u"W\7\3\2\2WX\5\b\5\2XY\7\4\2\2Y`\3\2\2\2Z`\5\24\13\2[")
+        buf.write(u"\\\5\n\6\2\\]\5\f\7\2]^\5\n\6\2^`\3\2\2\2_R\3\2\2\2_")
+        buf.write(u"V\3\2\2\2_Z\3\2\2\2_[\3\2\2\2`g\3\2\2\2ab\f\7\2\2bc\5")
+        buf.write(u"\20\t\2cd\5\b\5\bdf\3\2\2\2ea\3\2\2\2fi\3\2\2\2ge\3\2")
+        buf.write(u"\2\2gh\3\2\2\2h\t\3\2\2\2ig\3\2\2\2jk\b\6\1\2kx\7\35")
+        buf.write(u"\2\2lm\7\t\2\2mn\7\34\2\2nx\7\7\2\2op\7\n\2\2pq\7\34")
+        buf.write(u"\2\2qr\7\13\2\2rs\7\34\2\2sx\7\7\2\2tu\7\n\2\2uv\7\34")
+        buf.write(u"\2\2vx\7\7\2\2wj\3\2\2\2wl\3\2\2\2wo\3\2\2\2wt\3\2\2")
+        buf.write(u"\2x\177\3\2\2\2yz\f\3\2\2z{\5\16\b\2{|\5\n\6\4|~\3\2")
+        buf.write(u"\2\2}y\3\2\2\2~\u0081\3\2\2\2\177}\3\2\2\2\177\u0080")
+        buf.write(u"\3\2\2\2\u0080\13\3\2\2\2\u0081\177\3\2\2\2\u0082\u0083")
+        buf.write(u"\t\2\2\2\u0083\r\3\2\2\2\u0084\u0085\t\3\2\2\u0085\17")
+        buf.write(u"\3\2\2\2\u0086\u0087\t\4\2\2\u0087\21\3\2\2\2\u0088\u0089")
+        buf.write(u"\7\16\2\2\u0089\23\3\2\2\2\u008a\u008b\7\17\2\2\u008b")
+        buf.write(u"\25\3\2\2\2\13#+:BO_gw\177")
         return buf.getvalue()
 
 
@@ -69,16 +74,16 @@ class SpecificationGrammarParser ( Parser ):
 
     literalNames = [ u"<INVALID>", u"'('", u"')'", u"'DC['", u"'|'", u"']'", 
                      u"';'", u"'INTERFACE['", u"'CLASS['", u"':'", u"'and'", 
-                     u"'or'", u"'not'", u"'true'", u"'false'", u"'<='", 
-                     u"'='", u"'>='", u"'<'", u"'>'", u"'!='", u"'+'", u"'-'", 
-                     u"'*'" ]
+                     u"'or'", u"'not'", u"'true'", u"'false'", u"'impl'", 
+                     u"'iff'", u"'<='", u"'='", u"'>='", u"'<'", u"'>'", 
+                     u"'!='", u"'+'", u"'-'", u"'*'" ]
 
     symbolicNames = [ u"<INVALID>", u"<INVALID>", u"<INVALID>", u"<INVALID>", 
                       u"<INVALID>", u"<INVALID>", u"<INVALID>", u"<INVALID>", 
                       u"<INVALID>", u"<INVALID>", u"AND", u"OR", u"NOT", 
-                      u"TRUE", u"FALSE", u"LEQ", u"EQ", u"GEQ", u"LT", u"GT", 
-                      u"NEQ", u"PLUS", u"MINUS", u"TIMES", u"ID", u"INT", 
-                      u"WS" ]
+                      u"TRUE", u"FALSE", u"IMPL", u"IFF", u"LEQ", u"EQ", 
+                      u"GEQ", u"LT", u"GT", u"NEQ", u"PLUS", u"MINUS", u"TIMES", 
+                      u"ID", u"INT", u"WS" ]
 
     RULE_spec = 0
     RULE_expr = 1
@@ -109,18 +114,20 @@ class SpecificationGrammarParser ( Parser ):
     NOT=12
     TRUE=13
     FALSE=14
-    LEQ=15
-    EQ=16
-    GEQ=17
-    LT=18
-    GT=19
-    NEQ=20
-    PLUS=21
-    MINUS=22
-    TIMES=23
-    ID=24
-    INT=25
-    WS=26
+    IMPL=15
+    IFF=16
+    LEQ=17
+    EQ=18
+    GEQ=19
+    LT=20
+    GT=21
+    NEQ=22
+    PLUS=23
+    MINUS=24
+    TIMES=25
+    ID=26
+    INT=27
+    WS=28
 
     def __init__(self, input):
         super(SpecificationGrammarParser, self).__init__(input)
@@ -145,25 +152,25 @@ class SpecificationGrammarParser ( Parser ):
             super(SpecificationGrammarParser.SpecContext, self).copyFrom(ctx)
 
 
-    class AspecBool2OpContext(SpecContext):
+    class AspecOpContext(SpecContext):
 
         def __init__(self, parser, ctx): # actually a SpecificationGrammarParser.SpecContext)
-            super(SpecificationGrammarParser.AspecBool2OpContext, self).__init__(parser)
+            super(SpecificationGrammarParser.AspecOpContext, self).__init__(parser)
             self.copyFrom(ctx)
 
-        def spec(self, i=None):
+        def expr(self, i=None):
             if i is None:
-                return self.getTypedRuleContexts(SpecificationGrammarParser.SpecContext)
+                return self.getTypedRuleContexts(SpecificationGrammarParser.ExprContext)
             else:
-                return self.getTypedRuleContext(SpecificationGrammarParser.SpecContext,i)
+                return self.getTypedRuleContext(SpecificationGrammarParser.ExprContext,i)
 
-        def bool2Op(self):
-            return self.getTypedRuleContext(SpecificationGrammarParser.Bool2OpContext,0)
+        def op(self):
+            return self.getTypedRuleContext(SpecificationGrammarParser.OpContext,0)
 
 
         def accept(self, visitor):
             if isinstance( visitor, SpecificationGrammarVisitor ):
-                return visitor.visitAspecBool2Op(self)
+                return visitor.visitAspecOp(self)
             else:
                 return visitor.visitChildren(self)
 
@@ -205,29 +212,6 @@ class SpecificationGrammarParser ( Parser ):
                 return visitor.visitChildren(self)
 
 
-    class AspecOpContext(SpecContext):
-
-        def __init__(self, parser, ctx): # actually a SpecificationGrammarParser.SpecContext)
-            super(SpecificationGrammarParser.AspecOpContext, self).__init__(parser)
-            self.copyFrom(ctx)
-
-        def expr(self, i=None):
-            if i is None:
-                return self.getTypedRuleContexts(SpecificationGrammarParser.ExprContext)
-            else:
-                return self.getTypedRuleContext(SpecificationGrammarParser.ExprContext,i)
-
-        def op(self):
-            return self.getTypedRuleContext(SpecificationGrammarParser.OpContext,0)
-
-
-        def accept(self, visitor):
-            if isinstance( visitor, SpecificationGrammarVisitor ):
-                return visitor.visitAspecOp(self)
-            else:
-                return visitor.visitChildren(self)
-
-
     class AspecBoolFactContext(SpecContext):
 
         def __init__(self, parser, ctx): # actually a SpecificationGrammarParser.SpecContext)
@@ -241,6 +225,29 @@ class SpecificationGrammarParser ( Parser ):
         def accept(self, visitor):
             if isinstance( visitor, SpecificationGrammarVisitor ):
                 return visitor.visitAspecBoolFact(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+    class AspecBool2OpContext(SpecContext):
+
+        def __init__(self, parser, ctx): # actually a SpecificationGrammarParser.SpecContext)
+            super(SpecificationGrammarParser.AspecBool2OpContext, self).__init__(parser)
+            self.copyFrom(ctx)
+
+        def spec(self, i=None):
+            if i is None:
+                return self.getTypedRuleContexts(SpecificationGrammarParser.SpecContext)
+            else:
+                return self.getTypedRuleContext(SpecificationGrammarParser.SpecContext,i)
+
+        def bool2Op(self):
+            return self.getTypedRuleContext(SpecificationGrammarParser.Bool2OpContext,0)
+
+
+        def accept(self, visitor):
+            if isinstance( visitor, SpecificationGrammarVisitor ):
+                return visitor.visitAspecBool2Op(self)
             else:
                 return visitor.visitChildren(self)
 
@@ -345,22 +352,25 @@ class SpecificationGrammarParser ( Parser ):
             super(SpecificationGrammarParser.ExprContext, self).copyFrom(ctx)
 
 
-    class AexprDCContext(ExprContext):
+    class AexprArithmeticContext(ExprContext):
 
         def __init__(self, parser, ctx): # actually a SpecificationGrammarParser.ExprContext)
-            super(SpecificationGrammarParser.AexprDCContext, self).__init__(parser)
+            super(SpecificationGrammarParser.AexprArithmeticContext, self).__init__(parser)
             self.copyFrom(ctx)
 
-        def resourceFilter(self):
-            return self.getTypedRuleContext(SpecificationGrammarParser.ResourceFilterContext,0)
+        def expr(self, i=None):
+            if i is None:
+                return self.getTypedRuleContexts(SpecificationGrammarParser.ExprContext)
+            else:
+                return self.getTypedRuleContext(SpecificationGrammarParser.ExprContext,i)
 
-        def specNoDC(self):
-            return self.getTypedRuleContext(SpecificationGrammarParser.SpecNoDCContext,0)
+        def arithmetic_op(self):
+            return self.getTypedRuleContext(SpecificationGrammarParser.Arithmetic_opContext,0)
 
 
         def accept(self, visitor):
             if isinstance( visitor, SpecificationGrammarVisitor ):
-                return visitor.visitAexprDC(self)
+                return visitor.visitAexprArithmetic(self)
             else:
                 return visitor.visitChildren(self)
 
@@ -382,6 +392,26 @@ class SpecificationGrammarParser ( Parser ):
                 return visitor.visitChildren(self)
 
 
+    class AexprDCContext(ExprContext):
+
+        def __init__(self, parser, ctx): # actually a SpecificationGrammarParser.ExprContext)
+            super(SpecificationGrammarParser.AexprDCContext, self).__init__(parser)
+            self.copyFrom(ctx)
+
+        def resourceFilter(self):
+            return self.getTypedRuleContext(SpecificationGrammarParser.ResourceFilterContext,0)
+
+        def specNoDC(self):
+            return self.getTypedRuleContext(SpecificationGrammarParser.SpecNoDCContext,0)
+
+
+        def accept(self, visitor):
+            if isinstance( visitor, SpecificationGrammarVisitor ):
+                return visitor.visitAexprDC(self)
+            else:
+                return visitor.visitChildren(self)
+
+
     class AexprNoDCContext(ExprContext):
 
         def __init__(self, parser, ctx): # actually a SpecificationGrammarParser.ExprContext)
@@ -395,29 +425,6 @@ class SpecificationGrammarParser ( Parser ):
         def accept(self, visitor):
             if isinstance( visitor, SpecificationGrammarVisitor ):
                 return visitor.visitAexprNoDC(self)
-            else:
-                return visitor.visitChildren(self)
-
-
-    class AexprArithmeticContext(ExprContext):
-
-        def __init__(self, parser, ctx): # actually a SpecificationGrammarParser.ExprContext)
-            super(SpecificationGrammarParser.AexprArithmeticContext, self).__init__(parser)
-            self.copyFrom(ctx)
-
-        def expr(self, i=None):
-            if i is None:
-                return self.getTypedRuleContexts(SpecificationGrammarParser.ExprContext)
-            else:
-                return self.getTypedRuleContext(SpecificationGrammarParser.ExprContext,i)
-
-        def arithmetic_op(self):
-            return self.getTypedRuleContext(SpecificationGrammarParser.Arithmetic_opContext,0)
-
-
-        def accept(self, visitor):
-            if isinstance( visitor, SpecificationGrammarVisitor ):
-                return visitor.visitAexprArithmetic(self)
             else:
                 return visitor.visitChildren(self)
 
@@ -468,7 +475,7 @@ class SpecificationGrammarParser ( Parser ):
                 self._ctx = localctx
                 _prevctx = localctx
                 self.state = 55
-                self.exprNoDC()
+                self.exprNoDC(0)
                 pass
 
 
@@ -518,6 +525,26 @@ class SpecificationGrammarParser ( Parser ):
             super(SpecificationGrammarParser.ResourceFilterContext, self).copyFrom(ctx)
 
 
+    class AresourceFilterBool2OpContext(ResourceFilterContext):
+
+        def __init__(self, parser, ctx): # actually a SpecificationGrammarParser.ResourceFilterContext)
+            super(SpecificationGrammarParser.AresourceFilterBool2OpContext, self).__init__(parser)
+            self.copyFrom(ctx)
+
+        def resourceFilter(self, i=None):
+            if i is None:
+                return self.getTypedRuleContexts(SpecificationGrammarParser.ResourceFilterContext)
+            else:
+                return self.getTypedRuleContext(SpecificationGrammarParser.ResourceFilterContext,i)
+
+
+        def accept(self, visitor):
+            if isinstance( visitor, SpecificationGrammarVisitor ):
+                return visitor.visitAresourceFilterBool2Op(self)
+            else:
+                return visitor.visitChildren(self)
+
+
     class AresourceFilterOpContext(ResourceFilterContext):
 
         def __init__(self, parser, ctx): # actually a SpecificationGrammarParser.ResourceFilterContext)
@@ -535,26 +562,6 @@ class SpecificationGrammarParser ( Parser ):
         def accept(self, visitor):
             if isinstance( visitor, SpecificationGrammarVisitor ):
                 return visitor.visitAresourceFilterOp(self)
-            else:
-                return visitor.visitChildren(self)
-
-
-    class AresourceFilterBool2OpContext(ResourceFilterContext):
-
-        def __init__(self, parser, ctx): # actually a SpecificationGrammarParser.ResourceFilterContext)
-            super(SpecificationGrammarParser.AresourceFilterBool2OpContext, self).__init__(parser)
-            self.copyFrom(ctx)
-
-        def resourceFilter(self, i=None):
-            if i is None:
-                return self.getTypedRuleContexts(SpecificationGrammarParser.ResourceFilterContext)
-            else:
-                return self.getTypedRuleContext(SpecificationGrammarParser.ResourceFilterContext,i)
-
-
-        def accept(self, visitor):
-            if isinstance( visitor, SpecificationGrammarVisitor ):
-                return visitor.visitAresourceFilterBool2Op(self)
             else:
                 return visitor.visitChildren(self)
 
@@ -625,25 +632,39 @@ class SpecificationGrammarParser ( Parser ):
             super(SpecificationGrammarParser.SpecNoDCContext, self).copyFrom(ctx)
 
 
-    class AspecNoDCOpContext(SpecNoDCContext):
+    class AspecNoDCBool1OpContext(SpecNoDCContext):
 
         def __init__(self, parser, ctx): # actually a SpecificationGrammarParser.SpecNoDCContext)
-            super(SpecificationGrammarParser.AspecNoDCOpContext, self).__init__(parser)
+            super(SpecificationGrammarParser.AspecNoDCBool1OpContext, self).__init__(parser)
             self.copyFrom(ctx)
 
-        def exprNoDC(self, i=None):
-            if i is None:
-                return self.getTypedRuleContexts(SpecificationGrammarParser.ExprNoDCContext)
-            else:
-                return self.getTypedRuleContext(SpecificationGrammarParser.ExprNoDCContext,i)
+        def bool1Op(self):
+            return self.getTypedRuleContext(SpecificationGrammarParser.Bool1OpContext,0)
 
-        def op(self):
-            return self.getTypedRuleContext(SpecificationGrammarParser.OpContext,0)
+        def specNoDC(self):
+            return self.getTypedRuleContext(SpecificationGrammarParser.SpecNoDCContext,0)
 
 
         def accept(self, visitor):
             if isinstance( visitor, SpecificationGrammarVisitor ):
-                return visitor.visitAspecNoDCOp(self)
+                return visitor.visitAspecNoDCBool1Op(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+    class AspecNoDCBracketsContext(SpecNoDCContext):
+
+        def __init__(self, parser, ctx): # actually a SpecificationGrammarParser.SpecNoDCContext)
+            super(SpecificationGrammarParser.AspecNoDCBracketsContext, self).__init__(parser)
+            self.copyFrom(ctx)
+
+        def specNoDC(self):
+            return self.getTypedRuleContext(SpecificationGrammarParser.SpecNoDCContext,0)
+
+
+        def accept(self, visitor):
+            if isinstance( visitor, SpecificationGrammarVisitor ):
+                return visitor.visitAspecNoDCBrackets(self)
             else:
                 return visitor.visitChildren(self)
 
@@ -671,26 +692,6 @@ class SpecificationGrammarParser ( Parser ):
                 return visitor.visitChildren(self)
 
 
-    class AspecNoDCBool1OpContext(SpecNoDCContext):
-
-        def __init__(self, parser, ctx): # actually a SpecificationGrammarParser.SpecNoDCContext)
-            super(SpecificationGrammarParser.AspecNoDCBool1OpContext, self).__init__(parser)
-            self.copyFrom(ctx)
-
-        def bool1Op(self):
-            return self.getTypedRuleContext(SpecificationGrammarParser.Bool1OpContext,0)
-
-        def specNoDC(self):
-            return self.getTypedRuleContext(SpecificationGrammarParser.SpecNoDCContext,0)
-
-
-        def accept(self, visitor):
-            if isinstance( visitor, SpecificationGrammarVisitor ):
-                return visitor.visitAspecNoDCBool1Op(self)
-            else:
-                return visitor.visitChildren(self)
-
-
     class AspecNoDCBoolFactContext(SpecNoDCContext):
 
         def __init__(self, parser, ctx): # actually a SpecificationGrammarParser.SpecNoDCContext)
@@ -708,19 +709,25 @@ class SpecificationGrammarParser ( Parser ):
                 return visitor.visitChildren(self)
 
 
-    class AspecNoDCBracketsContext(SpecNoDCContext):
+    class AspecNoDCOpContext(SpecNoDCContext):
 
         def __init__(self, parser, ctx): # actually a SpecificationGrammarParser.SpecNoDCContext)
-            super(SpecificationGrammarParser.AspecNoDCBracketsContext, self).__init__(parser)
+            super(SpecificationGrammarParser.AspecNoDCOpContext, self).__init__(parser)
             self.copyFrom(ctx)
 
-        def specNoDC(self):
-            return self.getTypedRuleContext(SpecificationGrammarParser.SpecNoDCContext,0)
+        def exprNoDC(self, i=None):
+            if i is None:
+                return self.getTypedRuleContexts(SpecificationGrammarParser.ExprNoDCContext)
+            else:
+                return self.getTypedRuleContext(SpecificationGrammarParser.ExprNoDCContext,i)
+
+        def op(self):
+            return self.getTypedRuleContext(SpecificationGrammarParser.OpContext,0)
 
 
         def accept(self, visitor):
             if isinstance( visitor, SpecificationGrammarVisitor ):
-                return visitor.visitAspecNoDCBrackets(self)
+                return visitor.visitAspecNoDCOp(self)
             else:
                 return visitor.visitChildren(self)
 
@@ -770,11 +777,11 @@ class SpecificationGrammarParser ( Parser ):
                 self._ctx = localctx
                 _prevctx = localctx
                 self.state = 89
-                self.exprNoDC()
+                self.exprNoDC(0)
                 self.state = 90
                 self.op()
                 self.state = 91
-                self.exprNoDC()
+                self.exprNoDC(0)
 
             else:
                 raise NoViableAltException(self)
@@ -825,22 +832,18 @@ class SpecificationGrammarParser ( Parser ):
             super(SpecificationGrammarParser.ExprNoDCContext, self).copyFrom(ctx)
 
 
-
-    class AexprNoDCClassScenarioContext(ExprNoDCContext):
+    class AexprNoDCInterfaceContext(ExprNoDCContext):
 
         def __init__(self, parser, ctx): # actually a SpecificationGrammarParser.ExprNoDCContext)
-            super(SpecificationGrammarParser.AexprNoDCClassScenarioContext, self).__init__(parser)
+            super(SpecificationGrammarParser.AexprNoDCInterfaceContext, self).__init__(parser)
             self.copyFrom(ctx)
 
-        def ID(self, i=None):
-            if i is None:
-                return self.getTokens(SpecificationGrammarParser.ID)
-            else:
-                return self.getToken(SpecificationGrammarParser.ID, i)
+        def ID(self):
+            return self.getToken(SpecificationGrammarParser.ID, 0)
 
         def accept(self, visitor):
             if isinstance( visitor, SpecificationGrammarVisitor ):
-                return visitor.visitAexprNoDCClassScenario(self)
+                return visitor.visitAexprNoDCInterface(self)
             else:
                 return visitor.visitChildren(self)
 
@@ -861,6 +864,48 @@ class SpecificationGrammarParser ( Parser ):
                 return visitor.visitChildren(self)
 
 
+    class AexprNoDCArithmeticContext(ExprNoDCContext):
+
+        def __init__(self, parser, ctx): # actually a SpecificationGrammarParser.ExprNoDCContext)
+            super(SpecificationGrammarParser.AexprNoDCArithmeticContext, self).__init__(parser)
+            self.copyFrom(ctx)
+
+        def exprNoDC(self, i=None):
+            if i is None:
+                return self.getTypedRuleContexts(SpecificationGrammarParser.ExprNoDCContext)
+            else:
+                return self.getTypedRuleContext(SpecificationGrammarParser.ExprNoDCContext,i)
+
+        def arithmetic_op(self):
+            return self.getTypedRuleContext(SpecificationGrammarParser.Arithmetic_opContext,0)
+
+
+        def accept(self, visitor):
+            if isinstance( visitor, SpecificationGrammarVisitor ):
+                return visitor.visitAexprNoDCArithmetic(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+    class AexprNoDCClassScenarioContext(ExprNoDCContext):
+
+        def __init__(self, parser, ctx): # actually a SpecificationGrammarParser.ExprNoDCContext)
+            super(SpecificationGrammarParser.AexprNoDCClassScenarioContext, self).__init__(parser)
+            self.copyFrom(ctx)
+
+        def ID(self, i=None):
+            if i is None:
+                return self.getTokens(SpecificationGrammarParser.ID)
+            else:
+                return self.getToken(SpecificationGrammarParser.ID, i)
+
+        def accept(self, visitor):
+            if isinstance( visitor, SpecificationGrammarVisitor ):
+                return visitor.visitAexprNoDCClassScenario(self)
+            else:
+                return visitor.visitChildren(self)
+
+
     class AexprNoDCIntContext(ExprNoDCContext):
 
         def __init__(self, parser, ctx): # actually a SpecificationGrammarParser.ExprNoDCContext)
@@ -877,81 +922,97 @@ class SpecificationGrammarParser ( Parser ):
                 return visitor.visitChildren(self)
 
 
-    class AexprNoDCInterfaceContext(ExprNoDCContext):
 
-        def __init__(self, parser, ctx): # actually a SpecificationGrammarParser.ExprNoDCContext)
-            super(SpecificationGrammarParser.AexprNoDCInterfaceContext, self).__init__(parser)
-            self.copyFrom(ctx)
-
-        def ID(self):
-            return self.getToken(SpecificationGrammarParser.ID, 0)
-
-        def accept(self, visitor):
-            if isinstance( visitor, SpecificationGrammarVisitor ):
-                return visitor.visitAexprNoDCInterface(self)
-            else:
-                return visitor.visitChildren(self)
-
-
-
-    def exprNoDC(self):
-
-        localctx = SpecificationGrammarParser.ExprNoDCContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 8, self.RULE_exprNoDC)
+    def exprNoDC(self, _p=0):
+        _parentctx = self._ctx
+        _parentState = self.state
+        localctx = SpecificationGrammarParser.ExprNoDCContext(self, self._ctx, _parentState)
+        _prevctx = localctx
+        _startState = 8
+        self.enterRecursionRule(localctx, 8, self.RULE_exprNoDC, _p)
         try:
-            self.state = 116
+            self.enterOuterAlt(localctx, 1)
+            self.state = 117
             la_ = self._interp.adaptivePredict(self._input,7,self._ctx)
             if la_ == 1:
                 localctx = SpecificationGrammarParser.AexprNoDCIntContext(self, localctx)
-                self.enterOuterAlt(localctx, 1)
-                self.state = 104
+                self._ctx = localctx
+                _prevctx = localctx
+
+                self.state = 105
                 self.match(SpecificationGrammarParser.INT)
                 pass
 
             elif la_ == 2:
                 localctx = SpecificationGrammarParser.AexprNoDCInterfaceContext(self, localctx)
-                self.enterOuterAlt(localctx, 2)
-                self.state = 105
-                self.match(SpecificationGrammarParser.T__6)
+                self._ctx = localctx
+                _prevctx = localctx
                 self.state = 106
-                self.match(SpecificationGrammarParser.ID)
+                self.match(SpecificationGrammarParser.T__6)
                 self.state = 107
+                self.match(SpecificationGrammarParser.ID)
+                self.state = 108
                 self.match(SpecificationGrammarParser.T__4)
                 pass
 
             elif la_ == 3:
                 localctx = SpecificationGrammarParser.AexprNoDCClassScenarioContext(self, localctx)
-                self.enterOuterAlt(localctx, 3)
-                self.state = 108
-                self.match(SpecificationGrammarParser.T__7)
+                self._ctx = localctx
+                _prevctx = localctx
                 self.state = 109
-                self.match(SpecificationGrammarParser.ID)
+                self.match(SpecificationGrammarParser.T__7)
                 self.state = 110
-                self.match(SpecificationGrammarParser.T__8)
-                self.state = 111
                 self.match(SpecificationGrammarParser.ID)
+                self.state = 111
+                self.match(SpecificationGrammarParser.T__8)
                 self.state = 112
+                self.match(SpecificationGrammarParser.ID)
+                self.state = 113
                 self.match(SpecificationGrammarParser.T__4)
                 pass
 
             elif la_ == 4:
                 localctx = SpecificationGrammarParser.AexprNoDCClassContext(self, localctx)
-                self.enterOuterAlt(localctx, 4)
-                self.state = 113
-                self.match(SpecificationGrammarParser.T__7)
+                self._ctx = localctx
+                _prevctx = localctx
                 self.state = 114
-                self.match(SpecificationGrammarParser.ID)
+                self.match(SpecificationGrammarParser.T__7)
                 self.state = 115
+                self.match(SpecificationGrammarParser.ID)
+                self.state = 116
                 self.match(SpecificationGrammarParser.T__4)
                 pass
 
+
+            self._ctx.stop = self._input.LT(-1)
+            self.state = 125
+            self._errHandler.sync(self)
+            _alt = self._interp.adaptivePredict(self._input,8,self._ctx)
+            while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
+                if _alt==1:
+                    if self._parseListeners is not None:
+                        self.triggerExitRuleEvent()
+                    _prevctx = localctx
+                    localctx = SpecificationGrammarParser.AexprNoDCArithmeticContext(self, SpecificationGrammarParser.ExprNoDCContext(self, _parentctx, _parentState))
+                    self.pushNewRecursionContext(localctx, _startState, self.RULE_exprNoDC)
+                    self.state = 119
+                    if not self.precpred(self._ctx, 1):
+                        from antlr4.error.Errors import FailedPredicateException
+                        raise FailedPredicateException(self, "self.precpred(self._ctx, 1)")
+                    self.state = 120
+                    self.arithmetic_op()
+                    self.state = 121
+                    self.exprNoDC(2) 
+                self.state = 127
+                self._errHandler.sync(self)
+                _alt = self._interp.adaptivePredict(self._input,8,self._ctx)
 
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
             self._errHandler.recover(self, re)
         finally:
-            self.exitRule()
+            self.unrollRecursionContexts(_parentctx)
         return localctx
 
     class OpContext(ParserRuleContext):
@@ -997,7 +1058,7 @@ class SpecificationGrammarParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 118
+            self.state = 128
             _la = self._input.LA(1)
             if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << SpecificationGrammarParser.LEQ) | (1 << SpecificationGrammarParser.EQ) | (1 << SpecificationGrammarParser.GEQ) | (1 << SpecificationGrammarParser.LT) | (1 << SpecificationGrammarParser.GT) | (1 << SpecificationGrammarParser.NEQ))) != 0)):
                 self._errHandler.recoverInline(self)
@@ -1045,7 +1106,7 @@ class SpecificationGrammarParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 120
+            self.state = 130
             _la = self._input.LA(1)
             if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << SpecificationGrammarParser.PLUS) | (1 << SpecificationGrammarParser.MINUS) | (1 << SpecificationGrammarParser.TIMES))) != 0)):
                 self._errHandler.recoverInline(self)
@@ -1071,6 +1132,12 @@ class SpecificationGrammarParser ( Parser ):
         def OR(self):
             return self.getToken(SpecificationGrammarParser.OR, 0)
 
+        def IMPL(self):
+            return self.getToken(SpecificationGrammarParser.IMPL, 0)
+
+        def IFF(self):
+            return self.getToken(SpecificationGrammarParser.IFF, 0)
+
         def getRuleIndex(self):
             return SpecificationGrammarParser.RULE_bool2Op
 
@@ -1090,9 +1157,9 @@ class SpecificationGrammarParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 122
+            self.state = 132
             _la = self._input.LA(1)
-            if not(_la==SpecificationGrammarParser.AND or _la==SpecificationGrammarParser.OR):
+            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << SpecificationGrammarParser.AND) | (1 << SpecificationGrammarParser.OR) | (1 << SpecificationGrammarParser.IMPL) | (1 << SpecificationGrammarParser.IFF))) != 0)):
                 self._errHandler.recoverInline(self)
             else:
                 self.consume()
@@ -1131,7 +1198,7 @@ class SpecificationGrammarParser ( Parser ):
         self.enterRule(localctx, 16, self.RULE_bool1Op)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 124
+            self.state = 134
             self.match(SpecificationGrammarParser.NOT)
         except RecognitionException as re:
             localctx.exception = re
@@ -1168,7 +1235,7 @@ class SpecificationGrammarParser ( Parser ):
         self.enterRule(localctx, 18, self.RULE_boolFact)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 126
+            self.state = 136
             self.match(SpecificationGrammarParser.TRUE)
         except RecognitionException as re:
             localctx.exception = re
@@ -1187,6 +1254,7 @@ class SpecificationGrammarParser ( Parser ):
         self._predicates[1] = self.expr_sempred
         self._predicates[2] = self.resourceFilter_sempred
         self._predicates[3] = self.specNoDC_sempred
+        self._predicates[4] = self.exprNoDC_sempred
         pred = self._predicates.get(ruleIndex, None)
         if pred is None:
             raise Exception("No predicate with index:" + str(ruleIndex))
@@ -1211,6 +1279,11 @@ class SpecificationGrammarParser ( Parser ):
     def specNoDC_sempred(self, localctx, predIndex):
             if predIndex == 3:
                 return self.precpred(self._ctx, 5)
+         
+
+    def exprNoDC_sempred(self, localctx, predIndex):
+            if predIndex == 4:
+                return self.precpred(self._ctx, 1)
          
 
 

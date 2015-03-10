@@ -399,7 +399,6 @@ def main(argv):
   
   if proc.returncode != 0:
     log.critical("Zephyrus execution terminated with return code " +  str(proc.returncode))
-    log.critical("It may be that there is no possible deployment solution.")
     log.critical("Exiting")
     sys.exit(1)
 

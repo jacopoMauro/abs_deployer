@@ -61,7 +61,7 @@ class MyVisitor(SpecificationGrammarVisitor):
     if class_name not in self.classes:
       raise SpecificationParsingException("Class " + class_name + " is not a valid class name")
     else:
-      scenarios = self.classes[class_name]
+      scenarios = list(self.classes[class_name])
       s = "#" + scenarios.pop() + settings.SEPARATOR + class_name + ":On"
       for i in scenarios:
         s += " + #" + i + settings.SEPARATOR + class_name + ":On"
@@ -84,6 +84,16 @@ class MyVisitor(SpecificationGrammarVisitor):
   def visitAexprDCNoFilter(self, ctx):
     spec = ctx.getChild(1).accept(self)
     return "#(_){ _ : " + spec + "}"
+  
+  # Visit a parse tree produced by SpecificationGrammarParser#bool2Op.
+  def visitBool2Op(self, ctx):
+    op = self.visitChildren(ctx)
+    if op == "impl":
+      return "=>"
+    elif op == "iff":
+      return "<=>"
+    else:
+      return op
   
 
 def translate_specification(inFile, classes, resources, interfaces):
