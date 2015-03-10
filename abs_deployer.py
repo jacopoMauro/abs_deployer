@@ -147,7 +147,8 @@ def process_location_file(in_file, out_file, json_res):
       rs[settings.RESOURCE_PREFIX + j] = i["provide_resources"][j] 
     locs["locations"].append({ "name" : i["name"],
                          "repository" : "mbs",
-                         "provide_resources" : rs })
+                         "provide_resources" : rs,
+                         "cost" : i["cost"] })
   
   log.debug("New location data")
   log.debug(locs)
