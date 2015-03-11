@@ -240,9 +240,11 @@ def generate_abs_code(data, zephyrus, metis, dep_comp, output_stream):
       resKeys = res.keys()
       while len(resKeys) > 0:
         j = resKeys.pop()
-        output_stream.write("Pair(" + j + "," + str(res[j]) + ")")
-        if len(resKeys) > 0:
-          output_stream.write(", ")
+        # for ABS only CPU, Memory, and Bandwidth can be used
+        if j == "CPU" or j == "Memory" or j == "Bandwidth":
+          output_stream.write("Pair(" + j + "," + str(res[j]) + ")")
+          if len(resKeys) > 0:
+            output_stream.write(", ")
       output_stream.write("]);\n") 
   
   for i in metis:
