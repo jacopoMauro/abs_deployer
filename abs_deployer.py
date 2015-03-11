@@ -95,9 +95,12 @@ def generate_universe(data, universe_file):
       if component_name in data["hierarchy"]:
         provides = data["hierarchy"][component_name]
         if len(provides) > 1:
-          log.warning("Class implementing more than one interface not yet supported correctly")      
+          log.warning("Class implementing more than one interface")      
       for k in provides:
-        state["provide"][settings.INTERFACE_PREFIX + k] =  j["provide"]
+        if int(j["provide"]) == -1:
+          state["provide"][settings.INTERFACE_PREFIX + k] = "inf"
+        else:
+          state["provide"][settings.INTERFACE_PREFIX + k] =  j["provide"]
         
       # handles require ports
       requires = {}
@@ -162,6 +165,7 @@ def process_location_file(in_file, out_file, json_res):
                          "repository" : "mbs",
                          "provide_resources" : res_dict[i],
                          "cost" : res_cost[i] })
+      counter += 1
   
   log.debug("New location data")
   log.debug(locs)
