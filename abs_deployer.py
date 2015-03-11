@@ -331,6 +331,7 @@ def main(argv):
   aeolus_universe = "/tmp/" + pid + "_universe.json"
   spec_file = "/tmp/" + pid + "_spec.spec"
   zephyrus_output = "/tmp/" + pid + "_zephyrus.json"
+  zephyrus_output_opt = "/tmp/" + pid + "_zephyrus_opt.json"
   metis_output = "/tmp/" + pid + "_metis.txt"
   absfrontend_file = "/tmp/" + pid + "_frontend.json"
   locations_file = "/tmp/" + pid + "_locations.json"
@@ -410,9 +411,20 @@ def main(argv):
 
   log.debug("---FINAL CONFIGURATION---")
   log.debug(json.dumps(read_json(zephyrus_output),indent=1))
+  
+  log.debug("---RUN BINDINGS OPTIMIZER---")
+  proc = Popen( ["python", "bindings_opt.py", "-i", zephyrus_output,
+                  "-o", zephyrus_output_opt], cwd=script_directory, stdout=DEVNULL )
+  proc.wait()
+  
+  if proc.returncode != 0:
+    log.critical("Bindings optimizer terminated with return code " +  str(proc.returncode))
+    log.critical("Exiting")
+    sys.exit(1)
+  log.debug(json.dumps(read_json(zephyrus_output_opt),indent=1))
  
   log.info("Running Metis")
-  proc = Popen( [settings.METIS_COMMAND, "-u", aeolus_universe, "-conf", zephyrus_output,
+  proc = Popen( [settings.METIS_COMMAND, "-u", aeolus_universe, "-conf", zephyrus_output_opt,
          "-o", metis_output], cwd=script_directory, stdout=DEVNULL )
   proc.wait()
 
@@ -429,11 +441,11 @@ def main(argv):
   log.debug("---ABS Code---")
   
   if output_file == "":
-    generate_abs_code(data, read_json(zephyrus_output), plan_to_json(metis_output), read_json(depl_file), sys.stdout)
+    generate_abs_code(data, read_json(zephyrus_output_opt), plan_to_json(metis_output), read_json(depl_file), sys.stdout)
   else:
     log.info("Writing to " + output_file)
     output_stream = open(output_file, 'w')
-    generate_abs_code(data, read_json(zephyrus_output), plan_to_json(metis_output), read_json(depl_file), output_stream)
+    generate_abs_code(data, read_json(zephyrus_output_opt), plan_to_json(metis_output), read_json(depl_file), output_stream)
     output_stream.close()
       
   log.info("Removing temp files")
@@ -442,6 +454,7 @@ def main(argv):
   os.remove(metis_output)
   os.remove(spec_file)
   os.remove(locations_file)
+  os.remove(zephyrus_output_opt)
   log.info("Program Succesfully Ended")
 
 
