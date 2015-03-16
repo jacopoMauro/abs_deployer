@@ -1,0 +1,19 @@
+{
+ "DC_availability": {
+   "small_loc" : 2,
+   "big_loc" : 4 }
+ ,
+ "DC_description":
+      [
+		{
+			"name" : "small_loc",
+			"provide_resources" : {"Bandwidth" :  20, "CPU" : 2, "Memory" : 60},
+			"cost" : 1
+		},
+		{
+			"name" : "big_loc",
+			"provide_resources" : {"Bandwidth" :  20, "CPU" : 5, "Memory" : 158},
+			"cost" : 1
+		}
+      ]
+}
