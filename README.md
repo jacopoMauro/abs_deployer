@@ -12,8 +12,13 @@ antlr python runtime support
 
 Zephyrus: available from https://github.com/aeolus-project/zephyrus
 Metis: available from https://github.com/aeolus-project/metis
+MiniZinc suite 1.6: available from http://www.minizinc.org/g12distrib.html
 
+In order to use Zephyrus the patch zephyrus.patch needs to be applied before compiling it.
 
-Note that to use Zephyrus you also need to install the MiniZinc suite 1.6
-available at
-http://www.minizinc.org/g12distrib.html
+Once installed to test the application please launch the following commands: 
+python abs_deployer.py test/ex1.abs test/ex1_5.spec test/ex1_dc.json
+
+To test the tool with the industrial use case provided by Fredhopper please launch the command:
+python abs_deployer.py test/FRH_2Query.abs test/FRH_2Query.spec test/FRH_2Query_dc.json
+
