@@ -347,7 +347,7 @@ def main(argv):
     log.critical("absfrontend execution terminated with return code " +  str(proc.returncode))
     log.critical("Exiting")
     sys.exit(1)
-    
+
   log.info("Parsing JSON file")
   data = read_json(absfrontend_file)
   log.debug("Internal json representation")

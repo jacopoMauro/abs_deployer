@@ -1,10 +1,10 @@
 {
  "DC_availability": {
-   "m1.large" : 15,
-   "m1.xlarge" : 15,
-   "m3.medium" : 15,
-   "c3.large" : 15,
-   "c3.xlarge" : 15,
+   "m1.large" : 20,
+   "m1.xlarge" : 20,
+   "m3.medium" : 20,
+   "c3.large" : 20,
+   "c3.xlarge" : 20,
    "amazon_internals" : 1}
  ,
  "DC_description":
