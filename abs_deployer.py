@@ -1,22 +1,35 @@
 """
-Usage: abs_deployer.py [<options>] <abs program file> <target specification> <deployment components file>
+Usage: abs_deployer.py [<options>] <abs program file>
   Options:
     -o, --ofile: file where to save the output
-    -d, --dot: dot file where to save the configuration computed by Zephyrus
     -v, --verbose
+    -k, --keep: keep temp files
 """
 
 import json
+import uuid
 import re
 from subprocess import Popen
 import sys, getopt
 import os
 import logging as log
+import signal
+import psutil
 
 import settings
 import SpecificationGrammar.SpecTranslator as SpecTranslator
+import ABS.abs_extractor as abs_extractor
 
 DEVNULL = open(os.devnull, 'wb')
+
+# List of the temp files.
+TMP_FILES = []
+
+# List of the running solvers.
+RUNNING_SOLVERS = []
+
+# If KEEP, don't delete temporary files.
+KEEP = False
 
 #log.basicConfig(filename='example.log',level=log.DEBUG)
 #log.basicConfig(level=log.DEBUG)
@@ -25,11 +38,65 @@ def usage():
   """Print usage"""
   print(__doc__)
 
+
+def remove_dots(obj):
+  """
+  Keeps only the part of the string after the dot to a json object
+  """
+  if isinstance(obj, basestring):
+    return obj.rsplit('.',1)[-1]
+  elif isinstance(obj, dict):
+    new = {}
+    for k in obj.keys():
+      if isinstance(k, basestring):
+        new[k.rsplit('.',1)[-1]] = remove_dots(obj[k])
+      else:
+        new[k] = remove_dots(obj[k])
+    return new
+  elif isinstance(obj,list):
+    return map(remove_dots,obj)
+  else:
+    return obj
+  
+
 def read_json(json_file): 
   json_data = open(json_file)
   data = json.load(json_data)
   json_data.close()
   return data
+
+
+def send_signal_proc(signal, proc):
+  """
+  Sends the specified signal to the process, and to all its children.
+  """
+  if proc.poll() is None:
+    for p in proc.children(recursive = True):
+      try:
+        p.send_signal(signal)
+      except psutil.NoSuchProcess:
+        pass
+    try:
+      proc.send_signal(signal)
+    except psutil.NoSuchProcess:
+      pass
+
+
+def clean():
+  """
+  Utility for (possibly) cleaning temporary files and killing the solvers 
+  processes at the end of the solving process (even when the termination is 
+  forced externally).
+  """
+  global RUNNING_SOLVERS
+  for solver in RUNNING_SOLVERS:
+    send_signal_proc(signal.SIGKILL, solver)
+  # Possibly remove temporary files.
+  if not KEEP:
+    for f in TMP_FILES:
+      if os.path.exists(f):
+        os.remove(f)
+
 
 def get_abs_names(data):
   """Extract from the json generated parsing the ABS the names of the classes, resouces, and interfaces"""
@@ -55,67 +122,46 @@ def get_abs_names(data):
   return (classes,resources,interfaces)
 
 
-def generate_universe(data, universe_file):
-  """Generate the universe file for Zephyrus and Metis"""
+def generate_zep_input_from_annotations(data):
+  """
+  Generate the partial input for zephyrus starting from the json internal
+  representation extracted from the abs program.
+  Note that the names can not contain a '.' that in the specification language
+  has its own meaning
+  """
 
-  universe = {
-    "implementation" : {},
-    "component_types" : [],
-    "version" : 1, 
-    "repositories" : [
-      {
-        "packages": [
-          { "name": "mbs_stub_package" }
-        ], 
-        "name": "mbs"
-      }]
+  zep = {
+    "components" : {},
+    "locations" : {}
     }
    
   for i in data["classes"]:
-
-    component_name = i["name"]
-        
+    component_name = i["name"]   
     for j in i["activates"]:
-
-      init_state = {
-        "provide" : {},
-        "require" : {},
-        "initial" : True,
-        "name" : "Init", 
-        "successors" : ["On"] }
-               
-      state = {
-        "provide" : {},
-        "require" : {},
-        "successors" : [],
-        "name" : "On" }
-
-      # handle provides
-      provides = []
+      comp = {
+            "provides" : [ {} ],
+            "requires" : {},
+            "resources" : {}}
+             
+      # handle provide-ports
       if component_name in data["hierarchy"]:
-        provides = data["hierarchy"][component_name]
-        if len(provides) > 1:
-          log.warning("Class implementing more than one interface")      
-      for k in provides:
-        if int(j["provide"]) == -1:
-          state["provide"][settings.INTERFACE_PREFIX + k] = "inf"
-        else:
-          state["provide"][settings.INTERFACE_PREFIX + k] =  j["provide"]
+        comp["provides"][0]["ports"] = data["hierarchy"][component_name]
+      else:
+        log.critical("Component " + component_name + "not present in hierarchy")
+        exit(1)
+      comp["provides"][0]["num"] =  j["provide"]
         
-      # handles require ports
-      requires = {}
+      # handle require-ports
       for k in j["sig"]:
         if k["type"] == "require" or k["type"] == "list":
-          if k["value"] in requires:
-            requires[k["value"]] += k["arity"]
-          else:
-            requires[k["value"]] = k["arity"]
-      for k in requires.keys():
-        state["require"][settings.INTERFACE_PREFIX + k] = requires[k]
-            
-      #name = component_name + SEPARATOR + j["scenario"] TEMPFIX
+          comp["requires"][k["value"]] = k["arity"]
+      
+      # handle resources
+      comp["resources"].update(j["cost"])
+      
+      # decide the name            
       if len(j["scenarios"]) > 1:
-        log.critical("Multiple scenario feature is not supported")
+        log.critical("In internal json scenarios has more than one element")
         log.critical("Exiting")
         sys.exit(1)
       elif len(j["scenarios"]) == 0:
@@ -123,21 +169,15 @@ def generate_universe(data, universe_file):
       else:
         name = j["scenarios"][0].upper() + settings.SEPARATOR + component_name
       
-      # for zephyrus specification resources should start with lowercase letter  
-      costs = {}
-      for k in j["cost"].keys():
-        costs[settings.RESOURCE_PREFIX + k] = j["cost"][k]
-        
-      universe["component_types"].append({ "states" : [ init_state, state ], "name" : name, "consume" : costs})
-      universe["implementation"][name] = [ { "repository": "mbs", "package": "mbs_stub_package" } ]
-  
-  with open(universe_file, 'w') as fo:
-    json.dump(universe, fo, indent=1)       
+      zep["components"][name] = comp
+  return zep
 
 
 def process_location_file(in_file, out_file, json_res):
-  """Process the deployment component files generating the location file for Zephyrus.
-  It changes the name of the resources and checks if the resources of abs are properly defined"""
+  """
+  Process the deployment component files generating the location file for Zephyrus.
+  It changes the name of the resources and checks if the resources of abs are properly defined
+  """
     
   data = read_json(in_file)
   res = set([])
@@ -183,27 +223,6 @@ def process_location_file(in_file, out_file, json_res):
     
   return res
   
-
-
-def plan_to_json(metis_output_file):
-    """Extract from the Metis output the change state actions."""
-    plans = []
-    with open(metis_output_file, 'r') as f:
-        for l in f:
-            if re.match('.*change state.*', l):
-                component_name = re.search('= \[(.*) :', l).group(1)
-                #component_name = cn_to_armonic(component_name)
-                state_from = re.search('from (.*) to', l).group(1)
-                state_to = re.search('to (.*)]', l).group(1)
-                plans.append({'component_name': component_name, 'state_from': state_from, 'state_to': state_to})
-            else:
-                pass
-    return plans
-  
-
-def abs_id_rename(string):
-  """Rename the string replacing dots and minus with underscores"""
-  return "o" + string.replace(".","_").replace("-", "_")
 
 def generate_abs_code(data, zephyrus, metis, dep_comp, output_stream):
   """Generate the ABS code from the Zephyrus and Metis outputs"""
@@ -285,15 +304,67 @@ def generate_abs_code(data, zephyrus, metis, dep_comp, output_stream):
   output_stream.write("}\n")
 
 
+def initialDC(annotation):
+  """
+  Creates a new type of DC for every initially available DC
+  It takes the annotation in json format.
+  It returns the data to include in zephyrus input and the maps between the DC
+  components and its real name 
+  """
+  zep = {}
+  DC_into_names = {}
+  names_into_DC = {}
+  
+  for i in annotation["DC"]:
+    name = uuid.uuid4().hex
+    zep[name] = {}
+    zep[name]["num"] = 1
+    zep[name]["cost"] = 0
+    zep[name]["resources"] = {}
+    for j in i.keys():
+      if j != "name":
+        zep[name]["resources"][j] = i[j]
+    
+    DC_into_names[(name,0)] = i["name"]
+    names_into_DC[i["name"]] = (name,0)
+  
+  return (zep, DC_into_names, names_into_DC)  
+
+
+def initialObjects(annotation):
+  """
+  Creates a new type of obj for every initially available obj
+  It takes the annotation in json format.
+  It returns the data to include in zephyrus input and the maps between the obj
+  and its real name 
+  """
+  zep = {}
+  obj_into_names = {}
+  names_into_obj = {}
+  
+  for i in annotation["obj"]:
+    name = uuid.uuid4().hex
+    zep[name] = {}
+    for j in i.keys():
+      if j != "name":
+        zep[name]["provides"] = i["provides"]
+        zep[name]["resources"] = {} # no resource consumption
+  obj_into_names[name] = i["name"]
+  names_into_obj[i["name"]] = name
+  
+  return (zep, obj_into_names, names_into_obj)
+
+
 def main(argv):
-  """Main procedure extracting the JSON file from the ABS code,
-  generates the universe file, calls Zephyrus and Metis, and
-  generates the ABS code"""   
+  """
+  Main procedure extracting the JSON file from the ABS code,
+  calls Zephyrus, and
+  generates the ABS code
+  """   
   output_file = ""
-  dot_file = ""
   
   try:
-    opts, args = getopt.getopt(argv,"ho:vd:",["help","ofile=","verbose","dot="])
+    opts, args = getopt.getopt(argv,"ho:vk",["help","ofile=","verbose","keep"])
   except getopt.GetoptError as err:
     print str(err)
     usage()
@@ -304,57 +375,47 @@ def main(argv):
       sys.exit()
     elif opt in ("-o", "--ofile"):
       output_file = arg
-    elif opt in ("-d", "--dot"):
-      dot_file = arg
+    elif opt in ("-k", "--keep"):
+      global KEEP
+      KEEP = True
     elif opt in ("-v", "--verbose"):
       log.basicConfig(format="%(levelname)s: %(message)s", level=log.DEBUG)
       log.info("Verbose output.")
   
-  if len(args) != 3:
-    print "3 arguments are required"
+  if len(args) != 1:
+    print "1 argument is required"
     usage()
     sys.exit(1)
     
-  input_file = args[0]
-  target = args[1]
-  depl_file = args[2] 
-  
-  if input_file == "" or depl_file == "" or target == "":
-    print "Input file not given. Please use -i, -d, -t options"
-    usage()
-    sys.exit(1)
-  
+  input_file = args[0]   
   input_file = os.path.abspath(input_file)
-  depl_file = os.path.abspath(depl_file)
-  
+  global TMP_FILES  
   pid = str(os.getpgid(0))
-  aeolus_universe = "/tmp/" + pid + "_universe.json"
-  spec_file = "/tmp/" + pid + "_spec.spec"
-  zephyrus_output = "/tmp/" + pid + "_zephyrus.json"
-  zephyrus_output_opt = "/tmp/" + pid + "_zephyrus_opt.json"
-  metis_output = "/tmp/" + pid + "_metis.txt"
-  absfrontend_file = "/tmp/" + pid + "_frontend.json"
-  locations_file = "/tmp/" + pid + "_locations.json"
-
-  log.info("Extracting JSON file from ABS code")
   script_directory = os.path.dirname(os.path.realpath(__file__))
+  
+  log.info("Extracting JSON file from ABS code")
+  annotation_file = "/tmp/" + pid + "_annotation.json"
+  TMP_FILES = [ annotation_file ]
   proc = Popen( ["java", "-classpath", script_directory + "/absfrontend.jar",
-        "autodeploy.Tester", "-JSON=" + absfrontend_file, input_file],
+        "autodeploy.Tester", "-JSON=" + annotation_file, input_file],
         cwd=script_directory, stdout=DEVNULL )
   proc.wait()
 
   if proc.returncode != 0:
+    # TODO check if output file exists
     log.critical("absfrontend execution terminated with return code " +  str(proc.returncode))
     log.critical("Exiting")
     sys.exit(1)
 
+  
+
   log.info("Parsing JSON file")
-  data = read_json(absfrontend_file)
-  log.debug("Internal json representation")
-  log.debug(json.dumps(data, indent=1))
+  annotation = remove_dots(read_json(annotation_file))
+  log.debug("Internal json representation extracted from teh abs program")
+  log.debug(json.dumps(annotation, indent=1))
   
   log.info("Extracting class, resource, interface")
-  class_names, resouce_names, interface_names = get_abs_names(data)
+  class_names, resouce_names, interface_names = get_abs_names(annotation)
   
   log.debug("Classes")
   log.debug(class_names)
@@ -363,98 +424,135 @@ def main(argv):
   log.debug("Interfaces")
   log.debug(interface_names)
   
-  log.info("Parsing location file")
-  resouce_names = process_location_file(depl_file, locations_file,resouce_names)
+  log.info("Start generation of zephyrus json")
+  # TODO fix with real implementation
+  initial_data = generate_zep_input_from_annotations(annotation)
   
-  log.info("Generating universe file")
-  generate_universe(data, aeolus_universe)
+  log.info("Generate locations")
+  # TODO fix with real implementation
+  locations = read_json('spec/dc_example.json')
+  log.debug("Generated locations")
+  log.debug(locations)
   
-  log.info("Processing specification")
-  try: 
-    spec = SpecTranslator.translate_specification(target, class_names, resouce_names, interface_names)
-  except SpecTranslator.SpecificationParsingException as e:
-    log.critical("Parsing of the specification failed: " + e.value)
-    log.critical("Exiting")
-    sys.exit(1)
-    
-  log.debug("Zephyrus specification:")
-  log.debug(spec)
-  with open(spec_file, 'w') as f:
-    f.write(spec) 
-  
-  log.debug("---UNIVERSE---")
-  log.debug(json.dumps(read_json(aeolus_universe),indent=1))
-  
-  log.info("Running Zephyrus")
-  if dot_file == "":
-    proc = Popen( [settings.ZEPHYRUS_COMMAND, "-u", aeolus_universe, "-ic", locations_file,
-         "-spec", spec_file, "-out", "stateful-json-v1", zephyrus_output,
-         "-settings", script_directory + "/zephyrus.settings"],
-         cwd=script_directory, stdout=DEVNULL )
-  else:
-    proc = Popen( [settings.ZEPHYRUS_COMMAND, "-u", aeolus_universe, "-ic", locations_file,
-         "-spec", spec_file, "-out", "stateful-json-v1", zephyrus_output,
-         "-out", "graph-deployment", dot_file,
-         "-settings", script_directory + "/zephyrus.settings"],
-         cwd=script_directory, stdout=DEVNULL )
-  proc.wait()
-  
-  if proc.returncode == 14:
-    log.critical("Zephyrus execution terminated with return code " +  str(proc.returncode))
-    log.critical("Specification does not admit solutions")
-    sys.exit(1)
-  
-  if proc.returncode != 0:
-    log.critical("Zephyrus execution terminated with return code " +  str(proc.returncode))
-    log.critical("Exiting")
-    sys.exit(1)
-
-  log.debug("---FINAL CONFIGURATION---")
-  log.debug(json.dumps(read_json(zephyrus_output),indent=1))
-  
-  log.debug("---RUN BINDINGS OPTIMIZER---")
-  proc = Popen( ["python", "bindings_opt.py", "-i", zephyrus_output,
-                  "-o", zephyrus_output_opt], cwd=script_directory, stdout=DEVNULL )
-  proc.wait()
-  
-  if proc.returncode != 0:
-    log.critical("Bindings optimizer terminated with return code " +  str(proc.returncode))
-    log.critical("Exiting")
-    sys.exit(1)
-  log.debug(json.dumps(read_json(zephyrus_output_opt),indent=1))
+  log.info("Add location into zephyrus json")
+  initial_data["locations"] = locations
  
-  log.info("Running Metis")
-  proc = Popen( [settings.METIS_COMMAND, "-u", aeolus_universe, "-conf", zephyrus_output_opt,
-         "-o", metis_output], cwd=script_directory, stdout=DEVNULL )
-  proc.wait()
-
-  if proc.returncode != 0:
-    log.critical("Metis execution terminated with return code " +  str(proc.returncode))
-    log.critical("Exiting")
-    sys.exit(1)
-
+  log.info("Retrieve smart deployment json")
+  # TODO capture json conversion error
+  smart_dep_json = abs_extractor.get_annotation_from_abs(input_file)
+  log.debug("Smart deployment json")
+  log.debug(smart_dep_json)
   
-  log.debug("---FINAL PLAN---")
-  log.debug(json.dumps(plan_to_json(metis_output),indent=1))
-
-  log.info("Generating ABS Code")
-  log.debug("---ABS Code---")
+  for i in smart_dep_json:
+    log.info("Processing " + i["id"])
+    data = dict(initial_data)
+    log.info("Adding new DC")
+    newDC, DC_into_names, names_into_DC =  initialDC(i)
+    data["locations"].update(newDC)
+    
+    log.info("Adding new obj")
+    newObj, obj_into_names, names_into_obj =  initialObjects(i)
+    
+    log.debug("Zephyrus input")
+    log.debug(json.dumps(data,indent=1))
+    
+    log.info("Parsing specification")
+    # TODO
+    # add initial obj constraints in the specification
+    spec = i["specification"]
+    log.debug("Specfication")
+    log.debug(spec)
+ 
   
-  if output_file == "":
-    generate_abs_code(data, read_json(zephyrus_output_opt), plan_to_json(metis_output), read_json(depl_file), sys.stdout)
-  else:
-    log.info("Writing to " + output_file)
-    output_stream = open(output_file, 'w')
-    generate_abs_code(data, read_json(zephyrus_output_opt), plan_to_json(metis_output), read_json(depl_file), output_stream)
-    output_stream.close()
+  
+  
+  
+#   resouce_names = process_location_file(depl_file, locations_file,resouce_names)
+#   
+#   log.info("Generating universe file")
+#   generate_universe(data, aeolus_universe)
+#   
+#   log.info("Processing specification")
+#   try: 
+#     spec = SpecTranslator.translate_specification(target, class_names, resouce_names, interface_names)
+#   except SpecTranslator.SpecificationParsingException as e:
+#     log.critical("Parsing of the specification failed: " + e.value)
+#     log.critical("Exiting")
+#     sys.exit(1)
+#     
+#   log.debug("Zephyrus specification:")
+#   
+#   with open(spec_file, 'w') as f:
+#     f.write(spec) 
+#   
+#   log.debug("---UNIVERSE---")
+#   log.debug(json.dumps(read_json(aeolus_universe),indent=1))
+#   
+#   log.info("Running Zephyrus")
+#   if dot_file == "":
+#     proc = Popen( [settings.ZEPHYRUS_COMMAND, "-u", aeolus_universe, "-ic", locations_file,
+#          "-spec", spec_file, "-out", "stateful-json-v1", zephyrus_output,
+#          "-settings", script_directory + "/zephyrus.settings"],
+#          cwd=script_directory, stdout=DEVNULL )
+#   else:
+#     proc = Popen( [settings.ZEPHYRUS_COMMAND, "-u", aeolus_universe, "-ic", locations_file,
+#          "-spec", spec_file, "-out", "stateful-json-v1", zephyrus_output,
+#          "-out", "graph-deployment", dot_file,
+#          "-settings", script_directory + "/zephyrus.settings"],
+#          cwd=script_directory, stdout=DEVNULL )
+#   proc.wait()
+#   
+#   if proc.returncode == 14:
+#     log.critical("Zephyrus execution terminated with return code " +  str(proc.returncode))
+#     log.critical("Specification does not admit solutions")
+#     sys.exit(1)
+#   
+#   if proc.returncode != 0:
+#     log.critical("Zephyrus execution terminated with return code " +  str(proc.returncode))
+#     log.critical("Exiting")
+#     sys.exit(1)
+# 
+#   log.debug("---FINAL CONFIGURATION---")
+#   log.debug(json.dumps(read_json(zephyrus_output),indent=1))
+#   
+#   log.debug("---RUN BINDINGS OPTIMIZER---")
+#   proc = Popen( ["python", "bindings_opt.py", "-i", zephyrus_output,
+#                   "-o", zephyrus_output_opt], cwd=script_directory, stdout=DEVNULL )
+#   proc.wait()
+#   
+#   if proc.returncode != 0:
+#     log.critical("Bindings optimizer terminated with return code " +  str(proc.returncode))
+#     log.critical("Exiting")
+#     sys.exit(1)
+#   log.debug(json.dumps(read_json(zephyrus_output_opt),indent=1))
+#  
+#   log.info("Running Metis")
+#   proc = Popen( [settings.METIS_COMMAND, "-u", aeolus_universe, "-conf", zephyrus_output_opt,
+#          "-o", metis_output], cwd=script_directory, stdout=DEVNULL )
+#   proc.wait()
+# 
+#   if proc.returncode != 0:
+#     log.critical("Metis execution terminated with return code " +  str(proc.returncode))
+#     log.critical("Exiting")
+#     sys.exit(1)
+# 
+#   
+#   log.debug("---FINAL PLAN---")
+#   log.debug(json.dumps(plan_to_json(metis_output),indent=1))
+# 
+#   log.info("Generating ABS Code")
+#   log.debug("---ABS Code---")
+#   
+#   if output_file == "":
+#     generate_abs_code(data, read_json(zephyrus_output_opt), plan_to_json(metis_output), read_json(depl_file), sys.stdout)
+#   else:
+#     log.info("Writing to " + output_file)
+#     output_stream = open(output_file, 'w')
+#     generate_abs_code(data, read_json(zephyrus_output_opt), plan_to_json(metis_output), read_json(depl_file), output_stream)
+#     output_stream.close()
       
-  log.info("Removing temp files")
-  os.remove(aeolus_universe)
-  os.remove(zephyrus_output)
-  os.remove(metis_output)
-  os.remove(spec_file)
-  os.remove(locations_file)
-  os.remove(zephyrus_output_opt)
+  log.info("Clean.")
+  clean()    
   log.info("Program Succesfully Ended")
 
 
