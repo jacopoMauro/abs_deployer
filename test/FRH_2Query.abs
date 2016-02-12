@@ -18,6 +18,12 @@ interface SmartDeployInt {
 type SmartDeploy = String;
 //
 
+
+
+
+
+
+
 //abstraction for a customer
 type Customer = String;
 
@@ -1300,6 +1306,17 @@ class Main implements Main {
 
 
 {
+
+	CloudProvider cloudProvider = new CloudProvider("CloudProvider");
+	
+	
+
+	//cloud_spec = insert(cloud_spec, Pair("c3.xlarge",res));
+
+	cloudProvider.setInstanceDescriptions(InsertAssoc(Pair("c3.xlarge", InsertAssoc(Pair(CostPerInterval,210), InsertAssoc( Pair(Memory,750), InsertAssoc(Pair(Cores,4), EmptyMap)))), InsertAssoc( Pair("c3.large", InsertAssoc(Pair(CostPerInterval,105), InsertAssoc( Pair(Memory,375), InsertAssoc(Pair(Cores,2), EmptyMap)))), EmptyMap)));
+
+	
+
 	[ SmartDeploy : "{\"id\":\"MainSmartDeployer\",\"specification\":\"QueryServiceImpl > 0\",\"DC\":[{\"name\":\"amazon_internals\",\"amazon_res\":10},{\"name\":\"my_dc1\",\"Cores\":\"1\",\"Memory\":\"250\"}],\"obj\":[{\"name\":\"x\",\"provides\":[{\"ports\":[\"FredhopperCloudServices.MonitorPlatformService\",\"FredhopperCloudServices.PlatformService\"],\"num\":-1}]}]}" ]
 	SmartDeployInt c1 = new MainSmartDeployer();
 } 

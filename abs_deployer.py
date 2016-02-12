@@ -173,135 +173,84 @@ def generate_zep_input_from_annotations(data):
   return zep
 
 
-def process_location_file(in_file, out_file, json_res):
-  """
-  Process the deployment component files generating the location file for Zephyrus.
-  It changes the name of the resources and checks if the resources of abs are properly defined
-  """
-    
-  data = read_json(in_file)
-  res = set([])
-  
-  counter = 0
-  res_dict = {}
-  res_cost = {}
-  
-  locs = { "version" : 1, "locations" : []}
-  for i in data["DC_description"]:
-    res_dict[i["name"]] = {}
-    for j in i["provide_resources"].keys():
-      res.add(settings.RESOURCE_PREFIX + j)
-      res_dict[i["name"]][settings.RESOURCE_PREFIX + j] = i["provide_resources"][j]
-      
-    res_cost[i["name"]] = i["cost"]
-       
-  for i in data["DC_availability"].keys():
-    if i not in res_dict:
-      log.critical("Description of Deployment component " + i + " not found in the deployment component file")
-      log.critical("Exiting")
-      sys.exit(1)
-    for j in range(int(data["DC_availability"][i])):
-      locs["locations"].append({ "name" : i + settings.SEPARATOR +  str(counter),
-                         "repository" : "mbs",
-                         "provide_resources" : res_dict[i],
-                         "cost" : res_cost[i] })
-      counter += 1
-  
-  log.debug("New location data")
-  log.debug(locs)
-  
-  #check if resources given in the abs are present in the location file
-  for i in json_res:
-    if not i in res:
-      log.critical("Resource " + i + "not found in the deployment component file")
-      log.critical("Exiting")
-      sys.exit(1)
-      
-  # write file
-  with open(out_file, 'w') as fo:
-    json.dump(locs, fo, indent=1) 
-    
-  return res
-  
-
-def generate_abs_code(data, zephyrus, metis, dep_comp, output_stream):
-  """Generate the ABS code from the Zephyrus and Metis outputs"""
-
-  class_locations = {}
-  class_bindings = {}
-  class_types = {}
-  signatures = {}
-  used_locations = {}
-
-  for i in zephyrus["components"]:
-    class_locations[i["name"]] = i["location"]
-    used_locations[i["location"]] = 0
-    class_types[i["name"]] = i["type"].split(settings.SEPARATOR)[1]
-    
-  for i in zephyrus["bindings"]:
-    if i["requirer"] not in class_bindings:
-      class_bindings[i["requirer"]] = {}
-    if i["port"] not in class_bindings[i["requirer"]]:
-      class_bindings[i["requirer"]][i["port"]] = [ i["provider"] ]
-    else:
-      class_bindings[i["requirer"]][i["port"]].append(i["provider"])
-
-  for i in data["classes"]:
-    for j in i["activates"]:
-      if len(j["scenarios"]) == 0:
-        signatures[settings.DEFAULT_SCENARIO_NAME + settings.SEPARATOR + i["name"] ] = j["sig"]
-      else:
-        signatures[j["scenarios"][0].upper() + settings.SEPARATOR + i["name"] ] = j["sig"]
-  
-  output_stream.write("{\n")  
-  for i in zephyrus["locations"]:
-    if i["name"] in used_locations:
-      output_stream.write("\tDeploymentComponent " + i["name"] +
-                        " = new DeploymentComponent(\"" + i["name"] + "\", map[")
-      name = i["name"].split(settings.SEPARATOR)[0]
-      res = filter( lambda x: x["name"] == name, dep_comp["DC_description"])[0]["provide_resources"]
-      resKeys = res.keys()
-      while len(resKeys) > 0:
-        j = resKeys.pop()
-        # for ABS only CPU, Memory, and Bandwidth can be used
-        if j == "CPU" or j == "Memory" or j == "Bandwidth":
-          output_stream.write("Pair(" + j + "," + str(res[j]) + ")")
-          if len(resKeys) > 0:
-            output_stream.write(", ")
-      output_stream.write("]);\n") 
-  
-  for i in metis:
-    name = i["component_name"]
-    signature = signatures[name.split("-")[0]]
-    output_stream.write("\t[DC: " + class_locations[name] + "] ")
-    if len(data["hierarchy"][class_types[name]]) > 0:
-      output_stream.write(data["hierarchy"][class_types[name]][0] +
-                          " " + abs_id_rename(name) + " = ")
-    output_stream.write( "new " + class_types[name] + "(")
-    first_param = True
-    for j in signature:
-      if first_param:
-        first_param = False
-      else:
-        output_stream.write(", ")
-        
-      if j["type"] == "require":
-        output_stream.write(abs_id_rename(class_bindings[name][settings.INTERFACE_PREFIX + j["value"]].pop()))
-      elif j["type"] == "user":
-        output_stream.write(settings.SEPARATOR + j["value"] + settings.SEPARATOR)
-      elif j["type"] == "default":
-        output_stream.write(j["value"])
-      elif j["type"] == "list":
-        output_stream.write("list[")
-        for _ in range(int(j["arity"])-1):
-          output_stream.write(abs_id_rename(class_bindings[name][settings.INTERFACE_PREFIX + j["value"]].pop()) + ", ")
-        output_stream.write(abs_id_rename(class_bindings[name][settings.INTERFACE_PREFIX + j["value"]].pop()) + "]")
-      else:
-        log.critical("The value " + j["value"] + " in signature not supported")
-        log.critical("Exiting")
-        sys.exit(1)
-    output_stream.write(");\n")
-  output_stream.write("}\n")
+# def generate_abs_code(data, zephyrus, metis, dep_comp, output_stream):
+#   """Generate the ABS code from the Zephyrus and Metis outputs"""
+# 
+#   class_locations = {}
+#   class_bindings = {}
+#   class_types = {}
+#   signatures = {}
+#   used_locations = {}
+# 
+#   for i in zephyrus["components"]:
+#     class_locations[i["name"]] = i["location"]
+#     used_locations[i["location"]] = 0
+#     class_types[i["name"]] = i["type"].split(settings.SEPARATOR)[1]
+#     
+#   for i in zephyrus["bindings"]:
+#     if i["requirer"] not in class_bindings:
+#       class_bindings[i["requirer"]] = {}
+#     if i["port"] not in class_bindings[i["requirer"]]:
+#       class_bindings[i["requirer"]][i["port"]] = [ i["provider"] ]
+#     else:
+#       class_bindings[i["requirer"]][i["port"]].append(i["provider"])
+# 
+#   for i in data["classes"]:
+#     for j in i["activates"]:
+#       if len(j["scenarios"]) == 0:
+#         signatures[settings.DEFAULT_SCENARIO_NAME + settings.SEPARATOR + i["name"] ] = j["sig"]
+#       else:
+#         signatures[j["scenarios"][0].upper() + settings.SEPARATOR + i["name"] ] = j["sig"]
+#   
+#   output_stream.write("{\n")  
+#   for i in zephyrus["locations"]:
+#     if i["name"] in used_locations:
+#       output_stream.write("\tDeploymentComponent " + i["name"] +
+#                         " = new DeploymentComponent(\"" + i["name"] + "\", map[")
+#       name = i["name"].split(settings.SEPARATOR)[0]
+#       res = filter( lambda x: x["name"] == name, dep_comp["DC_description"])[0]["provide_resources"]
+#       resKeys = res.keys()
+#       while len(resKeys) > 0:
+#         j = resKeys.pop()
+#         # for ABS only CPU, Memory, and Bandwidth can be used
+#         if j == "CPU" or j == "Memory" or j == "Bandwidth":
+#           output_stream.write("Pair(" + j + "," + str(res[j]) + ")")
+#           if len(resKeys) > 0:
+#             output_stream.write(", ")
+#       output_stream.write("]);\n") 
+#   
+#   for i in metis:
+#     name = i["component_name"]
+#     signature = signatures[name.split("-")[0]]
+#     output_stream.write("\t[DC: " + class_locations[name] + "] ")
+#     if len(data["hierarchy"][class_types[name]]) > 0:
+#       output_stream.write(data["hierarchy"][class_types[name]][0] +
+#                           " " + abs_id_rename(name) + " = ")
+#     output_stream.write( "new " + class_types[name] + "(")
+#     first_param = True
+#     for j in signature:
+#       if first_param:
+#         first_param = False
+#       else:
+#         output_stream.write(", ")
+#         
+#       if j["type"] == "require":
+#         output_stream.write(abs_id_rename(class_bindings[name][settings.INTERFACE_PREFIX + j["value"]].pop()))
+#       elif j["type"] == "user":
+#         output_stream.write(settings.SEPARATOR + j["value"] + settings.SEPARATOR)
+#       elif j["type"] == "default":
+#         output_stream.write(j["value"])
+#       elif j["type"] == "list":
+#         output_stream.write("list[")
+#         for _ in range(int(j["arity"])-1):
+#           output_stream.write(abs_id_rename(class_bindings[name][settings.INTERFACE_PREFIX + j["value"]].pop()) + ", ")
+#         output_stream.write(abs_id_rename(class_bindings[name][settings.INTERFACE_PREFIX + j["value"]].pop()) + "]")
+#       else:
+#         log.critical("The value " + j["value"] + " in signature not supported")
+#         log.critical("Exiting")
+#         sys.exit(1)
+#     output_stream.write(");\n")
+#   output_stream.write("}\n")
 
 
 def initialDC(annotation):
@@ -393,7 +342,7 @@ def main(argv):
   pid = str(os.getpgid(0))
   script_directory = os.path.dirname(os.path.realpath(__file__))
   
-  log.info("Extracting JSON file from ABS code")
+  log.info("Extracting JSON cost annotations from ABS code")
   annotation_file = "/tmp/" + pid + "_annotation.json"
   TMP_FILES = [ annotation_file ]
   proc = Popen( ["java", "-classpath", script_directory + "/absfrontend.jar",
@@ -407,9 +356,7 @@ def main(argv):
     log.critical("Exiting")
     sys.exit(1)
 
-  
-
-  log.info("Parsing JSON file")
+  log.info("Parsing JSON costs annotations file")
   annotation = remove_dots(read_json(annotation_file))
   log.debug("Internal json representation extracted from teh abs program")
   log.debug(json.dumps(annotation, indent=1))
@@ -423,26 +370,26 @@ def main(argv):
   log.debug(resouce_names)
   log.debug("Interfaces")
   log.debug(interface_names)
+    
+  log.info("Extract smart deployment and dc annotations")
+  try:
+    (smart_dep_json, dc_json) = abs_extractor.get_annotation_from_abs(input_file)
+  except ValueError:
+    log.critical("Parsing error in JSON smart deployment annotations")
+    log.critical("Exiting")
+    sys.exit(1)
+  
+  log.debug("Smart deployment json annotation")
+  log.debug(json.dumps(smart_dep_json, indent=1))
+  log.debug("DC json annotation")
+  log.debug(json.dumps(dc_json, indent=1))
   
   log.info("Start generation of zephyrus json")
-  # TODO fix with real implementation
   initial_data = generate_zep_input_from_annotations(annotation)
   
-  log.info("Generate locations")
-  # TODO fix with real implementation
-  locations = read_json('spec/dc_example.json')
-  log.debug("Generated locations")
-  log.debug(locations)
-  
   log.info("Add location into zephyrus json")
-  initial_data["locations"] = locations
+  initial_data["locations"] = dc_json
  
-  log.info("Retrieve smart deployment json")
-  # TODO capture json conversion error
-  smart_dep_json = abs_extractor.get_annotation_from_abs(input_file)
-  log.debug("Smart deployment json")
-  log.debug(smart_dep_json)
-  
   for i in smart_dep_json:
     log.info("Processing " + i["id"])
     data = dict(initial_data)

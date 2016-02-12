@@ -8,7 +8,9 @@ from ABSVisitor import ABSVisitor
 
 import sys, getopt, os, json
 
-class SpecificationParsingException(Exception):
+import settings
+
+class ABSParsingException(Exception):
   
   def __init__(self,value):
     self.value = value
@@ -26,7 +28,8 @@ class MyABSVisitor(ABSVisitor):
     abs program
     """    
     ABSVisitor.__init__(self)
-    self.json = []
+    self.smart_dep_json = []
+    self.dc_json = {}
     
     
   def defaultResult(self):
@@ -38,11 +41,14 @@ class MyABSVisitor(ABSVisitor):
   
   
   def aggregateResult(self, aggregate, nextResult):
-    return aggregate + "" + nextResult
-  
+    if isinstance(nextResult,list):
+      return aggregate + " " +  str(nextResult)
+    else:
+      return aggregate + " " + nextResult
+
   
   def visitErrorNode(self, node):
-    raise SpecificationParsingException("Erroneous Node in parsing ABS")  
+    raise ABSParsingException("Erroneous Node in parsing ABS")  
   
   
   def visitAnnotation(self, ctx):
@@ -50,11 +56,72 @@ class MyABSVisitor(ABSVisitor):
     Collects the annotations [ SmartDeploy : "..." ]
     """
     if ctx.getChildCount() == 5:
-      name = ctx.getChild(1).accept(self)
-      if name.endswith("SmartDeploy"):
-        data = ctx.getChild(3).accept(self).decode("string-escape")[1:-1]
-        self.json.append(json.loads(data))  
+      name = ctx.getChild(1).accept(self).strip()
+      if name == "SmartDeploy":
+        data = ctx.getChild(3).accept(self).strip().decode("string-escape")[1:-1]
+        self.smart_dep_json.append(json.loads(data))  
     return ""
+  
+  
+  def visitSyncCallExp(self, ctx):
+    """
+    Try to find synccall with name setInstanceDescriptions to get the DC
+    specification.
+    """
+    if ctx.getChild(2).accept(self).strip() == "setInstanceDescriptions":
+      cloud_name = ctx.getChild(0).accept(self).strip()
+      params = ctx.getChild(4).accept(self)[0]
+      try:
+        data = json.loads(params)
+      except ValueError:
+        raise ABSParsingException("CloudProvider parsing failed")
+      
+      # example JSON from parser
+      # [{"c3.xlarge": [{"CostPerInterval": 210},{"Memory": 750}]}]
+      # transformed into JSON for Zephyrus "locations" : XXX
+      for i in data:
+        for j in i.keys():
+          self.dc_json[j] = {
+                  "num": settings.DEFAULT_NUMBER_OF_DC,
+                  "resources": {},
+                  "cost":0 }
+          for k in i[j]:
+            for h in k.keys():
+              if h == "CostPerInterval":
+                self.dc_json[j]["cost"] = k[h]
+              else:
+                self.dc_json[j]["resources"][h] = k[h]
+    return ""
+  
+  
+  def visitConstructorExp(self, ctx):
+    """
+    Dicriminate Pair and Map Constructors to transform an ABS string into a
+    JSON like string.
+    """
+    qualifier = ctx.getChild(0).accept(self).strip()
+    if qualifier == "Pair":
+      ls = ctx.getChild(2).accept(self)
+      return "{" + ls[0] + ": " + ls[1] + "}"
+    elif qualifier == "InsertAssoc":
+      ls = ctx.getChild(2).accept(self)
+      if ls[1] == '"EmptyMap"':
+        return  "["  + ls[0] + "]"
+      else:
+        return "[" + ls[0] + "," + ls[1][1:]
+    else:
+      return '"' + qualifier +'"'
+  
+  
+  def visitPure_exp_list(self, ctx):
+    """
+    Pure expression lists return a list, not a string.
+    """
+    n = ctx.getChildCount()
+    ls = []
+    for i in range(0,n,2):
+      ls.append(ctx.getChild(i).accept(self).strip())
+    return ls
 
 
 def get_annotation_from_abs(abs_program_file):
@@ -64,7 +131,7 @@ def get_annotation_from_abs(abs_program_file):
   tree = parser.goal()
   visitor = MyABSVisitor()
   visitor.visit(tree)
-  return visitor.json
+  return (visitor.smart_dep_json, visitor.dc_json)
   
 
 def main(argv):

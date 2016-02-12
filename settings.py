@@ -16,3 +16,5 @@ DEFAULT_DC_RESOURCES = { "CORES" : 512, "MEMORY" : 1024}
 
 # prefix for random generated DC
 DC_PREFIX = "DC_"
+
+DEFAULT_NUMBER_OF_DC = 5
