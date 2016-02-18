@@ -4,6 +4,19 @@ Usage: abs_deployer.py [<options>] <abs program file>
     -o, --ofile: file where to save the output
     -v, --verbose
     -k, --keep: keep temp files
+
+It requires the installation of zephyrus2 available from git@bitbucket.org:jacopomauro/zephyrus2.git    
+
+Limitations:
+  - the definition of the deployment components need to be done in just on step
+    calling the setInstanceDescriptions on an object denoted as cloudProvider
+   
+Scenarios name have to differ from DC names
+
+Requirements:
+  Python packages
+   - toposort https://pypi.python.org/simple/topsort/
+   - zephyrus2 git@bitbucket.org:jacopomauro/zephyrus2.git    
 """
 
 import json
@@ -15,9 +28,12 @@ import os
 import logging as log
 import signal
 import psutil
+from antlr4 import *
+import zephyrus2
 
 import settings
-import SpecificationGrammar.SpecTranslator as SpecTranslator
+#import code_generation
+import decl_spec_lang.decl_spec_lang as decl_spec_lang
 import ABS.abs_extractor as abs_extractor
 
 DEVNULL = open(os.devnull, 'wb')
@@ -110,14 +126,14 @@ def get_abs_names(data):
       if len(j["scenarios"]) == 0:
         classes[i["name"]].append(settings.DEFAULT_SCENARIO_NAME)
       else:
-        classes[i["name"]].append(j["scenarios"][0].upper())
+        classes[i["name"]].append(j["scenarios"][0])
       
       for k in j["cost"].keys():
-        resources.add(settings.RESOURCE_PREFIX + k)
+        resources.add(k)
   
   for i in data["hierarchy"]:
     for j in data["hierarchy"][i]:
-      interfaces.add(settings.INTERFACE_PREFIX + j)
+      interfaces.add(j)
     
   return (classes,resources,interfaces)
 
@@ -167,7 +183,7 @@ def generate_zep_input_from_annotations(data):
       elif len(j["scenarios"]) == 0:
         name = settings.DEFAULT_SCENARIO_NAME + settings.SEPARATOR + component_name
       else:
-        name = j["scenarios"][0].upper() + settings.SEPARATOR + component_name
+        name = j["scenarios"][0] + settings.SEPARATOR + component_name
       
       zep["components"][name] = comp
   return zep
@@ -261,11 +277,11 @@ def initialDC(annotation):
   components and its real name 
   """
   zep = {}
-  DC_into_names = {}
-  names_into_DC = {}
+  DC_into_name = {}
+  name_into_DC = {}
   
   for i in annotation["DC"]:
-    name = uuid.uuid4().hex
+    name = settings.SEPARATOR + uuid.uuid4().hex
     zep[name] = {}
     zep[name]["num"] = 1
     zep[name]["cost"] = 0
@@ -274,10 +290,10 @@ def initialDC(annotation):
       if j != "name":
         zep[name]["resources"][j] = i[j]
     
-    DC_into_names[(name,0)] = i["name"]
-    names_into_DC[i["name"]] = (name,0)
+    DC_into_name[(name,0)] = i["name"]
+    name_into_DC[i["name"]] = (name,0)
   
-  return (zep, DC_into_names, names_into_DC)  
+  return (zep, DC_into_name, name_into_DC)  
 
 
 def initialObjects(annotation):
@@ -288,20 +304,43 @@ def initialObjects(annotation):
   and its real name 
   """
   zep = {}
-  obj_into_names = {}
-  names_into_obj = {}
+  obj_into_name = {}
+  name_into_obj = {}
   
   for i in annotation["obj"]:
-    name = uuid.uuid4().hex
+    name = settings.SEPARATOR + uuid.uuid4().hex
     zep[name] = {}
     for j in i.keys():
       if j != "name":
         zep[name]["provides"] = i["provides"]
-        zep[name]["resources"] = {} # no resource consumption
-  obj_into_names[name] = i["name"]
-  names_into_obj[i["name"]] = name
+        zep[name]["resources"] = { "initial_obj_resource" : 1}
+    obj_into_name[name] = i["name"]
+    name_into_obj[i["name"]] = name
   
-  return (zep, obj_into_names, names_into_obj)
+  return (zep, obj_into_name, name_into_obj)
+
+
+def extract_last_solution(inFile,outFile):
+  """
+  Extracts from a file the last solution saving it in another file.
+  Rerturns true if a solutions is found.
+  """
+  solution = False
+  sol = ""
+  
+  for line in reversed(open(inFile,'r').readlines()):
+    if not solution:
+      if line.startswith("----------"):
+        solution = True
+    else:
+      if line.startswith("----------"):
+        break
+      else:
+        sol = line + sol
+  
+  with open(outFile, 'w') as f:
+    f.write(sol)
+  return solution
 
 
 def main(argv):
@@ -350,9 +389,8 @@ def main(argv):
         cwd=script_directory, stdout=DEVNULL )
   proc.wait()
 
-  if proc.returncode != 0:
-    # TODO check if output file exists
-    log.critical("absfrontend execution terminated with return code " +  str(proc.returncode))
+  if not os.path.isfile(annotation_file): 
+    log.critical("absfrontend execution terminated without writing its output file")
     log.critical("Exiting")
     sys.exit(1)
 
@@ -389,30 +427,52 @@ def main(argv):
   
   log.info("Add location into zephyrus json")
   initial_data["locations"] = dc_json
- 
+  log.info("Add default location for deploying intial objects")
+  initial_data["locations"].update(settings.DEFAULT_INITIAL_DC)
+  
   for i in smart_dep_json:
     log.info("Processing " + i["id"])
     data = dict(initial_data)
     log.info("Adding new DC")
-    newDC, DC_into_names, names_into_DC =  initialDC(i)
+    newDC, DC_into_name, name_into_DC =  initialDC(i)
     data["locations"].update(newDC)
     
     log.info("Adding new obj")
-    newObj, obj_into_names, names_into_obj =  initialObjects(i)
+    newObj, obj_into_name, name_into_obj =  initialObjects(i)
+    data["components"].update(newObj)
+    
+    log.info("Parsing and adding specification")
+    data["specification"] = decl_spec_lang.translate_specification(
+                InputStream(i["specification"]),name_into_DC,name_into_obj)
     
     log.debug("Zephyrus input")
-    log.debug(json.dumps(data,indent=1))
+    log.debug(json.dumps(data,indent=1))    
+    zephyrus_in_file = "/tmp/" + pid + i["id"] + "_zep_input.json"
+    TMP_FILES.append(zephyrus_in_file)
+    with open(zephyrus_in_file, 'w') as f:
+      json.dump(data,f,indent=1)
+         
+    log.info("Running Zephyrus")
+    zephyrus_out_file = "/tmp/" + pid + i["id"] + "_zep_output.txt"
+    TMP_FILES.append(zephyrus_out_file)
+    zephyrus2.zephyrus2.main(["-o",zephyrus_out_file,zephyrus_in_file])
+    #zephyrus2.zephyrus2.main(["-v", "-o",zephyrus_out_file,zephyrus_in_file])
     
-    log.info("Parsing specification")
+    log.info("Exctracting last solution")
+    binding_in_file = "/tmp/" + pid + i["id"] + "_binding_in.json"
+    TMP_FILES.append(binding_in_file)
+    if not extract_last_solution(zephyrus_out_file,binding_in_file):
+      log.info("No solution found for " + i["id"])
+      continue
+    else:
+      log.debug("Zephyrus last solution")
+      log.debug(open(binding_in_file, 'r').read())
+      
+    log.info("Running bind optimizer")
+    zephyrus2.bindings_optimizer.main(["-v",zephyrus_in_file,binding_in_file])
+    
+    log.info("Generating ABS code")
     # TODO
-    # add initial obj constraints in the specification
-    spec = i["specification"]
-    log.debug("Specfication")
-    log.debug(spec)
- 
-  
-  
-  
   
 #   resouce_names = process_location_file(depl_file, locations_file,resouce_names)
 #   

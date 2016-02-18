@@ -1,20 +1,18 @@
-METIS_COMMAND = "metis.native"
-ZEPHYRUS_COMMAND = "zephyrus.native"
-
 SEPARATOR = "___"
 
-#should start with a capital letter
-#components in zephyrus start with a capital letter
+#default scenario name
 DEFAULT_SCENARIO_NAME = "Def"
-
-RESOURCE_PREFIX = "res___"
-INTERFACE_PREFIX = "@"
-
-# name and resources of the DC where the initial objects are deployed
-DEFAULT_DC_NAME = "defaultDC"
-DEFAULT_DC_RESOURCES = { "CORES" : 512, "MEMORY" : 1024}
 
 # prefix for random generated DC
 DC_PREFIX = "DC_"
+# number of DC if not specifid in the abs program
+DEFAULT_NUMBER_OF_DC = 4
 
-DEFAULT_NUMBER_OF_DC = 5
+# DC where the intial objects will be deployed
+DEFAULT_INITIAL_DC = { "___initial_DC": {
+      "num": 1,
+      "resources": {
+        "initial_obj_resource": 1000
+      },
+      "cost": 0
+    }}

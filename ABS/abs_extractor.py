@@ -48,7 +48,10 @@ class MyABSVisitor(ABSVisitor):
 
   
   def visitErrorNode(self, node):
-    raise ABSParsingException("Erroneous Node in parsing ABS")  
+    token = node.getSymbol()    
+    raise ABSParsingException("Erroneous Node at line "  +
+            str(token.line) + ", column " + str(token.column) + ": '" + 
+            str(token.text) + "'"  )
   
   
   def visitAnnotation(self, ctx):
