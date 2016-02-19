@@ -24,7 +24,6 @@ def get_map_obj_abs_name(zep_sol,initial_obj_into_name):
           else:
             obj_to_abs_name[(i,int(j),h,k)] = (settings.OBJ_PREFIX + \
               h + "_" + str(k) + "_" + i + "_" + j).replace(".", "_")
-            
   return obj_to_abs_name
 
 

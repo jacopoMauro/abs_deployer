@@ -31,6 +31,7 @@ import os
 import logging as log
 import signal
 import psutil
+import copy
 from antlr4 import *
 import zephyrus2
 
@@ -295,7 +296,7 @@ def initialDC(annotation):
     
     dc_into_name[(name,0)] = i["name"]
     name_into_dc[i["name"]] = (name,0)
-  
+    
   return (zep, dc_into_name, name_into_dc)  
 
 
@@ -442,7 +443,8 @@ def main(argv):
   
   for i in smart_dep_json:
     log.info("Processing " + i["id"])
-    data = dict(initial_data)
+    data = copy.deepcopy(initial_data)
+    
     log.info("Adding new DC")
     newDC, dc_into_name, name_into_dc =  initialDC(i)
     data["locations"].update(newDC)

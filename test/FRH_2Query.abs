@@ -2,8 +2,6 @@ module FredhopperCloudServices;
 
 import * from ABS.DC;
 
-import SmartDeployInterface from SmartDeployInterface;
-
 /**************************************************************
 // Definitions needed to parse the cost annotations
 **************************************************************/
