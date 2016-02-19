@@ -2,25 +2,23 @@ module FredhopperCloudServices;
 
 import * from ABS.DC;
 
+import SmartDeployInterface from SmartDeployInterface;
 
-// Definition to add for the type checker
-
-//TDOO Revert providerImpl arc
-//TODO More than one amazon datacenter to connect the query services
+/**************************************************************
+// Definitions needed to parse the cost annotations
+**************************************************************/
 
 data DeployParamSpecification = Req | List(Int) | Default(String) | User ;
 data DeployScenarioElement = MaxUse(Int) | Cost(String, Int) | Param(String, DeployParamSpecification) | Name(String);
 type Deploy = List<DeployScenarioElement>;
 
-interface SmartDeployInt {
-	Unit deploy();
-	Unit undeploy();
-}
-
 type SmartDeploy = String;
-//
 
+interface SmartDeployInterface { }
 
+/**************************************************************
+// Definition of classes with their cost annotations
+**************************************************************/
 
 //abstraction for a customer
 type Customer = String;
@@ -51,10 +49,7 @@ data Config = Config(ServiceType serviceType, List<Int> instances);
 data State = RUNNING | STOP;
 
 //  Models an infrastructure service that allows one to acquire and release cpu resources
-interface InfrastructureService {
-	DC acquire(Id id, Int cpuamount);
-	Unit release(DC component);
-}
+interface InfrastructureService { }
 
 //[Deploy: scenario[Name("amazon_scenario1"), Cost("Cores", 1)] ]
 [Deploy: scenario[Name("amazon_scenario"), Cost("amazon_res",1)]]
@@ -65,52 +60,29 @@ class InfrastructureServiceImpl implements InfrastructureService {
 
 
 // An endpoint is where service user connects to a service
-interface EndPoint {
-	Response invoke(Request request);
-	Unit setStatus(State status);
-	State getStatus();
-}
+interface EndPoint { }
 
-interface LoadBalancerEndPoint extends EndPoint {
-	//bring service instance off from load balancer
-	Bool remove(Service service);
-	//bring service instance on to load balancer
-	Bool add(Service service);
-}
+interface LoadBalancerEndPoint extends EndPoint { }
 
 // A service instance offers a single end point 
 // A service has a service type, defining the kind of service offered
 // A service belong to a customer
 // A service exposes logging information
-interface Service extends EndPoint {
-	Id getServiceId();
-	ServiceType getServiceType();
-	Customer getCustomer();
-	Int getLatency();
-	Int getRequestCount();
-	Int getCPU();
-}
+interface Service extends EndPoint { }
 
 // load balance over n services in round robin style
 class LoadBalancerEndPointImpl(List<Service> services) implements LoadBalancerEndPoint {
 }
 
 // An interface offered to InfrastructureService to allocate resources
-interface ResourceService extends Service {
-	Unit moveTo(DeploymentComponent dc);
-}
+interface ResourceService extends Service { }
 
 class ServiceImpl(Id serviceId, ServiceType st, Customer c, Int cost) implements ResourceService {
 	// ...
 }
 
 // A deployment service helps to deploy ALL types of service instance onto required cpu resources.
-interface DeploymentService {
-	Unit install(ResourceService service, Int cpures);
-	Unit uninstall(Id serviceId);
-	Unit start(Id serviceId);
-	Unit stop(Id serviceId);
-} 
+interface DeploymentService { } 
 
 
 [Deploy: scenario[MaxUse(2),Cost("Cores", 1), Cost("Memory", 80), Param("rp", Req), Param("p",Req)]]
@@ -122,17 +94,7 @@ class DeploymentServiceImpl(InfrastructureService rp, PlatformService p) impleme
 // A load balancer can enable or disable a service
 // TODO annotations on interfaces might help to restrict or specifiy 
 // requirements such that they should be observed by any object impl.
-interface LoadBalancerService {
-	Bool disable(Id endPointId);
-	Bool enable(Id endPointId);
-	Bool add(List<Service> services, Int endPointId);
-	Bool remove(Id endPointId);
-	Maybe<EndPoint> getServiceEndPoint(Int endPointId);
-	//take service off load balancing
-	Bool decrease(Id endPointId, List<Service> services);
-	//put service on load balancing 
-	Bool increase(Id endPointId, List<Service> services);
-}
+interface LoadBalancerService { }
 
 //enum to specify whether to increase/decrease load balance resource
 data LBOp = INCR | DECR;
@@ -144,28 +106,10 @@ class LoadBalancerServiceImpl implements LoadBalancerService {
 }
 
 //Platform service can create and remove a service
-interface PlatformService {
-	//return end point id
-	Id createService(Config config, Customer customer);
-	Unit removeService(Id endPoint);
-	
-}
+interface PlatformService { }
 
 //Platform service used by monitor to scale up/down a service
-interface MonitorPlatformService extends PlatformService {
-	//increase the number of service instances by n
-	Unit incrService(Id endPoint, List<Int> instances);
-	//decrease the number of service instances by n
-	Unit decrService(Id endPoint, List<Id> serviceIds);
-	//all existing endpoints 
-	List<Id> getEndPoints();
-	//service instance with the given id
-	Maybe<Service> getService(Id serviceId);
-	//service instance ids of all 'deployed' service instances referred by the given endPoint
-	List<Id> getServiceIds(Id endPoint);
-	//alter the cpu resource of serviceId underlying resource by r
-	Unit alterResource(Id serviceId, Int r);
-}
+interface MonitorPlatformService extends PlatformService { }
 
 
 [Deploy: scenario[Cost("Cores", 4), Cost("Memory", 12), Param("ls", Req)]]
@@ -175,39 +119,19 @@ implements MonitorPlatformService {
 	// ...
 }
 
-interface User {
-	Unit use(EndPoint endPoint, Int min, Int max);
-}
-
-//a user invokes a service endpoint repeatedly 
-class RepeatUserImpl implements User {
-	// ...
-}
+interface User { }
 
 data Rule = Rule(Int interval, Monitor monitor); 
 
-interface MonitoringService {
-	Unit add(Rule rule);
-	Unit remove(Rule rule);
-}
+interface MonitoringService { }
 
 class MonitoringServiceImpl implements MonitoringService {
 	// ..
 }
 
-interface Monitor {
+interface Monitor { }
 
-	//initialise this monitor
-	Unit init();
-
-	//execute this monitor
-	//and return a nullable action 
-	Action monitor();
-}
-
-interface Action {
-	Unit action();
-}
+interface Action { }
 
 //A monitor that checks the latency of a service endpoint
 class LatencyMonitor(Int upper, MonitorPlatformService ps) implements Monitor {
@@ -230,10 +154,7 @@ class ScaleInstanceAction(List<Triple<Int, Scale, List<Int>>> scalings, MonitorP
 /**
 * Models a cloud service provider such as Fredhopper
 **/
-interface ServiceProvider {
-	EndPoint addCustomer(Config sc, Customer c);
-	Unit removeCustomer(Config sc, Customer c);
-}
+interface ServiceProvider { }
 
 [Deploy: scenario[Param("ps", Req), Param("ls", Req)] ]
 class ServiceProviderImpl(PlatformService ps, LoadBalancerService ls) implements ServiceProvider {
@@ -247,17 +168,19 @@ class ServiceProviderImpl(PlatformService ps, LoadBalancerService ls) implements
 interface Item {
 }
 
-interface IQueryService extends Service {
-	List<Item> doQuery(String q);
-}
+interface IQueryService extends Service { }
 
 // Stub implementation of the query service, for use with cost annotations
-[Deploy: scenario[MaxUse(1), Cost("Cores", 1), Cost("Memory", 400), Param("c", User), Param("ds", Req)] ]
+[Deploy: scenario[MaxUse(1), Cost("Cores", 1), Cost("Memory", 400), Param("c", Default("toString(0)")), Param("ds", Req)] ]
 class QueryServiceImpl(DeploymentService ds, Customer c) implements IQueryService {
 	// ....
 }
 
+
+/**************************************************************
 // MAIN
+**************************************************************/
+
 {
 
 /** Deployment component types that can be used
@@ -270,10 +193,13 @@ Pair("c3.large", InsertAssoc(Pair(CostPerInterval,105), InsertAssoc( Pair(Memory
 	// Definition of the deployment components
 	cloudProvider.setInstanceDescriptions(InsertAssoc(Pair("c3.xlarge", InsertAssoc(Pair(CostPerInterval,210), InsertAssoc( Pair(Memory,750), InsertAssoc(Pair(Cores,4), EmptyMap)))), InsertAssoc( Pair("c3.large", InsertAssoc(Pair(CostPerInterval,105), InsertAssoc( Pair(Memory,375), InsertAssoc(Pair(Cores,2), EmptyMap)))), EmptyMap)));
 
+	DeploymentComponent amazon_eu = new DeploymentComponent("amazon_eu", EmptyMap);
+	DeploymentComponent amazon_us = new DeploymentComponent("amazon_us", EmptyMap);
+
 
 /* JSON ANNOTATION
 {
-	"id": "MainDeployer",
+	"id": "MainSmartDeployer",
 	"specification": "QueryServiceImpl = 2 and LoadBalancerServiceImpl > 0 and PlatformServiceImpl > 0 and ServiceProviderImpl > 0 and forall ?x in DC: ( ?x.QueryServiceImpl < 2 and ( ?x.QueryServiceImpl = 1 impl ?x.DeploymentServiceImpl > 0) and (?x.ServiceProviderImpl > 0 impl ?x.PlatformServiceImpl > 0) and ( ?x.ServiceProviderImpl > 0 impl  (sum ?y in obj:  ?x.?y) = ?x.ServiceProviderImpl + ?x.PlatformServiceImpl) and (?x.LoadBalancerServiceImpl > 0 impl (sum ?y in obj: ?x.?y) = ?x.LoadBalancerServiceImpl) and (?x.InfrastructureServiceImpl[amazon_scenario] > 0 impl  (sum ?y in obj: ?x.?y) = ?x.InfrastructureServiceImpl[amazon_scenario]))",
 	"DC": [{
 		"name": "amazon_eu",
@@ -284,51 +210,83 @@ Pair("c3.large", InsertAssoc(Pair(CostPerInterval,105), InsertAssoc( Pair(Memory
 **/
 	
 
-	[ SmartDeploy : "{\"id\":\"MainDeployer\",\"specification\":\"QueryServiceImpl = 2 and LoadBalancerServiceImpl > 0 and PlatformServiceImpl > 0 and ServiceProviderImpl > 0 and forall ?x in DC: ( ?x.QueryServiceImpl < 2 and ( ?x.QueryServiceImpl = 1 impl ?x.DeploymentServiceImpl > 0) and (?x.ServiceProviderImpl > 0 impl ?x.PlatformServiceImpl > 0) and ( ?x.ServiceProviderImpl > 0 impl  (sum ?y in obj:  ?x.?y) = ?x.ServiceProviderImpl + ?x.PlatformServiceImpl) and (?x.LoadBalancerServiceImpl > 0 impl (sum ?y in obj: ?x.?y) = ?x.LoadBalancerServiceImpl) and (?x.InfrastructureServiceImpl[amazon_scenario] > 0 impl  (sum ?y in obj: ?x.?y) = ?x.InfrastructureServiceImpl[amazon_scenario]))\",\"DC\":[{\"name\":\"amazon_eu\",\"amazon_res\":10}],\"obj\":[]}" ]
-	SmartDeployInt c1 = new MainSmartDeployer();
+	[ SmartDeploy : "{\"id\":\"MainSmartDeployer\",\"specification\":\"QueryServiceImpl = 2 and LoadBalancerServiceImpl > 0 and PlatformServiceImpl > 0 and ServiceProviderImpl > 0 and forall ?x in DC: ( ?x.QueryServiceImpl < 2 and ( ?x.QueryServiceImpl = 1 impl ?x.DeploymentServiceImpl > 0) and (?x.ServiceProviderImpl > 0 impl ?x.PlatformServiceImpl > 0) and ( ?x.ServiceProviderImpl > 0 impl  (sum ?y in obj:  ?x.?y) = ?x.ServiceProviderImpl + ?x.PlatformServiceImpl) and (?x.LoadBalancerServiceImpl > 0 impl (sum ?y in obj: ?x.?y) = ?x.LoadBalancerServiceImpl) and (?x.InfrastructureServiceImpl[amazon_scenario] > 0 impl  (sum ?y in obj: ?x.?y) = ?x.InfrastructureServiceImpl[amazon_scenario]))\",\"DC\":[{\"name\":\"amazon_eu\",\"amazon_res\":10}],\"obj\":[]}" ]
+	SmartDeployInterface c1 = new MainSmartDeployer(cloudProvider,amazon_eu);
 	c1.deploy();
+
+	List<InfrastructureService> infrastructureServices = c1.getInfrastructureService();
+	List<PlatformService> platformServices = c1.getPlatformService();
+	List<LoadBalancerService> loadBalancerServices = c1.getLoadBalancerService();
+	List<ServiceProvider> serviceProviders  = c1.getServiceProvider();
 
 
 /** JSON ANNOTATION
 {
-	"id": "MainDeployer",
-	"specification": "QueryServiceImpl = 3 and forall ?x in DC: ( ?x.QueryServiceImpl < 2 and ( ?x.QueryServiceImpl = 1 impl ?x.DeploymentServiceImpl > 0) and (?x.ServiceProviderImpl > 0 impl ?x.PlatformServiceImpl > 0) and ( ?x.ServiceProviderImpl > 0 impl  (sum ?y in obj:  ?x.?y) = ?x.ServiceProviderImpl + ?x.PlatformServiceImpl) and (?x.LoadBalancerServiceImpl > 0 impl (sum ?y in obj: ?x.?y) = ?x.LoadBalancerServiceImpl) and (?x.InfrastructureServiceImpl[amazon_scenario] > 0 impl  (sum ?y in obj: ?x.?y) = ?x.InfrastructureServiceImpl[amazon_scenario]))",
-	"DC": [{
-		"name": "amazon_us",
-		"amazon_res": 10
-	}],
-	"obj": [{
-			"name": "infrastructureObj",
-			"provides": [{
-				"ports": ["InfrastructureService"],
-				"num": 1
-			}]
-		}, {
-			"name": "platformObj",
-			"provides": [{
-				"ports": ["MonitorPlatformService", "PlatformService"],
-				"num": -1
-			}]
-		}, {
-			"name": "loadBalancerObj",
-			"provides": [{
-				"ports": ["LoadBalancerService"],
-				"num": -1
-			}]
-		}, {
-			"name": "serviceProviderObj",
-			"provides": [{
-				"ports": ["ServiceProvider"],
-				"num": -1
-			}]
-		}
-	]
+  "id": "AddQueryDeployer",
+  "specification": "QueryServiceImpl = 3 and forall ?x in DC: ( ?x.QueryServiceImpl < 2 and ( ?x.QueryServiceImpl = 1 impl ?x.DeploymentServiceImpl > 0) and (?x.ServiceProviderImpl > 0 impl ?x.PlatformServiceImpl > 0) and ( ?x.ServiceProviderImpl > 0 impl  (sum ?y in obj:  ?x.?y) = ?x.ServiceProviderImpl + ?x.PlatformServiceImpl) and (?x.LoadBalancerServiceImpl > 0 impl (sum ?y in obj: ?x.?y) = ?x.LoadBalancerServiceImpl) and (?x.InfrastructureServiceImpl[amazon_scenario] > 0 impl  (sum ?y in obj: ?x.?y) = ?x.InfrastructureServiceImpl[amazon_scenario]))",
+  "DC": [
+    {
+      "name": "amazon_us",
+      "amazon_res": 10
+    }
+  ],
+  "obj": [
+    {
+      "name": "infrastructureObj",
+      "provides": [
+        {
+          "ports": [
+            "InfrastructureService"
+          ],
+          "num": 1
+        }
+      ],
+      "interface": "InfrastructureService"
+    },
+    {
+      "name": "platformObj",
+      "provides": [
+        {
+          "ports": [
+            "MonitorPlatformService",
+            "PlatformService"
+          ],
+          "num": -1
+        }
+      ],
+      "interface": "PlatformService"
+    },
+    {
+      "name": "loadBalancerObj",
+      "provides": [
+        {
+          "ports": [
+            "LoadBalancerService"
+          ],
+          "num": -1
+        }
+      ],
+      "interface": "LoadBalancerService"
+    },
+    {
+      "name": "serviceProviderObj",
+      "provides": [
+        {
+          "ports": [
+            "ServiceProvider"
+          ],
+          "num": -1
+        }
+      ],
+      "interface": "ServiceProvider"
+    }
+  ]
 }
 **/
 
 
-	[ SmartDeploy : "{\"id\":\"MainDeployer\",\"specification\":\"QueryServiceImpl = 3 and forall ?x in DC: ( ?x.QueryServiceImpl < 2 and ( ?x.QueryServiceImpl = 1 impl ?x.DeploymentServiceImpl > 0) and (?x.ServiceProviderImpl > 0 impl ?x.PlatformServiceImpl > 0) and ( ?x.ServiceProviderImpl > 0 impl  (sum ?y in obj:  ?x.?y) = ?x.ServiceProviderImpl + ?x.PlatformServiceImpl) and (?x.LoadBalancerServiceImpl > 0 impl (sum ?y in obj: ?x.?y) = ?x.LoadBalancerServiceImpl) and (?x.InfrastructureServiceImpl[amazon_scenario] > 0 impl  (sum ?y in obj: ?x.?y) = ?x.InfrastructureServiceImpl[amazon_scenario]))\",\"DC\":[{\"name\":\"amazon_us\",\"amazon_res\":10}],\"obj\":[{\"name\":\"infrastructureObj\",\"provides\":[{\"ports\":[\"InfrastructureService\"],\"num\":1}]},{\"name\":\"platformObj\",\"provides\":[{\"ports\":[\"MonitorPlatformService\",\"PlatformService\"],\"num\":-1}]},{\"name\":\"loadBalancerObj\",\"provides\":[{\"ports\":[\"LoadBalancerService\"],\"num\":-1}]},{\"name\":\"serviceProviderObj\",\"provides\":[{\"ports\":[\"ServiceProvider\"],\"num\":-1}]}]}" ]
-	SmartDeployInt c2 = new AddQueryDeployer();
+	[ SmartDeploy : "{\"id\":\"AddQueryDeployer\",\"specification\":\"QueryServiceImpl = 3 and forall ?x in DC: ( ?x.QueryServiceImpl < 2 and ( ?x.QueryServiceImpl = 1 impl ?x.DeploymentServiceImpl > 0) and (?x.ServiceProviderImpl > 0 impl ?x.PlatformServiceImpl > 0) and ( ?x.ServiceProviderImpl > 0 impl  (sum ?y in obj:  ?x.?y) = ?x.ServiceProviderImpl + ?x.PlatformServiceImpl) and (?x.LoadBalancerServiceImpl > 0 impl (sum ?y in obj: ?x.?y) = ?x.LoadBalancerServiceImpl) and (?x.InfrastructureServiceImpl[amazon_scenario] > 0 impl  (sum ?y in obj: ?x.?y) = ?x.InfrastructureServiceImpl[amazon_scenario]))\",\"DC\":[{\"name\":\"amazon_us\",\"amazon_res\":10}],\"obj\":[{\"name\":\"infrastructureObj\",\"provides\":[{\"ports\":[\"InfrastructureService\"],\"num\":1}],\"interface\":\"InfrastructureService\"},{\"name\":\"platformObj\",\"provides\":[{\"ports\":[\"MonitorPlatformService\",\"PlatformService\"],\"num\":-1}],\"interface\":\"PlatformService\"},{\"name\":\"loadBalancerObj\",\"provides\":[{\"ports\":[\"LoadBalancerService\"],\"num\":-1}],\"interface\":\"LoadBalancerService\"},{\"name\":\"serviceProviderObj\",\"provides\":[{\"ports\":[\"ServiceProvider\"],\"num\":-1}],\"interface\":\"ServiceProvider\"}]}" ]
+	SmartDeployInterface c2 = new AddQueryDeployer(cloudProvider,amazon_us,head(infrastructureServices),head(platformServices),head(loadBalancerServices),head(serviceProviders));
 	c2.deploy();
 
 

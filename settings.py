@@ -16,3 +16,5 @@ DEFAULT_INITIAL_DC = { "___initial_DC": {
       },
       "cost": 0
     }}
+
+OBJ_PREFIX = "o"
