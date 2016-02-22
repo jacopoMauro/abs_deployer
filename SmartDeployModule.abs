@@ -1,0 +1,15 @@
+module SmartDeployModule;
+
+export *;
+
+/**************************************************************
+// Definitions needed to parse the cost annotations
+**************************************************************/
+
+data DeployParamSpecification = Req | List(Int) | Default(String) | User ;
+data DeployScenarioElement = MaxUse(Int) | Cost(String, Int) | Param(String, DeployParamSpecification) | Name(String);
+type Deploy = List<DeployScenarioElement>;
+
+type SmartDeploy = String;
+
+interface SmartDeployInterface {}

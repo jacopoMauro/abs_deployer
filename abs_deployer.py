@@ -193,86 +193,6 @@ def generate_zep_input_from_annotations(data):
   return zep
 
 
-# def generate_abs_code(data, zephyrus, metis, dep_comp, output_stream):
-#   """Generate the ABS code from the Zephyrus and Metis outputs"""
-# 
-#   class_locations = {}
-#   class_bindings = {}
-#   class_types = {}
-#   signatures = {}
-#   used_locations = {}
-# 
-#   for i in zephyrus["components"]:
-#     class_locations[i["name"]] = i["location"]
-#     used_locations[i["location"]] = 0
-#     class_types[i["name"]] = i["type"].split(settings.SEPARATOR)[1]
-#     
-#   for i in zephyrus["bindings"]:
-#     if i["requirer"] not in class_bindings:
-#       class_bindings[i["requirer"]] = {}
-#     if i["port"] not in class_bindings[i["requirer"]]:
-#       class_bindings[i["requirer"]][i["port"]] = [ i["provider"] ]
-#     else:
-#       class_bindings[i["requirer"]][i["port"]].append(i["provider"])
-# 
-#   for i in data["classes"]:
-#     for j in i["activates"]:
-#       if len(j["scenarios"]) == 0:
-#         signatures[settings.DEFAULT_SCENARIO_NAME + settings.SEPARATOR + i["name"] ] = j["sig"]
-#       else:
-#         signatures[j["scenarios"][0].upper() + settings.SEPARATOR + i["name"] ] = j["sig"]
-#   
-#   output_stream.write("{\n")  
-#   for i in zephyrus["locations"]:
-#     if i["name"] in used_locations:
-#       output_stream.write("\tDeploymentComponent " + i["name"] +
-#                         " = new DeploymentComponent(\"" + i["name"] + "\", map[")
-#       name = i["name"].split(settings.SEPARATOR)[0]
-#       res = filter( lambda x: x["name"] == name, dep_comp["DC_description"])[0]["provide_resources"]
-#       resKeys = res.keys()
-#       while len(resKeys) > 0:
-#         j = resKeys.pop()
-#         # for ABS only CPU, Memory, and Bandwidth can be used
-#         if j == "CPU" or j == "Memory" or j == "Bandwidth":
-#           output_stream.write("Pair(" + j + "," + str(res[j]) + ")")
-#           if len(resKeys) > 0:
-#             output_stream.write(", ")
-#       output_stream.write("]);\n") 
-#   
-#   for i in metis:
-#     name = i["component_name"]
-#     signature = signatures[name.split("-")[0]]
-#     output_stream.write("\t[DC: " + class_locations[name] + "] ")
-#     if len(data["hierarchy"][class_types[name]]) > 0:
-#       output_stream.write(data["hierarchy"][class_types[name]][0] +
-#                           " " + abs_id_rename(name) + " = ")
-#     output_stream.write( "new " + class_types[name] + "(")
-#     first_param = True
-#     for j in signature:
-#       if first_param:
-#         first_param = False
-#       else:
-#         output_stream.write(", ")
-#         
-#       if j["type"] == "require":
-#         output_stream.write(abs_id_rename(class_bindings[name][settings.INTERFACE_PREFIX + j["value"]].pop()))
-#       elif j["type"] == "user":
-#         output_stream.write(settings.SEPARATOR + j["value"] + settings.SEPARATOR)
-#       elif j["type"] == "default":
-#         output_stream.write(j["value"])
-#       elif j["type"] == "list":
-#         output_stream.write("list[")
-#         for _ in range(int(j["arity"])-1):
-#           output_stream.write(abs_id_rename(class_bindings[name][settings.INTERFACE_PREFIX + j["value"]].pop()) + ", ")
-#         output_stream.write(abs_id_rename(class_bindings[name][settings.INTERFACE_PREFIX + j["value"]].pop()) + "]")
-#       else:
-#         log.critical("The value " + j["value"] + " in signature not supported")
-#         log.critical("Exiting")
-#         sys.exit(1)
-#     output_stream.write(");\n")
-#   output_stream.write("}\n")
-
-
 def initialDC(annotation):
   """
   Creates a new type of DC for every initially available DC
@@ -393,7 +313,8 @@ def main(argv):
   annotation_file = "/tmp/" + pid + "_annotation.json"
   TMP_FILES = [ annotation_file ]
   proc = Popen( ["java", "-classpath", script_directory + "/absfrontend.jar",
-        "autodeploy.Tester", "-JSON=" + annotation_file, input_file],
+        "autodeploy.Tester", "-JSON=" + annotation_file, input_file,
+        script_directory + "/SmartDeployModule.abs"],
         cwd=script_directory, stdout=DEVNULL )
   proc.wait()
 
@@ -417,11 +338,9 @@ def main(argv):
   log.debug("Interfaces")
   log.debug(interface_names)
   
-  log.info("Printing common SmartDeployInterface interface")
-  code_generation.print_interface(interface_names,out_stream)
   log.info("Extract smart deployment and dc annotations")
   try:
-    (smart_dep_json, dc_json) = abs_extractor.get_annotation_from_abs(input_file)
+    (smart_dep_json, dc_json, module_name) = abs_extractor.get_annotation_from_abs(input_file)
   except ValueError:
     log.critical("Parsing error in JSON smart deployment annotations")
     log.critical("Exiting")
@@ -432,7 +351,11 @@ def main(argv):
   log.debug("DC json annotation")
   log.debug(json.dumps(dc_json, indent=1))
   
+  log.info("Printing common SmartDeployInterface interface and imports")
+  code_generation.print_interface(module_name,interface_names,out_stream)
+  
   log.info("Start generation of zephyrus json")
+  
   initial_data = generate_zep_input_from_annotations(annotation)
   (interface_to_classes,class_to_interfaces) = code_generation.get_maps_interface_class(initial_data)
   
@@ -495,7 +418,9 @@ def main(argv):
       annotation,
       dc_into_name, obj_into_name,
       out_stream)
-      
+  
+  log.info("Print producline info")
+  code_generation.print_productline(out_stream)    
   log.info("Clean.")
   clean()    
   log.info("Program Succesfully Ended")

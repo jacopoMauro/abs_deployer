@@ -4,6 +4,7 @@ Procedures to generate the code code
 
 import toposort
 import settings
+import uuid
 
 
 ################################
@@ -222,6 +223,7 @@ def print_class(smart_dep_annotation,interfaces,
   """
   Prints the class implementing the SmartDeployInt interface
   """  
+  out.write("adds ")
   print_class_signature(smart_dep_annotation,out)
   out.write("\n")
   print_list_and_get_methods(interfaces,out)
@@ -231,17 +233,32 @@ def print_class(smart_dep_annotation,interfaces,
       cost_annotations, out)
   out.write("\n")
   print_undeploy_method(interfaces,out)
-  out.write("}\n\n")
+  out.write("}\n")
 
 
-def print_interface(interfaces,out):
+def print_interface(module_name,interfaces,out):
   """
-  Prints the SmartDeployInterface interface
+  Prints the delta for modifying the SmartDeployInterface interface
   """
-  out.write("interface SmartDeployInterface {\n")
+  
+  out.write("module Delta" + uuid.uuid4().hex + ";\n")
+  out.write("import * from ABS.DC;\n")
+  out.write("import * from " + module_name + ";\n\n")
+  out.write("delta SmartDeployDelta;\n")
+  out.write("uses SmartDeployModule;\n")  
+  out.write("adds import * from " + module_name + ";\n")
+  out.write("adds import * from ABS.DC;\n")
+  out.write("modifies interface SmartDeployInterface {\n")
   for i in interfaces:
-    out.write("\tList<" + i + "> get" + i + "();\n")
-  out.write("\tList<DeploymentComponent> getDeploymentComponent();\n")
-  out.write("\tUnit deploy();\n")
-  out.write("\tUnit undeploy();\n")
-  out.write("}\n\n")
+    out.write("\tadds List<" + i + "> get" + i + "();\n")
+  out.write("\tadds List<DeploymentComponent> getDeploymentComponent();\n")
+  out.write("\tadds Unit deploy();\n")
+  out.write("\tadds Unit undeploy();\n")
+  out.write("}\n")
+
+
+def print_productline(out):
+  out.write("\nproductline SmartDeployProductLine;\n")
+  out.write("features SmartDeployFeature;\n")
+  out.write("delta SmartDeployDelta when SmartDeployFeature;\n")
+  out.write("product SmartDeploy (SmartDeployFeature);\n")

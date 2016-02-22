@@ -30,7 +30,8 @@ class MyABSVisitor(ABSVisitor):
     ABSVisitor.__init__(self)
     self.smart_dep_json = []
     self.dc_json = {}
-    
+    self.module_name = ""
+  
     
   def defaultResult(self):
     return ""
@@ -52,6 +53,13 @@ class MyABSVisitor(ABSVisitor):
     raise ABSParsingException("Erroneous Node at line "  +
             str(token.line) + ", column " + str(token.column) + ": '" + 
             str(token.text) + "'"  )
+  
+  
+  def visitModule_decl(self, ctx):
+    self.module_name = ctx.getChild(1).accept(self).strip()
+    for i in range(3,ctx.getChildCount()):
+      ctx.getChild(i).accept(self)
+    return ""
   
   
   def visitAnnotation(self, ctx):
@@ -134,7 +142,7 @@ def get_annotation_from_abs(abs_program_file):
   tree = parser.goal()
   visitor = MyABSVisitor()
   visitor.visit(tree)
-  return (visitor.smart_dep_json, visitor.dc_json)
+  return (visitor.smart_dep_json, visitor.dc_json, visitor.module_name)
   
 
 def main(argv):
