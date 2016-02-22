@@ -315,7 +315,7 @@ def main(argv):
   proc = Popen( ["java", "-classpath", script_directory + "/absfrontend.jar",
         "autodeploy.Tester", "-JSON=" + annotation_file, input_file,
         script_directory + "/SmartDeployModule.abs"],
-        cwd=script_directory, stdout=DEVNULL )
+        cwd=script_directory, stdout=DEVNULL, stderr=DEVNULL )
   proc.wait()
 
   if not os.path.isfile(annotation_file): 
