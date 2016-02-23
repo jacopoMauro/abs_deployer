@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2016, Jacopo Mauro. All rights reserved. 
+ * This file is licensed under the terms of the ISC License.
+ */
+
 grammar DeclSpecLanguage;
 
 // To generate files run antlr4 -Dlanguage=Python2 -visitor -no-listener

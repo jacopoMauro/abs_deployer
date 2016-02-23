@@ -1,6 +1,16 @@
 """
+decl_spec_lang.py:
+
 Usage: abs_extractor <abs_program>
 """
+__author__ = "Jacopo Mauro"
+__copyright__ = "Copyright 2016, Jacopo Mauro"
+__license__ = "ISC"
+__version__ = "0.1"
+__maintainer__ = "Jacopo Mauro"
+__email__ = "mauro.jacopo@gmail.com"
+__status__ = "Prototype"
+
 from antlr4 import *
 from DeclSpecLanguageLexer import DeclSpecLanguageLexer
 from DeclSpecLanguageParser import DeclSpecLanguageParser

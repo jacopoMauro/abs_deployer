@@ -1,6 +1,13 @@
 '''
-Procedures to generate the code code
+code_generation.py: Procedures to generate the code code
 '''
+__author__ = "Jacopo Mauro"
+__copyright__ = "Copyright 2016, Jacopo Mauro"
+__license__ = "ISC"
+__version__ = "0.1"
+__maintainer__ = "Jacopo Mauro"
+__email__ = "mauro.jacopo@gmail.com"
+__status__ = "Prototype"
 
 import toposort
 import settings

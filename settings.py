@@ -1,3 +1,14 @@
+"""
+settings.py: file containing some variables used by other modules 
+"""
+__author__ = "Jacopo Mauro"
+__copyright__ = "Copyright 2016, Jacopo Mauro"
+__license__ = "ISC"
+__version__ = "0.1"
+__maintainer__ = "Jacopo Mauro"
+__email__ = "mauro.jacopo@gmail.com"
+__status__ = "Prototype"
+
 SEPARATOR = "___"
 
 #default scenario name

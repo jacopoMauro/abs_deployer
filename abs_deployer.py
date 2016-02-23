@@ -1,4 +1,6 @@
 """
+abs_deployer.py:
+
 Usage: abs_deployer.py [<options>] <abs program file>
   Options:
     -o, --ofile: file where to save the output
@@ -20,6 +22,14 @@ Requirements:
   
   The absfrontend.jar should be in CLASSPATH  
 """
+__author__ = "Jacopo Mauro"
+__copyright__ = "Copyright 2016, Jacopo Mauro"
+__license__ = "ISC"
+__version__ = "0.1"
+__maintainer__ = "Jacopo Mauro"
+__email__ = "mauro.jacopo@gmail.com"
+__status__ = "Prototype"
+
 
 # TODO: error if cycle is detected
 # TODO: error if no solution if found
