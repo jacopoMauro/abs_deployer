@@ -22,6 +22,7 @@ Requirements:
 """
 
 # TODO: error if cycle is detected
+# TODO: error if no solution if found
 
 
 import json

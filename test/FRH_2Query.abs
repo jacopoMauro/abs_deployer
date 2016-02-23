@@ -176,15 +176,10 @@ class QueryServiceImpl(DeploymentService ds, Customer c) implements IQueryServic
 
 {
 
-/** Deployment component types that can be used
-Pair("c3.xlarge", InsertAssoc(Pair(CostPerInterval,210), InsertAssoc( Pair(Memory,750), InsertAssoc(Pair(Cores,4), EmptyMap))))
-Pair("c3.large", InsertAssoc(Pair(CostPerInterval,105), InsertAssoc( Pair(Memory,375), InsertAssoc(Pair(Cores,2), EmptyMap))))
-**/
-
-
 	CloudProvider cloudProvider = new CloudProvider("CloudProvider");
 	// Definition of the deployment components
-	cloudProvider.setInstanceDescriptions(InsertAssoc(Pair("c3.xlarge", InsertAssoc(Pair(CostPerInterval,210), InsertAssoc( Pair(Memory,750), InsertAssoc(Pair(Cores,4), EmptyMap)))), InsertAssoc( Pair("c3.large", InsertAssoc(Pair(CostPerInterval,105), InsertAssoc( Pair(Memory,375), InsertAssoc(Pair(Cores,2), EmptyMap)))), EmptyMap)));
+	cloudProvider.addInstanceDescription(Pair("c3.xlarge", InsertAssoc(Pair(CostPerInterval,210), InsertAssoc( Pair(Memory,750), InsertAssoc(Pair(Cores,4), EmptyMap)))));
+	cloudProvider.addInstanceDescription(Pair("c3.large", InsertAssoc(Pair(CostPerInterval,105), InsertAssoc( Pair(Memory,375), InsertAssoc(Pair(Cores,2), EmptyMap)))));
 
 	DeploymentComponent amazon_eu = new DeploymentComponent("amazon_eu", EmptyMap);
 	DeploymentComponent amazon_us = new DeploymentComponent("amazon_us", EmptyMap);

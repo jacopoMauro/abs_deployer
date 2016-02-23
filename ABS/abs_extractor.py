@@ -79,14 +79,14 @@ class MyABSVisitor(ABSVisitor):
     Try to find synccall with name setInstanceDescriptions to get the DC
     specification.
     """
-    if ctx.getChild(2).accept(self).strip() == "setInstanceDescriptions":
-      cloud_name = ctx.getChild(0).accept(self).strip()
+    # TODO: handle removeInstanceDescription method
+    method_name = ctx.getChild(2).accept(self).strip()
+    if method_name == "setInstanceDescriptions":
       params = ctx.getChild(4).accept(self)[0]
       try:
         data = json.loads(params)
       except ValueError:
-        raise ABSParsingException("CloudProvider parsing failed")
-      
+        raise ABSParsingException("CloudProvider parsing failed")      
       # example JSON from parser
       # [{"c3.xlarge": [{"CostPerInterval": 210},{"Memory": 750}]}]
       # transformed into JSON for Zephyrus "locations" : XXX
@@ -102,6 +102,25 @@ class MyABSVisitor(ABSVisitor):
                 self.dc_json[j]["cost"] = k[h]
               else:
                 self.dc_json[j]["resources"][h] = k[h]
+    elif method_name == "addInstanceDescription":
+      params = ctx.getChild(4).accept(self)[0]
+      try:
+        data = json.loads(params)
+      except ValueError:
+        raise ABSParsingException("CloudProvider parsing failed")
+      # example JSON from parser
+      # {'c3.xlarge': [{'CostPerInterval': 210}, {'Memory': 750}, {'Cores': 4}]}
+      for i in data.keys():
+        self.dc_json[i] = {
+                  "num": settings.DEFAULT_NUMBER_OF_DC,
+                  "resources": {},
+                  "cost":0 }
+        for j in data[i]:
+          for k in j.keys():
+            if k == "CostPerInterval":
+              self.dc_json[i]["cost"] = j[k]
+            else:
+              self.dc_json[i]["resources"][k] = j[k]
     return ""
   
   
