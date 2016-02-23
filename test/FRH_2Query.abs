@@ -193,12 +193,13 @@ class QueryServiceImpl(DeploymentService ds, Customer c) implements IQueryServic
 		"name": "amazon_eu",
 		"amazon_res": 10
 	}],
-	"obj": []
+	"obj": [],
+	"cloud_provider_DC_availability" : { "c3.large" : 3}
 }
 **/
 	
 
-	[ SmartDeploy : "{\"id\":\"MainSmartDeployer\",\"specification\":\"QueryServiceImpl = 2 and LoadBalancerServiceImpl > 0 and PlatformServiceImpl > 0 and ServiceProviderImpl > 0 and forall ?x in DC: ( ?x.QueryServiceImpl < 2 and ( ?x.QueryServiceImpl = 1 impl ?x.DeploymentServiceImpl > 0) and (?x.ServiceProviderImpl > 0 impl ?x.PlatformServiceImpl > 0) and ( ?x.ServiceProviderImpl > 0 impl  (sum ?y in obj:  ?x.?y) = ?x.ServiceProviderImpl + ?x.PlatformServiceImpl) and (?x.LoadBalancerServiceImpl > 0 impl (sum ?y in obj: ?x.?y) = ?x.LoadBalancerServiceImpl) and (?x.InfrastructureServiceImpl[amazon_scenario] > 0 impl  (sum ?y in obj: ?x.?y) = ?x.InfrastructureServiceImpl[amazon_scenario]))\",\"DC\":[{\"name\":\"amazon_eu\",\"amazon_res\":10}],\"obj\":[]}" ]
+	[ SmartDeploy : "{\"id\":\"MainSmartDeployer\",\"specification\":\"QueryServiceImpl = 2 and LoadBalancerServiceImpl > 0 and PlatformServiceImpl > 0 and ServiceProviderImpl > 0 and forall ?x in DC: ( ?x.QueryServiceImpl < 2 and ( ?x.QueryServiceImpl = 1 impl ?x.DeploymentServiceImpl > 0) and (?x.ServiceProviderImpl > 0 impl ?x.PlatformServiceImpl > 0) and ( ?x.ServiceProviderImpl > 0 impl  (sum ?y in obj:  ?x.?y) = ?x.ServiceProviderImpl + ?x.PlatformServiceImpl) and (?x.LoadBalancerServiceImpl > 0 impl (sum ?y in obj: ?x.?y) = ?x.LoadBalancerServiceImpl) and (?x.InfrastructureServiceImpl[amazon_scenario] > 0 impl  (sum ?y in obj: ?x.?y) = ?x.InfrastructureServiceImpl[amazon_scenario]))\",\"DC\":[{\"name\":\"amazon_eu\",\"amazon_res\":10}],\"obj\":[],\"cloud_provider_DC_availability\":{\"c3.large\":3}}" ]
 	SmartDeployInterface c1 = new MainSmartDeployer(cloudProvider,amazon_eu);
 	c1.deploy();
 

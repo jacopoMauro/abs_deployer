@@ -222,6 +222,20 @@ def initialDC(annotation):
   return (zep, dc_into_name, name_into_dc)  
 
 
+def replace_default_cloud_provider_DC(data,smart_annotation):
+  """
+  Rewrites the number of DC if the users does not want to use the 
+  DEFAULT_NUMBER_OF_DC
+  """
+  if "cloud_provider_DC_availability" in smart_annotation:
+    for i in smart_annotation["cloud_provider_DC_availability"].keys():
+      if i not in data["locations"]:
+            log.critical("The DC " + i + " defined in the smart annotation has not been found")
+            log.critical("Exiting")
+            sys.exit(1)
+      data["locations"][i]["num"] = smart_annotation["cloud_provider_DC_availability"][i]
+      log.debug("Reset number of DC for " + i)
+
 def initialObjects(annotation):
   """
   Creates a new type of obj for every initially available obj
@@ -371,6 +385,9 @@ def main(argv):
     log.info("Adding new DC")
     newDC, dc_into_name, name_into_dc =  initialDC(i)
     data["locations"].update(newDC)
+    
+    log.info("Replace default number of DC if specified")
+    replace_default_cloud_provider_DC(data,i)
     
     log.info("Adding new obj")
     newObj, obj_into_name, name_into_obj =  initialObjects(i)
