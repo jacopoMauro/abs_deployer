@@ -408,7 +408,7 @@ def main(argv):
                 InputStream(i["specification"]),name_into_dc,name_into_obj)
     
     log.debug("Zephyrus input")
-    log.debug(json.dumps(data,indent=1))    
+    log.debug(json.dumps(data,indent=1))
     zephyrus_in_file = "/tmp/" + pid + i["id"] + "_zep_input.json"
     TMP_FILES.append(zephyrus_in_file)
     with open(zephyrus_in_file, 'w') as f:

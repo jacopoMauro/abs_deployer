@@ -8,7 +8,7 @@ grammar DeclSpecLanguage;
 // To generate files run antlr4 -Dlanguage=Python2 -visitor -no-listener
 
 
-statement : b_expr ;
+statement : b_expr EOF;
 
 b_expr : b_term (bool_binary_op b_term )* ;
 
@@ -25,7 +25,8 @@ term :
   INT                                                 # AtermInt |
   objId                                               # AtermId |
   dcId '.' objId                                      # AtermDCObj |
-  SUM variable 'in' typeV ':' expr                    # AtermSum |  
+  SUM variable 'in' typeV ':' expr                    # AtermSum |
+  arith_unary_op expr                                 # AexprUnaryArithmetic |  
   '(' b_expr ')'                                      # AtermBrackets ;
 
 typeV : OBJ | DC | ID;
@@ -47,6 +48,7 @@ variable : VARIABLE   # Avariable;
 	
 bool_binary_op : AND | OR | IMPL | IFF ;
 arith_binary_op : PLUS | MINUS | TIMES ;
+arith_unary_op : ABS ;
 
 comparison_op : LEQ | EQ | GEQ | LT | GT | NEQ;
 unaryOp : NOT;
@@ -74,7 +76,7 @@ NEQ : '!=';
 PLUS : '+';
 MINUS : '-';
 TIMES : '*';
-
+ABS : 'abs';
 
 OBJ: 'obj';
 DC: 'DC';

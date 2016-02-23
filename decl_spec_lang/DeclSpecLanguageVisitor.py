@@ -60,6 +60,11 @@ class DeclSpecLanguageVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by DeclSpecLanguageParser#AexprUnaryArithmetic.
+    def visitAexprUnaryArithmetic(self, ctx):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by DeclSpecLanguageParser#AtermBrackets.
     def visitAtermBrackets(self, ctx):
         return self.visitChildren(ctx)
@@ -112,6 +117,11 @@ class DeclSpecLanguageVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by DeclSpecLanguageParser#arith_binary_op.
     def visitArith_binary_op(self, ctx):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by DeclSpecLanguageParser#arith_unary_op.
+    def visitArith_unary_op(self, ctx):
         return self.visitChildren(ctx)
 
 

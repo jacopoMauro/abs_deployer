@@ -7,44 +7,48 @@ from io import StringIO
 def serializedATN():
     with StringIO() as buf:
         buf.write(u"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3")
-        buf.write(u"#~\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4")
-        buf.write(u"\b\t\b\4\t\t\t\4\n\t\n\4\13\t\13\4\f\t\f\4\r\t\r\4\16")
-        buf.write(u"\t\16\4\17\t\17\4\20\t\20\4\21\t\21\3\2\3\2\3\3\3\3\3")
-        buf.write(u"\3\3\3\7\3)\n\3\f\3\16\3,\13\3\3\4\5\4/\n\4\3\4\3\4\3")
-        buf.write(u"\5\3\5\5\5\65\n\5\3\6\3\6\3\6\3\6\5\6;\n\6\3\7\3\7\3")
-        buf.write(u"\7\3\7\7\7A\n\7\f\7\16\7D\13\7\3\b\3\b\3\b\3\b\3\b\3")
+        buf.write(u"$\u0086\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t")
+        buf.write(u"\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t\13\4\f\t\f\4\r\t\r")
+        buf.write(u"\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22\3")
+        buf.write(u"\2\3\2\3\2\3\3\3\3\3\3\3\3\7\3,\n\3\f\3\16\3/\13\3\3")
+        buf.write(u"\4\5\4\62\n\4\3\4\3\4\3\5\3\5\5\58\n\5\3\6\3\6\3\6\3")
+        buf.write(u"\6\5\6>\n\6\3\7\3\7\3\7\3\7\7\7D\n\7\f\7\16\7G\13\7\3")
         buf.write(u"\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3")
-        buf.write(u"\b\3\b\3\b\3\b\3\b\3\b\5\b^\n\b\3\t\3\t\3\n\3\n\3\n\3")
-        buf.write(u"\n\3\n\3\n\5\nh\n\n\3\13\3\13\3\13\3\13\3\13\3\13\5\13")
-        buf.write(u"p\n\13\3\f\3\f\3\r\3\r\3\16\3\16\3\17\3\17\3\20\3\20")
-        buf.write(u"\3\21\3\21\3\21\2\2\22\2\4\6\b\n\f\16\20\22\24\26\30")
-        buf.write(u"\32\34\36 \2\7\3\2\21\22\4\2\36\37!!\4\2\n\13\17\20\3")
-        buf.write(u"\2\33\35\3\2\25\32{\2\"\3\2\2\2\4$\3\2\2\2\6.\3\2\2\2")
-        buf.write(u"\b\64\3\2\2\2\n\66\3\2\2\2\f<\3\2\2\2\16]\3\2\2\2\20")
-        buf.write(u"_\3\2\2\2\22g\3\2\2\2\24o\3\2\2\2\26q\3\2\2\2\30s\3\2")
-        buf.write(u"\2\2\32u\3\2\2\2\34w\3\2\2\2\36y\3\2\2\2 {\3\2\2\2\"")
-        buf.write(u"#\5\4\3\2#\3\3\2\2\2$*\5\6\4\2%&\5\30\r\2&\'\5\6\4\2")
-        buf.write(u"\')\3\2\2\2(%\3\2\2\2),\3\2\2\2*(\3\2\2\2*+\3\2\2\2+")
-        buf.write(u"\5\3\2\2\2,*\3\2\2\2-/\5\36\20\2.-\3\2\2\2./\3\2\2\2")
-        buf.write(u"/\60\3\2\2\2\60\61\5\b\5\2\61\7\3\2\2\2\62\65\5 \21\2")
-        buf.write(u"\63\65\5\n\6\2\64\62\3\2\2\2\64\63\3\2\2\2\65\t\3\2\2")
-        buf.write(u"\2\66:\5\f\7\2\678\5\34\17\289\5\f\7\29;\3\2\2\2:\67")
-        buf.write(u"\3\2\2\2:;\3\2\2\2;\13\3\2\2\2<B\5\16\b\2=>\5\32\16\2")
-        buf.write(u">?\5\16\b\2?A\3\2\2\2@=\3\2\2\2AD\3\2\2\2B@\3\2\2\2B")
-        buf.write(u"C\3\2\2\2C\r\3\2\2\2DB\3\2\2\2EF\t\2\2\2FG\5\26\f\2G")
-        buf.write(u"H\7\3\2\2HI\5\20\t\2IJ\7\4\2\2JK\5\4\3\2K^\3\2\2\2L^")
-        buf.write(u"\7\"\2\2M^\5\24\13\2NO\5\22\n\2OP\7\5\2\2PQ\5\24\13\2")
-        buf.write(u"Q^\3\2\2\2RS\7\23\2\2ST\5\26\f\2TU\7\3\2\2UV\5\20\t\2")
-        buf.write(u"VW\7\4\2\2WX\5\f\7\2X^\3\2\2\2YZ\7\6\2\2Z[\5\4\3\2[\\")
-        buf.write(u"\7\7\2\2\\^\3\2\2\2]E\3\2\2\2]L\3\2\2\2]M\3\2\2\2]N\3")
-        buf.write(u"\2\2\2]R\3\2\2\2]Y\3\2\2\2^\17\3\2\2\2_`\t\3\2\2`\21")
-        buf.write(u"\3\2\2\2ah\7!\2\2bh\5\26\f\2cd\7!\2\2de\7\b\2\2ef\7\"")
-        buf.write(u"\2\2fh\7\t\2\2ga\3\2\2\2gb\3\2\2\2gc\3\2\2\2h\23\3\2")
-        buf.write(u"\2\2ip\7!\2\2jp\5\26\f\2kl\7!\2\2lm\7\b\2\2mn\7!\2\2")
-        buf.write(u"np\7\t\2\2oi\3\2\2\2oj\3\2\2\2ok\3\2\2\2p\25\3\2\2\2")
-        buf.write(u"qr\7 \2\2r\27\3\2\2\2st\t\4\2\2t\31\3\2\2\2uv\t\5\2\2")
-        buf.write(u"v\33\3\2\2\2wx\t\6\2\2x\35\3\2\2\2yz\7\f\2\2z\37\3\2")
-        buf.write(u"\2\2{|\7\r\2\2|!\3\2\2\2\n*.\64:B]go")
+        buf.write(u"\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3")
+        buf.write(u"\b\5\bd\n\b\3\t\3\t\3\n\3\n\3\n\3\n\3\n\3\n\5\nn\n\n")
+        buf.write(u"\3\13\3\13\3\13\3\13\3\13\3\13\5\13v\n\13\3\f\3\f\3\r")
+        buf.write(u"\3\r\3\16\3\16\3\17\3\17\3\20\3\20\3\21\3\21\3\22\3\22")
+        buf.write(u"\3\22\2\2\23\2\4\6\b\n\f\16\20\22\24\26\30\32\34\36 ")
+        buf.write(u"\"\2\7\3\2\21\22\4\2\37 \"\"\4\2\n\13\17\20\3\2\33\35")
+        buf.write(u"\3\2\25\32\u0083\2$\3\2\2\2\4\'\3\2\2\2\6\61\3\2\2\2")
+        buf.write(u"\b\67\3\2\2\2\n9\3\2\2\2\f?\3\2\2\2\16c\3\2\2\2\20e\3")
+        buf.write(u"\2\2\2\22m\3\2\2\2\24u\3\2\2\2\26w\3\2\2\2\30y\3\2\2")
+        buf.write(u"\2\32{\3\2\2\2\34}\3\2\2\2\36\177\3\2\2\2 \u0081\3\2")
+        buf.write(u"\2\2\"\u0083\3\2\2\2$%\5\4\3\2%&\7\2\2\3&\3\3\2\2\2\'")
+        buf.write(u"-\5\6\4\2()\5\30\r\2)*\5\6\4\2*,\3\2\2\2+(\3\2\2\2,/")
+        buf.write(u"\3\2\2\2-+\3\2\2\2-.\3\2\2\2.\5\3\2\2\2/-\3\2\2\2\60")
+        buf.write(u"\62\5 \21\2\61\60\3\2\2\2\61\62\3\2\2\2\62\63\3\2\2\2")
+        buf.write(u"\63\64\5\b\5\2\64\7\3\2\2\2\658\5\"\22\2\668\5\n\6\2")
+        buf.write(u"\67\65\3\2\2\2\67\66\3\2\2\28\t\3\2\2\29=\5\f\7\2:;\5")
+        buf.write(u"\36\20\2;<\5\f\7\2<>\3\2\2\2=:\3\2\2\2=>\3\2\2\2>\13")
+        buf.write(u"\3\2\2\2?E\5\16\b\2@A\5\32\16\2AB\5\16\b\2BD\3\2\2\2")
+        buf.write(u"C@\3\2\2\2DG\3\2\2\2EC\3\2\2\2EF\3\2\2\2F\r\3\2\2\2G")
+        buf.write(u"E\3\2\2\2HI\t\2\2\2IJ\5\26\f\2JK\7\3\2\2KL\5\20\t\2L")
+        buf.write(u"M\7\4\2\2MN\5\4\3\2Nd\3\2\2\2Od\7#\2\2Pd\5\24\13\2QR")
+        buf.write(u"\5\22\n\2RS\7\5\2\2ST\5\24\13\2Td\3\2\2\2UV\7\23\2\2")
+        buf.write(u"VW\5\26\f\2WX\7\3\2\2XY\5\20\t\2YZ\7\4\2\2Z[\5\f\7\2")
+        buf.write(u"[d\3\2\2\2\\]\5\34\17\2]^\5\f\7\2^d\3\2\2\2_`\7\6\2\2")
+        buf.write(u"`a\5\4\3\2ab\7\7\2\2bd\3\2\2\2cH\3\2\2\2cO\3\2\2\2cP")
+        buf.write(u"\3\2\2\2cQ\3\2\2\2cU\3\2\2\2c\\\3\2\2\2c_\3\2\2\2d\17")
+        buf.write(u"\3\2\2\2ef\t\3\2\2f\21\3\2\2\2gn\7\"\2\2hn\5\26\f\2i")
+        buf.write(u"j\7\"\2\2jk\7\b\2\2kl\7#\2\2ln\7\t\2\2mg\3\2\2\2mh\3")
+        buf.write(u"\2\2\2mi\3\2\2\2n\23\3\2\2\2ov\7\"\2\2pv\5\26\f\2qr\7")
+        buf.write(u"\"\2\2rs\7\b\2\2st\7\"\2\2tv\7\t\2\2uo\3\2\2\2up\3\2")
+        buf.write(u"\2\2uq\3\2\2\2v\25\3\2\2\2wx\7!\2\2x\27\3\2\2\2yz\t\4")
+        buf.write(u"\2\2z\31\3\2\2\2{|\t\5\2\2|\33\3\2\2\2}~\7\36\2\2~\35")
+        buf.write(u"\3\2\2\2\177\u0080\t\6\2\2\u0080\37\3\2\2\2\u0081\u0082")
+        buf.write(u"\7\f\2\2\u0082!\3\2\2\2\u0083\u0084\7\r\2\2\u0084#\3")
+        buf.write(u"\2\2\2\n-\61\67=Ecmu")
         return buf.getvalue()
 
 
@@ -62,16 +66,16 @@ class DeclSpecLanguageParser ( Parser ):
                      u"'['", u"']'", u"'and'", u"'or'", u"'not'", u"'true'", 
                      u"'false'", u"'impl'", u"'iff'", u"'exists'", u"'forall'", 
                      u"'sum'", u"'cost'", u"'<='", u"'='", u"'>='", u"'<'", 
-                     u"'>'", u"'!='", u"'+'", u"'-'", u"'*'", u"'obj'", 
-                     u"'DC'" ]
+                     u"'>'", u"'!='", u"'+'", u"'-'", u"'*'", u"'abs'", 
+                     u"'obj'", u"'DC'" ]
 
     symbolicNames = [ u"<INVALID>", u"<INVALID>", u"<INVALID>", u"<INVALID>", 
                       u"<INVALID>", u"<INVALID>", u"<INVALID>", u"<INVALID>", 
                       u"AND", u"OR", u"NOT", u"TRUE", u"FALSE", u"IMPL", 
                       u"IFF", u"EXISTS", u"FORALL", u"SUM", u"COST", u"LEQ", 
                       u"EQ", u"GEQ", u"LT", u"GT", u"NEQ", u"PLUS", u"MINUS", 
-                      u"TIMES", u"OBJ", u"DC", u"VARIABLE", u"ID", u"INT", 
-                      u"WS" ]
+                      u"TIMES", u"ABS", u"OBJ", u"DC", u"VARIABLE", u"ID", 
+                      u"INT", u"WS" ]
 
     RULE_statement = 0
     RULE_b_expr = 1
@@ -86,14 +90,15 @@ class DeclSpecLanguageParser ( Parser ):
     RULE_variable = 10
     RULE_bool_binary_op = 11
     RULE_arith_binary_op = 12
-    RULE_comparison_op = 13
-    RULE_unaryOp = 14
-    RULE_boolFact = 15
+    RULE_arith_unary_op = 13
+    RULE_comparison_op = 14
+    RULE_unaryOp = 15
+    RULE_boolFact = 16
 
     ruleNames =  [ u"statement", u"b_expr", u"b_term", u"b_factor", u"relation", 
                    u"expr", u"term", u"typeV", u"dcId", u"objId", u"variable", 
-                   u"bool_binary_op", u"arith_binary_op", u"comparison_op", 
-                   u"unaryOp", u"boolFact" ]
+                   u"bool_binary_op", u"arith_binary_op", u"arith_unary_op", 
+                   u"comparison_op", u"unaryOp", u"boolFact" ]
 
     EOF = Token.EOF
     T__0=1
@@ -123,12 +128,13 @@ class DeclSpecLanguageParser ( Parser ):
     PLUS=25
     MINUS=26
     TIMES=27
-    OBJ=28
-    DC=29
-    VARIABLE=30
-    ID=31
-    INT=32
-    WS=33
+    ABS=28
+    OBJ=29
+    DC=30
+    VARIABLE=31
+    ID=32
+    INT=33
+    WS=34
 
     def __init__(self, input):
         super(DeclSpecLanguageParser, self).__init__(input)
@@ -148,6 +154,9 @@ class DeclSpecLanguageParser ( Parser ):
             return self.getTypedRuleContext(DeclSpecLanguageParser.B_exprContext,0)
 
 
+        def EOF(self):
+            return self.getToken(DeclSpecLanguageParser.EOF, 0)
+
         def getRuleIndex(self):
             return DeclSpecLanguageParser.RULE_statement
 
@@ -166,8 +175,10 @@ class DeclSpecLanguageParser ( Parser ):
         self.enterRule(localctx, 0, self.RULE_statement)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 32
+            self.state = 34
             self.b_expr()
+            self.state = 35
+            self.match(DeclSpecLanguageParser.EOF)
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -214,18 +225,18 @@ class DeclSpecLanguageParser ( Parser ):
         self.enterRule(localctx, 2, self.RULE_b_expr)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 34
+            self.state = 37
             self.b_term()
-            self.state = 40
+            self.state = 43
             self._errHandler.sync(self)
             _alt = self._interp.adaptivePredict(self._input,0,self._ctx)
             while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
                 if _alt==1:
-                    self.state = 35
+                    self.state = 38
                     self.bool_binary_op()
-                    self.state = 36
+                    self.state = 39
                     self.b_term() 
-                self.state = 42
+                self.state = 45
                 self._errHandler.sync(self)
                 _alt = self._interp.adaptivePredict(self._input,0,self._ctx)
 
@@ -270,14 +281,14 @@ class DeclSpecLanguageParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 44
+            self.state = 47
             _la = self._input.LA(1)
             if _la==DeclSpecLanguageParser.NOT:
-                self.state = 43
+                self.state = 46
                 self.unaryOp()
 
 
-            self.state = 46
+            self.state = 49
             self.b_factor()
         except RecognitionException as re:
             localctx.exception = re
@@ -318,16 +329,16 @@ class DeclSpecLanguageParser ( Parser ):
         localctx = DeclSpecLanguageParser.B_factorContext(self, self._ctx, self.state)
         self.enterRule(localctx, 6, self.RULE_b_factor)
         try:
-            self.state = 50
+            self.state = 53
             token = self._input.LA(1)
             if token in [DeclSpecLanguageParser.TRUE]:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 48
+                self.state = 51
                 self.boolFact()
 
-            elif token in [DeclSpecLanguageParser.T__3, DeclSpecLanguageParser.EXISTS, DeclSpecLanguageParser.FORALL, DeclSpecLanguageParser.SUM, DeclSpecLanguageParser.VARIABLE, DeclSpecLanguageParser.ID, DeclSpecLanguageParser.INT]:
+            elif token in [DeclSpecLanguageParser.T__3, DeclSpecLanguageParser.EXISTS, DeclSpecLanguageParser.FORALL, DeclSpecLanguageParser.SUM, DeclSpecLanguageParser.ABS, DeclSpecLanguageParser.VARIABLE, DeclSpecLanguageParser.ID, DeclSpecLanguageParser.INT]:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 49
+                self.state = 52
                 self.relation()
 
             else:
@@ -376,14 +387,14 @@ class DeclSpecLanguageParser ( Parser ):
         self.enterRule(localctx, 8, self.RULE_relation)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 52
+            self.state = 55
             self.expr()
-            self.state = 56
+            self.state = 59
             la_ = self._interp.adaptivePredict(self._input,3,self._ctx)
             if la_ == 1:
-                self.state = 53
+                self.state = 56
                 self.comparison_op()
-                self.state = 54
+                self.state = 57
                 self.expr()
 
 
@@ -433,18 +444,18 @@ class DeclSpecLanguageParser ( Parser ):
         self.enterRule(localctx, 10, self.RULE_expr)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 58
+            self.state = 61
             self.term()
-            self.state = 64
+            self.state = 67
             self._errHandler.sync(self)
             _alt = self._interp.adaptivePredict(self._input,4,self._ctx)
             while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
                 if _alt==1:
-                    self.state = 59
+                    self.state = 62
                     self.arith_binary_op()
-                    self.state = 60
+                    self.state = 63
                     self.term() 
-                self.state = 66
+                self.state = 69
                 self._errHandler.sync(self)
                 _alt = self._interp.adaptivePredict(self._input,4,self._ctx)
 
@@ -569,6 +580,26 @@ class DeclSpecLanguageParser ( Parser ):
                 return visitor.visitChildren(self)
 
 
+    class AexprUnaryArithmeticContext(TermContext):
+
+        def __init__(self, parser, ctx): # actually a DeclSpecLanguageParser.TermContext)
+            super(DeclSpecLanguageParser.AexprUnaryArithmeticContext, self).__init__(parser)
+            self.copyFrom(ctx)
+
+        def arith_unary_op(self):
+            return self.getTypedRuleContext(DeclSpecLanguageParser.Arith_unary_opContext,0)
+
+        def expr(self):
+            return self.getTypedRuleContext(DeclSpecLanguageParser.ExprContext,0)
+
+
+        def accept(self, visitor):
+            if hasattr(visitor, "visitAexprUnaryArithmetic"):
+                return visitor.visitAexprUnaryArithmetic(self)
+            else:
+                return visitor.visitChildren(self)
+
+
     class AtermSumContext(TermContext):
 
         def __init__(self, parser, ctx): # actually a DeclSpecLanguageParser.TermContext)
@@ -601,79 +632,88 @@ class DeclSpecLanguageParser ( Parser ):
         self.enterRule(localctx, 12, self.RULE_term)
         self._la = 0 # Token type
         try:
-            self.state = 91
+            self.state = 97
             la_ = self._interp.adaptivePredict(self._input,5,self._ctx)
             if la_ == 1:
                 localctx = DeclSpecLanguageParser.AtermQuantifierContext(self, localctx)
                 self.enterOuterAlt(localctx, 1)
-                self.state = 67
+                self.state = 70
                 _la = self._input.LA(1)
                 if not(_la==DeclSpecLanguageParser.EXISTS or _la==DeclSpecLanguageParser.FORALL):
                     self._errHandler.recoverInline(self)
                 else:
                     self.consume()
-                self.state = 68
-                self.variable()
-                self.state = 69
-                self.match(DeclSpecLanguageParser.T__0)
-                self.state = 70
-                self.typeV()
                 self.state = 71
-                self.match(DeclSpecLanguageParser.T__1)
+                self.variable()
                 self.state = 72
+                self.match(DeclSpecLanguageParser.T__0)
+                self.state = 73
+                self.typeV()
+                self.state = 74
+                self.match(DeclSpecLanguageParser.T__1)
+                self.state = 75
                 self.b_expr()
                 pass
 
             elif la_ == 2:
                 localctx = DeclSpecLanguageParser.AtermIntContext(self, localctx)
                 self.enterOuterAlt(localctx, 2)
-                self.state = 74
+                self.state = 77
                 self.match(DeclSpecLanguageParser.INT)
                 pass
 
             elif la_ == 3:
                 localctx = DeclSpecLanguageParser.AtermIdContext(self, localctx)
                 self.enterOuterAlt(localctx, 3)
-                self.state = 75
+                self.state = 78
                 self.objId()
                 pass
 
             elif la_ == 4:
                 localctx = DeclSpecLanguageParser.AtermDCObjContext(self, localctx)
                 self.enterOuterAlt(localctx, 4)
-                self.state = 76
+                self.state = 79
                 self.dcId()
-                self.state = 77
+                self.state = 80
                 self.match(DeclSpecLanguageParser.T__2)
-                self.state = 78
+                self.state = 81
                 self.objId()
                 pass
 
             elif la_ == 5:
                 localctx = DeclSpecLanguageParser.AtermSumContext(self, localctx)
                 self.enterOuterAlt(localctx, 5)
-                self.state = 80
-                self.match(DeclSpecLanguageParser.SUM)
-                self.state = 81
-                self.variable()
-                self.state = 82
-                self.match(DeclSpecLanguageParser.T__0)
                 self.state = 83
-                self.typeV()
+                self.match(DeclSpecLanguageParser.SUM)
                 self.state = 84
-                self.match(DeclSpecLanguageParser.T__1)
+                self.variable()
                 self.state = 85
+                self.match(DeclSpecLanguageParser.T__0)
+                self.state = 86
+                self.typeV()
+                self.state = 87
+                self.match(DeclSpecLanguageParser.T__1)
+                self.state = 88
                 self.expr()
                 pass
 
             elif la_ == 6:
-                localctx = DeclSpecLanguageParser.AtermBracketsContext(self, localctx)
+                localctx = DeclSpecLanguageParser.AexprUnaryArithmeticContext(self, localctx)
                 self.enterOuterAlt(localctx, 6)
-                self.state = 87
+                self.state = 90
+                self.arith_unary_op()
+                self.state = 91
+                self.expr()
+                pass
+
+            elif la_ == 7:
+                localctx = DeclSpecLanguageParser.AtermBracketsContext(self, localctx)
+                self.enterOuterAlt(localctx, 7)
+                self.state = 93
                 self.match(DeclSpecLanguageParser.T__3)
-                self.state = 88
+                self.state = 94
                 self.b_expr()
-                self.state = 89
+                self.state = 95
                 self.match(DeclSpecLanguageParser.T__4)
                 pass
 
@@ -720,7 +760,7 @@ class DeclSpecLanguageParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 93
+            self.state = 99
             _la = self._input.LA(1)
             if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << DeclSpecLanguageParser.OBJ) | (1 << DeclSpecLanguageParser.DC) | (1 << DeclSpecLanguageParser.ID))) != 0)):
                 self._errHandler.recoverInline(self)
@@ -807,32 +847,32 @@ class DeclSpecLanguageParser ( Parser ):
         localctx = DeclSpecLanguageParser.DcIdContext(self, self._ctx, self.state)
         self.enterRule(localctx, 16, self.RULE_dcId)
         try:
-            self.state = 101
+            self.state = 107
             la_ = self._interp.adaptivePredict(self._input,6,self._ctx)
             if la_ == 1:
                 localctx = DeclSpecLanguageParser.AdcIDIDContext(self, localctx)
                 self.enterOuterAlt(localctx, 1)
-                self.state = 95
+                self.state = 101
                 self.match(DeclSpecLanguageParser.ID)
                 pass
 
             elif la_ == 2:
                 localctx = DeclSpecLanguageParser.AdcIDVarContext(self, localctx)
                 self.enterOuterAlt(localctx, 2)
-                self.state = 96
+                self.state = 102
                 self.variable()
                 pass
 
             elif la_ == 3:
                 localctx = DeclSpecLanguageParser.AdcIDNumContext(self, localctx)
                 self.enterOuterAlt(localctx, 3)
-                self.state = 97
+                self.state = 103
                 self.match(DeclSpecLanguageParser.ID)
-                self.state = 98
+                self.state = 104
                 self.match(DeclSpecLanguageParser.T__5)
-                self.state = 99
+                self.state = 105
                 self.match(DeclSpecLanguageParser.INT)
-                self.state = 100
+                self.state = 106
                 self.match(DeclSpecLanguageParser.T__6)
                 pass
 
@@ -919,32 +959,32 @@ class DeclSpecLanguageParser ( Parser ):
         localctx = DeclSpecLanguageParser.ObjIdContext(self, self._ctx, self.state)
         self.enterRule(localctx, 18, self.RULE_objId)
         try:
-            self.state = 109
+            self.state = 115
             la_ = self._interp.adaptivePredict(self._input,7,self._ctx)
             if la_ == 1:
                 localctx = DeclSpecLanguageParser.AobjIDIDContext(self, localctx)
                 self.enterOuterAlt(localctx, 1)
-                self.state = 103
+                self.state = 109
                 self.match(DeclSpecLanguageParser.ID)
                 pass
 
             elif la_ == 2:
                 localctx = DeclSpecLanguageParser.AobjIDVarContext(self, localctx)
                 self.enterOuterAlt(localctx, 2)
-                self.state = 104
+                self.state = 110
                 self.variable()
                 pass
 
             elif la_ == 3:
                 localctx = DeclSpecLanguageParser.AobjIDScenarioContext(self, localctx)
                 self.enterOuterAlt(localctx, 3)
-                self.state = 105
+                self.state = 111
                 self.match(DeclSpecLanguageParser.ID)
-                self.state = 106
+                self.state = 112
                 self.match(DeclSpecLanguageParser.T__5)
-                self.state = 107
+                self.state = 113
                 self.match(DeclSpecLanguageParser.ID)
-                self.state = 108
+                self.state = 114
                 self.match(DeclSpecLanguageParser.T__6)
                 pass
 
@@ -997,7 +1037,7 @@ class DeclSpecLanguageParser ( Parser ):
         try:
             localctx = DeclSpecLanguageParser.AvariableContext(self, localctx)
             self.enterOuterAlt(localctx, 1)
-            self.state = 111
+            self.state = 117
             self.match(DeclSpecLanguageParser.VARIABLE)
         except RecognitionException as re:
             localctx.exception = re
@@ -1044,7 +1084,7 @@ class DeclSpecLanguageParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 113
+            self.state = 119
             _la = self._input.LA(1)
             if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << DeclSpecLanguageParser.AND) | (1 << DeclSpecLanguageParser.OR) | (1 << DeclSpecLanguageParser.IMPL) | (1 << DeclSpecLanguageParser.IFF))) != 0)):
                 self._errHandler.recoverInline(self)
@@ -1092,12 +1132,49 @@ class DeclSpecLanguageParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 115
+            self.state = 121
             _la = self._input.LA(1)
             if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << DeclSpecLanguageParser.PLUS) | (1 << DeclSpecLanguageParser.MINUS) | (1 << DeclSpecLanguageParser.TIMES))) != 0)):
                 self._errHandler.recoverInline(self)
             else:
                 self.consume()
+        except RecognitionException as re:
+            localctx.exception = re
+            self._errHandler.reportError(self, re)
+            self._errHandler.recover(self, re)
+        finally:
+            self.exitRule()
+        return localctx
+
+    class Arith_unary_opContext(ParserRuleContext):
+
+        def __init__(self, parser, parent=None, invokingState=-1):
+            super(DeclSpecLanguageParser.Arith_unary_opContext, self).__init__(parent, invokingState)
+            self.parser = parser
+
+        def ABS(self):
+            return self.getToken(DeclSpecLanguageParser.ABS, 0)
+
+        def getRuleIndex(self):
+            return DeclSpecLanguageParser.RULE_arith_unary_op
+
+        def accept(self, visitor):
+            if hasattr(visitor, "visitArith_unary_op"):
+                return visitor.visitArith_unary_op(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+
+
+    def arith_unary_op(self):
+
+        localctx = DeclSpecLanguageParser.Arith_unary_opContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 26, self.RULE_arith_unary_op)
+        try:
+            self.enterOuterAlt(localctx, 1)
+            self.state = 123
+            self.match(DeclSpecLanguageParser.ABS)
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -1145,11 +1222,11 @@ class DeclSpecLanguageParser ( Parser ):
     def comparison_op(self):
 
         localctx = DeclSpecLanguageParser.Comparison_opContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 26, self.RULE_comparison_op)
+        self.enterRule(localctx, 28, self.RULE_comparison_op)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 117
+            self.state = 125
             _la = self._input.LA(1)
             if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << DeclSpecLanguageParser.LEQ) | (1 << DeclSpecLanguageParser.EQ) | (1 << DeclSpecLanguageParser.GEQ) | (1 << DeclSpecLanguageParser.LT) | (1 << DeclSpecLanguageParser.GT) | (1 << DeclSpecLanguageParser.NEQ))) != 0)):
                 self._errHandler.recoverInline(self)
@@ -1187,10 +1264,10 @@ class DeclSpecLanguageParser ( Parser ):
     def unaryOp(self):
 
         localctx = DeclSpecLanguageParser.UnaryOpContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 28, self.RULE_unaryOp)
+        self.enterRule(localctx, 30, self.RULE_unaryOp)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 119
+            self.state = 127
             self.match(DeclSpecLanguageParser.NOT)
         except RecognitionException as re:
             localctx.exception = re
@@ -1224,10 +1301,10 @@ class DeclSpecLanguageParser ( Parser ):
     def boolFact(self):
 
         localctx = DeclSpecLanguageParser.BoolFactContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 30, self.RULE_boolFact)
+        self.enterRule(localctx, 32, self.RULE_boolFact)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 121
+            self.state = 129
             self.match(DeclSpecLanguageParser.TRUE)
         except RecognitionException as re:
             localctx.exception = re

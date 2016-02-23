@@ -15,10 +15,13 @@ from antlr4 import *
 from DeclSpecLanguageLexer import DeclSpecLanguageLexer
 from DeclSpecLanguageParser import DeclSpecLanguageParser
 from DeclSpecLanguageVisitor import DeclSpecLanguageVisitor
+from antlr4.error.ErrorListener import ErrorListener
+from antlr4.error.ErrorStrategy import DefaultErrorStrategy
 
 import settings
 
 import sys, getopt, os
+
 
 class DeclSpecLanguageParsingException(Exception):
   
@@ -27,6 +30,32 @@ class DeclSpecLanguageParsingException(Exception):
   
   def __str__(self):
     return repr(self.value)
+
+
+# class MyErrorListener( ErrorListener ):
+# 
+#     def __init__(self):
+#         super(MyErrorListener, self).__init__()
+# 
+#     def syntaxError(self, recognizer, offendingSymbol, line, column, msg, e):
+#         raise DeclSpecLanguageParsingException("Parsing: syntax error!!")
+# 
+#     def reportAmbiguity(self, recognizer, dfa, startIndex, stopIndex, exact, ambigAlts, configs):
+#         raise DeclSpecLanguageParsingException("Ambiguity!!")
+ 
+#     def reportAttemptingFullContext(self, recognizer, dfa, startIndex, stopIndex, conflictingAlts, configs):
+#         raise DeclSpecLanguageParsingException("AttemptingFullContext")
+# 
+#     def reportContextSensitivity(self, recognizer, dfa, startIndex, stopIndex, prediction, configs):
+#         raise DeclSpecLanguageParsingException("ContextSensitivity " + str(startIndex) + \
+#             " " + str(stopIndex) + " " + str(prediction) + " " + str(configs))
+
+
+# class MyErrorStrategy(DefaultErrorStrategy):
+# 
+#     def reportError(self, recognizer, e):
+#         raise DeclSpecLanguageParsingException("Report Error")
+
 
 class MyVisitor(DeclSpecLanguageVisitor):
 
@@ -60,11 +89,14 @@ class MyVisitor(DeclSpecLanguageVisitor):
   
 
   def visitErrorNode(self, node):
-    token = node.getSymbol()    
+    token = node.getSymbol()
     raise DeclSpecLanguageParsingException("Erroneous Node at line "  +
             str(token.line) + ", column " + str(token.column) + ": '" + 
             str(token.text) + "'"  )
   
+  
+  def visitStatement(self, ctx):
+    return ctx.getChild(0).accept(self)
   
   
   def visitAdcIDID(self, ctx):
@@ -93,10 +125,12 @@ def translate_specification(file_stream, name_into_DC, name_into_obj):
   lexer = DeclSpecLanguageLexer(file_stream)
   stream = CommonTokenStream(lexer)
   parser = DeclSpecLanguageParser(stream)
+#   parser._listeners = [ MyErrorListener() ]
+#   parser._errHandler = BailErrorStrategy()
   tree = parser.statement()
   visitor = MyVisitor(name_into_DC, name_into_obj)
   spec = visitor.visit(tree)
-  # initial obj installed only in one amount and in initial_DC  
+#   initial obj installed only in one amount and in initial_DC  
   for i in name_into_obj.values():
     spec += " and (" + i + " = 1)"
     spec += " and (" + settings.DEFAULT_INITIAL_DC.keys()[0] + "[0]." + i + "= 1)"
