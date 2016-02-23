@@ -16,7 +16,9 @@ Scenarios name have to differ from DC names
 Requirements:
   Python packages
    - toposort https://pypi.python.org/simple/topsort/
-   - zephyrus2 git@bitbucket.org:jacopomauro/zephyrus2.git    
+   - zephyrus2 git@bitbucket.org:jacopomauro/zephyrus2.git
+  
+  The absfrontend.jar should be in CLASSPATH  
 """
 
 # TODO: error if cycle is detected
@@ -24,7 +26,6 @@ Requirements:
 
 import json
 import uuid
-import re
 from subprocess import Popen
 import sys, getopt
 import os
@@ -312,9 +313,7 @@ def main(argv):
   log.info("Extracting JSON cost annotations from ABS code")
   annotation_file = "/tmp/" + pid + "_annotation.json"
   TMP_FILES = [ annotation_file ]
-  proc = Popen( ["java", "-classpath", script_directory + "/absfrontend.jar",
-        "autodeploy.Tester", "-JSON=" + annotation_file, input_file,
-        script_directory + "/SmartDeployModule.abs"],
+  proc = Popen( ["java", "autodeploy.Tester", "-JSON=" + annotation_file, input_file],
         cwd=script_directory, stdout=DEVNULL, stderr=DEVNULL )
   proc.wait()
 

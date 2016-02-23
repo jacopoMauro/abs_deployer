@@ -5,7 +5,7 @@ Mandatory imports and exports
 **************************************************************/
 export *;
 import * from ABS.DC;
-import * from SmartDeployModule;
+import * from ABS.SmartDeploy;
 
 
 

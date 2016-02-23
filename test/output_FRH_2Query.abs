@@ -1,9 +1,9 @@
-module Delta76a6e07eadf641d88c55d9c04501c339;
+module Delta5dacaf5886f24e57afb7f4a29873ddee;
 import * from ABS.DC;
 import * from FredhopperCloudServices;
 
 delta SmartDeployDelta;
-uses SmartDeployModule;
+uses ABS.SmartDeploy;
 adds import * from FredhopperCloudServices;
 adds import * from ABS.DC;
 modifies interface SmartDeployInterface {
@@ -55,16 +55,16 @@ adds class MainSmartDeployer(CloudProvider cloudProvider, DeploymentComponent am
 		ls_DeploymentComponent = Cons(c3_xlarge_2,ls_DeploymentComponent);
 		[DC: c3_xlarge_1] LoadBalancerService oDef___LoadBalancerServiceImpl_0_c3_xlarge_1 = new LoadBalancerServiceImpl();
 		ls_LoadBalancerService = Cons(oDef___LoadBalancerServiceImpl_0_c3_xlarge_1, ls_LoadBalancerService);
-		[DC: amazon_eu] InfrastructureService oamazon_scenario___InfrastructureServiceImpl_0____849205f944c24a0bb69252b3feea51b3_0 = new InfrastructureServiceImpl();
-		ls_InfrastructureService = Cons(oamazon_scenario___InfrastructureServiceImpl_0____849205f944c24a0bb69252b3feea51b3_0, ls_InfrastructureService);
+		[DC: amazon_eu] InfrastructureService oamazon_scenario___InfrastructureServiceImpl_0____aac88a02d4bf46edbea66ef7b1155b9e_0 = new InfrastructureServiceImpl();
+		ls_InfrastructureService = Cons(oamazon_scenario___InfrastructureServiceImpl_0____aac88a02d4bf46edbea66ef7b1155b9e_0, ls_InfrastructureService);
 		[DC: c3_xlarge_0] MonitorPlatformService oDef___PlatformServiceImpl_0_c3_xlarge_0 = new PlatformServiceImpl(oDef___LoadBalancerServiceImpl_0_c3_xlarge_1);
 		ls_MonitorPlatformService = Cons(oDef___PlatformServiceImpl_0_c3_xlarge_0, ls_MonitorPlatformService);
 		ls_PlatformService = Cons(oDef___PlatformServiceImpl_0_c3_xlarge_0, ls_PlatformService);
-		[DC: c3_xlarge_3] DeploymentService oDef___DeploymentServiceImpl_0_c3_xlarge_3 = new DeploymentServiceImpl(oamazon_scenario___InfrastructureServiceImpl_0____849205f944c24a0bb69252b3feea51b3_0, oDef___PlatformServiceImpl_0_c3_xlarge_0);
+		[DC: c3_xlarge_3] DeploymentService oDef___DeploymentServiceImpl_0_c3_xlarge_3 = new DeploymentServiceImpl(oamazon_scenario___InfrastructureServiceImpl_0____aac88a02d4bf46edbea66ef7b1155b9e_0, oDef___PlatformServiceImpl_0_c3_xlarge_0);
 		ls_DeploymentService = Cons(oDef___DeploymentServiceImpl_0_c3_xlarge_3, ls_DeploymentService);
 		[DC: c3_xlarge_0] ServiceProvider oDef___ServiceProviderImpl_0_c3_xlarge_0 = new ServiceProviderImpl(oDef___PlatformServiceImpl_0_c3_xlarge_0, oDef___LoadBalancerServiceImpl_0_c3_xlarge_1);
 		ls_ServiceProvider = Cons(oDef___ServiceProviderImpl_0_c3_xlarge_0, ls_ServiceProvider);
-		[DC: c3_xlarge_2] DeploymentService oDef___DeploymentServiceImpl_0_c3_xlarge_2 = new DeploymentServiceImpl(oamazon_scenario___InfrastructureServiceImpl_0____849205f944c24a0bb69252b3feea51b3_0, oDef___PlatformServiceImpl_0_c3_xlarge_0);
+		[DC: c3_xlarge_2] DeploymentService oDef___DeploymentServiceImpl_0_c3_xlarge_2 = new DeploymentServiceImpl(oamazon_scenario___InfrastructureServiceImpl_0____aac88a02d4bf46edbea66ef7b1155b9e_0, oDef___PlatformServiceImpl_0_c3_xlarge_0);
 		ls_DeploymentService = Cons(oDef___DeploymentServiceImpl_0_c3_xlarge_2, ls_DeploymentService);
 		[DC: c3_xlarge_3] IQueryService oDef___QueryServiceImpl_0_c3_xlarge_3 = new QueryServiceImpl(oDef___DeploymentServiceImpl_0_c3_xlarge_3, "Customer X");
 		ls_IQueryService = Cons(oDef___QueryServiceImpl_0_c3_xlarge_3, ls_IQueryService);
@@ -123,13 +123,13 @@ adds class AddQueryDeployer(CloudProvider cloudProvider, DeploymentComponent ama
 		ls_DeploymentComponent = Cons(c3_xlarge_0,ls_DeploymentComponent);
 		DeploymentComponent c3_xlarge_2 = cloudProvider.prelaunchInstanceNamed("c3.xlarge");
 		ls_DeploymentComponent = Cons(c3_xlarge_2,ls_DeploymentComponent);
-		[DC: amazon_us] InfrastructureService oamazon_scenario___InfrastructureServiceImpl_0____7186204cb9824bcdaf27c2a9e559eaf0_0 = new InfrastructureServiceImpl();
-		ls_InfrastructureService = Cons(oamazon_scenario___InfrastructureServiceImpl_0____7186204cb9824bcdaf27c2a9e559eaf0_0, ls_InfrastructureService);
-		[DC: c3_xlarge_1] DeploymentService oDef___DeploymentServiceImpl_0_c3_xlarge_1 = new DeploymentServiceImpl(oamazon_scenario___InfrastructureServiceImpl_0____7186204cb9824bcdaf27c2a9e559eaf0_0, platformObj);
+		[DC: amazon_us] InfrastructureService oamazon_scenario___InfrastructureServiceImpl_0____5f38c23d3e0e42328440c7c9aef1e69b_0 = new InfrastructureServiceImpl();
+		ls_InfrastructureService = Cons(oamazon_scenario___InfrastructureServiceImpl_0____5f38c23d3e0e42328440c7c9aef1e69b_0, ls_InfrastructureService);
+		[DC: c3_xlarge_1] DeploymentService oDef___DeploymentServiceImpl_0_c3_xlarge_1 = new DeploymentServiceImpl(oamazon_scenario___InfrastructureServiceImpl_0____5f38c23d3e0e42328440c7c9aef1e69b_0, platformObj);
 		ls_DeploymentService = Cons(oDef___DeploymentServiceImpl_0_c3_xlarge_1, ls_DeploymentService);
-		[DC: c3_xlarge_2] DeploymentService oDef___DeploymentServiceImpl_0_c3_xlarge_2 = new DeploymentServiceImpl(oamazon_scenario___InfrastructureServiceImpl_0____7186204cb9824bcdaf27c2a9e559eaf0_0, platformObj);
+		[DC: c3_xlarge_2] DeploymentService oDef___DeploymentServiceImpl_0_c3_xlarge_2 = new DeploymentServiceImpl(oamazon_scenario___InfrastructureServiceImpl_0____5f38c23d3e0e42328440c7c9aef1e69b_0, platformObj);
 		ls_DeploymentService = Cons(oDef___DeploymentServiceImpl_0_c3_xlarge_2, ls_DeploymentService);
-		[DC: c3_xlarge_0] DeploymentService oDef___DeploymentServiceImpl_0_c3_xlarge_0 = new DeploymentServiceImpl(oamazon_scenario___InfrastructureServiceImpl_0____7186204cb9824bcdaf27c2a9e559eaf0_0, platformObj);
+		[DC: c3_xlarge_0] DeploymentService oDef___DeploymentServiceImpl_0_c3_xlarge_0 = new DeploymentServiceImpl(oamazon_scenario___InfrastructureServiceImpl_0____5f38c23d3e0e42328440c7c9aef1e69b_0, platformObj);
 		ls_DeploymentService = Cons(oDef___DeploymentServiceImpl_0_c3_xlarge_0, ls_DeploymentService);
 		[DC: c3_xlarge_1] IQueryService oDef___QueryServiceImpl_0_c3_xlarge_1 = new QueryServiceImpl(oDef___DeploymentServiceImpl_0_c3_xlarge_1, "Customer X");
 		ls_IQueryService = Cons(oDef___QueryServiceImpl_0_c3_xlarge_1, ls_IQueryService);

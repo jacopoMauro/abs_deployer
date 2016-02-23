@@ -245,7 +245,7 @@ def print_interface(module_name,interfaces,out):
   out.write("import * from ABS.DC;\n")
   out.write("import * from " + module_name + ";\n\n")
   out.write("delta SmartDeployDelta;\n")
-  out.write("uses SmartDeployModule;\n")  
+  out.write("uses ABS.SmartDeploy;\n")  
   out.write("adds import * from " + module_name + ";\n")
   out.write("adds import * from ABS.DC;\n")
   out.write("modifies interface SmartDeployInterface {\n")
