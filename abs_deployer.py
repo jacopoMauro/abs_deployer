@@ -418,14 +418,15 @@ def main(argv):
     zephyrus_out_file = "/tmp/" + pid + i["id"] + "_zep_output.txt"
     TMP_FILES.append(zephyrus_out_file)
     zephyrus2.zephyrus2.main(["-o",zephyrus_out_file,zephyrus_in_file])
-    #zephyrus2.zephyrus2.main(["-v", "-o",zephyrus_out_file,zephyrus_in_file])
+    #zephyrus2.zephyrus2.main(["-v", "-k", "-o",zephyrus_out_file,zephyrus_in_file])
     
     log.info("Exctracting last solution")
     binding_in_file = "/tmp/" + pid + i["id"] + "_binding_in.json"
     TMP_FILES.append(binding_in_file)
     if not extract_last_solution(zephyrus_out_file,binding_in_file):
-      log.info("No solution found for " + i["id"])
-      continue
+      log.critical("No solution found for " + i["id"])
+      log.critical("Exiting")
+      sys.exit(1)
     else:
       log.debug("Zephyrus last solution")
       zep_last_conf = read_json(binding_in_file)

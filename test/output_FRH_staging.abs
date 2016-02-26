@@ -1,4 +1,4 @@
-module Deltae4b5771f5fb143e49256cf0871650215;
+module Deltadcdba807697247e38400168e83bff3fd;
 import * from ABS.DC;
 import * from FredhopperCloudServices;
 
@@ -42,14 +42,12 @@ adds class MainSmartDeployer(CloudProvider cloudProvider) implements SmartDeploy
 	List<DeploymentComponent> getDeploymentComponent() { return ls_DeploymentComponent; }
 
 	Unit deploy() {
+		DeploymentComponent c3_2xlarge_eu_0 = cloudProvider.prelaunchInstanceNamed("c3_2xlarge_eu");
+		ls_DeploymentComponent = Cons(c3_2xlarge_eu_0,ls_DeploymentComponent);
 		DeploymentComponent c3_xlarge_eu_1 = cloudProvider.prelaunchInstanceNamed("c3_xlarge_eu");
 		ls_DeploymentComponent = Cons(c3_xlarge_eu_1,ls_DeploymentComponent);
 		DeploymentComponent c3_xlarge_eu_0 = cloudProvider.prelaunchInstanceNamed("c3_xlarge_eu");
 		ls_DeploymentComponent = Cons(c3_xlarge_eu_0,ls_DeploymentComponent);
-		DeploymentComponent c3_xlarge_eu_3 = cloudProvider.prelaunchInstanceNamed("c3_xlarge_eu");
-		ls_DeploymentComponent = Cons(c3_xlarge_eu_3,ls_DeploymentComponent);
-		DeploymentComponent c3_xlarge_eu_2 = cloudProvider.prelaunchInstanceNamed("c3_xlarge_eu");
-		ls_DeploymentComponent = Cons(c3_xlarge_eu_2,ls_DeploymentComponent);
 		DeploymentComponent c3_xlarge_us_0 = cloudProvider.prelaunchInstanceNamed("c3_xlarge_us");
 		ls_DeploymentComponent = Cons(c3_xlarge_us_0,ls_DeploymentComponent);
 		[DC: c3_xlarge_eu_1] LoadBalancerService oDef___LoadBalancerServiceImpl_0_c3_xlarge_eu_1 = new LoadBalancerServiceImpl();
@@ -57,24 +55,20 @@ adds class MainSmartDeployer(CloudProvider cloudProvider) implements SmartDeploy
 		[DC: c3_xlarge_eu_0] MonitorPlatformService oDef___PlatformServiceImpl_0_c3_xlarge_eu_0 = new PlatformServiceImpl(oDef___LoadBalancerServiceImpl_0_c3_xlarge_eu_1);
 		ls_MonitorPlatformService = Cons(oDef___PlatformServiceImpl_0_c3_xlarge_eu_0, ls_MonitorPlatformService);
 		ls_PlatformService = Cons(oDef___PlatformServiceImpl_0_c3_xlarge_eu_0, ls_PlatformService);
-		[DC: c3_xlarge_eu_3] DeploymentService oDef___DeploymentServiceImpl_0_c3_xlarge_eu_3 = new DeploymentServiceImpl(oDef___PlatformServiceImpl_0_c3_xlarge_eu_0);
-		ls_DeploymentService = Cons(oDef___DeploymentServiceImpl_0_c3_xlarge_eu_3, ls_DeploymentService);
+		[DC: c3_2xlarge_eu_0] DeploymentService oDef___DeploymentServiceImpl_0_c3_2xlarge_eu_0 = new DeploymentServiceImpl(oDef___PlatformServiceImpl_0_c3_xlarge_eu_0);
+		ls_DeploymentService = Cons(oDef___DeploymentServiceImpl_0_c3_2xlarge_eu_0, ls_DeploymentService);
 		[DC: c3_xlarge_us_0] DeploymentService oDef___DeploymentServiceImpl_0_c3_xlarge_us_0 = new DeploymentServiceImpl(oDef___PlatformServiceImpl_0_c3_xlarge_eu_0);
 		ls_DeploymentService = Cons(oDef___DeploymentServiceImpl_0_c3_xlarge_us_0, ls_DeploymentService);
 		[DC: c3_xlarge_eu_0] ServiceProvider oDef___ServiceProviderImpl_0_c3_xlarge_eu_0 = new ServiceProviderImpl(oDef___PlatformServiceImpl_0_c3_xlarge_eu_0, oDef___LoadBalancerServiceImpl_0_c3_xlarge_eu_1);
 		ls_ServiceProvider = Cons(oDef___ServiceProviderImpl_0_c3_xlarge_eu_0, ls_ServiceProvider);
-		[DC: c3_xlarge_eu_3] DeploymentService oDef___DeploymentServiceImpl_1_c3_xlarge_eu_3 = new DeploymentServiceImpl(oDef___PlatformServiceImpl_0_c3_xlarge_eu_0);
-		ls_DeploymentService = Cons(oDef___DeploymentServiceImpl_1_c3_xlarge_eu_3, ls_DeploymentService);
-		[DC: c3_xlarge_eu_2] DeploymentService oDef___DeploymentServiceImpl_0_c3_xlarge_eu_2 = new DeploymentServiceImpl(oDef___PlatformServiceImpl_0_c3_xlarge_eu_0);
-		ls_DeploymentService = Cons(oDef___DeploymentServiceImpl_0_c3_xlarge_eu_2, ls_DeploymentService);
-		[DC: c3_xlarge_eu_2] IQueryService ostaging___QueryServiceImpl_0_c3_xlarge_eu_2 = new QueryServiceImpl(oDef___DeploymentServiceImpl_0_c3_xlarge_eu_2, "Customer X", True);
-		ls_IQueryService = Cons(ostaging___QueryServiceImpl_0_c3_xlarge_eu_2, ls_IQueryService);
-		ls_Service = Cons(ostaging___QueryServiceImpl_0_c3_xlarge_eu_2, ls_Service);
-		ls_EndPoint = Cons(ostaging___QueryServiceImpl_0_c3_xlarge_eu_2, ls_EndPoint);
-		[DC: c3_xlarge_us_0] IQueryService olight___QueryServiceImpl_0_c3_xlarge_us_0 = new QueryServiceImpl(oDef___DeploymentServiceImpl_0_c3_xlarge_us_0, "Customer X", False);
-		ls_IQueryService = Cons(olight___QueryServiceImpl_0_c3_xlarge_us_0, ls_IQueryService);
-		ls_Service = Cons(olight___QueryServiceImpl_0_c3_xlarge_us_0, ls_Service);
-		ls_EndPoint = Cons(olight___QueryServiceImpl_0_c3_xlarge_us_0, ls_EndPoint);
+		[DC: c3_xlarge_us_0] IQueryService olive___QueryServiceImpl_0_c3_xlarge_us_0 = new QueryServiceImpl(oDef___DeploymentServiceImpl_0_c3_xlarge_us_0, "Customer X", False);
+		ls_IQueryService = Cons(olive___QueryServiceImpl_0_c3_xlarge_us_0, ls_IQueryService);
+		ls_Service = Cons(olive___QueryServiceImpl_0_c3_xlarge_us_0, ls_Service);
+		ls_EndPoint = Cons(olive___QueryServiceImpl_0_c3_xlarge_us_0, ls_EndPoint);
+		[DC: c3_2xlarge_eu_0] IQueryService ostaging___QueryServiceImpl_0_c3_2xlarge_eu_0 = new QueryServiceImpl(oDef___DeploymentServiceImpl_0_c3_2xlarge_eu_0, "Customer X", True);
+		ls_IQueryService = Cons(ostaging___QueryServiceImpl_0_c3_2xlarge_eu_0, ls_IQueryService);
+		ls_Service = Cons(ostaging___QueryServiceImpl_0_c3_2xlarge_eu_0, ls_Service);
+		ls_EndPoint = Cons(ostaging___QueryServiceImpl_0_c3_2xlarge_eu_0, ls_EndPoint);
 	}
 
 	Unit undeploy() {
@@ -127,18 +121,18 @@ adds class AddQueryDeployer(CloudProvider cloudProvider, PlatformService platfor
 		ls_DeploymentService = Cons(oDef___DeploymentServiceImpl_0_c3_xlarge_us_0, ls_DeploymentService);
 		[DC: c3_xlarge_eu_0] DeploymentService oDef___DeploymentServiceImpl_0_c3_xlarge_eu_0 = new DeploymentServiceImpl(platformObj);
 		ls_DeploymentService = Cons(oDef___DeploymentServiceImpl_0_c3_xlarge_eu_0, ls_DeploymentService);
-		[DC: c3_xlarge_eu_0] IQueryService olight___QueryServiceImpl_0_c3_xlarge_eu_0 = new QueryServiceImpl(oDef___DeploymentServiceImpl_0_c3_xlarge_eu_0, "Customer X", False);
-		ls_IQueryService = Cons(olight___QueryServiceImpl_0_c3_xlarge_eu_0, ls_IQueryService);
-		ls_Service = Cons(olight___QueryServiceImpl_0_c3_xlarge_eu_0, ls_Service);
-		ls_EndPoint = Cons(olight___QueryServiceImpl_0_c3_xlarge_eu_0, ls_EndPoint);
-		[DC: c3_xlarge_us_0] IQueryService olight___QueryServiceImpl_0_c3_xlarge_us_0 = new QueryServiceImpl(oDef___DeploymentServiceImpl_0_c3_xlarge_us_0, "Customer X", False);
-		ls_IQueryService = Cons(olight___QueryServiceImpl_0_c3_xlarge_us_0, ls_IQueryService);
-		ls_Service = Cons(olight___QueryServiceImpl_0_c3_xlarge_us_0, ls_Service);
-		ls_EndPoint = Cons(olight___QueryServiceImpl_0_c3_xlarge_us_0, ls_EndPoint);
-		[DC: c3_xlarge_eu_1] IQueryService olight___QueryServiceImpl_0_c3_xlarge_eu_1 = new QueryServiceImpl(oDef___DeploymentServiceImpl_0_c3_xlarge_eu_1, "Customer X", False);
-		ls_IQueryService = Cons(olight___QueryServiceImpl_0_c3_xlarge_eu_1, ls_IQueryService);
-		ls_Service = Cons(olight___QueryServiceImpl_0_c3_xlarge_eu_1, ls_Service);
-		ls_EndPoint = Cons(olight___QueryServiceImpl_0_c3_xlarge_eu_1, ls_EndPoint);
+		[DC: c3_xlarge_eu_0] IQueryService olive___QueryServiceImpl_0_c3_xlarge_eu_0 = new QueryServiceImpl(oDef___DeploymentServiceImpl_0_c3_xlarge_eu_0, "Customer X", False);
+		ls_IQueryService = Cons(olive___QueryServiceImpl_0_c3_xlarge_eu_0, ls_IQueryService);
+		ls_Service = Cons(olive___QueryServiceImpl_0_c3_xlarge_eu_0, ls_Service);
+		ls_EndPoint = Cons(olive___QueryServiceImpl_0_c3_xlarge_eu_0, ls_EndPoint);
+		[DC: c3_xlarge_us_0] IQueryService olive___QueryServiceImpl_0_c3_xlarge_us_0 = new QueryServiceImpl(oDef___DeploymentServiceImpl_0_c3_xlarge_us_0, "Customer X", False);
+		ls_IQueryService = Cons(olive___QueryServiceImpl_0_c3_xlarge_us_0, ls_IQueryService);
+		ls_Service = Cons(olive___QueryServiceImpl_0_c3_xlarge_us_0, ls_Service);
+		ls_EndPoint = Cons(olive___QueryServiceImpl_0_c3_xlarge_us_0, ls_EndPoint);
+		[DC: c3_xlarge_eu_1] IQueryService olive___QueryServiceImpl_0_c3_xlarge_eu_1 = new QueryServiceImpl(oDef___DeploymentServiceImpl_0_c3_xlarge_eu_1, "Customer X", False);
+		ls_IQueryService = Cons(olive___QueryServiceImpl_0_c3_xlarge_eu_1, ls_IQueryService);
+		ls_Service = Cons(olive___QueryServiceImpl_0_c3_xlarge_eu_1, ls_Service);
+		ls_EndPoint = Cons(olive___QueryServiceImpl_0_c3_xlarge_eu_1, ls_EndPoint);
 	}
 
 	Unit undeploy() {
