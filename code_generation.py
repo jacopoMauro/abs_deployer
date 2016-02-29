@@ -1,6 +1,7 @@
 '''
 code_generation.py: Procedures to generate the code code
 '''
+from ubuntu_sso.utils.ui import TRY_AGAIN_BUTTON
 __author__ = "Jacopo Mauro"
 __copyright__ = "Copyright 2016, Jacopo Mauro"
 __license__ = "ISC"
@@ -12,6 +13,8 @@ __status__ = "Prototype"
 import toposort
 import settings
 import uuid
+import logging as log
+import sys
 
 
 ################################
@@ -176,9 +179,13 @@ def print_deploy_method(zep_last_conf,bindings,
   # decide the order to create the obj and creating useful maps
   obj_to_abs_name = get_map_obj_abs_name(zep_last_conf,initial_obj_into_name)
   class_to_signature = get_map_class_signature(cost_annotations)
-  installing_order = get_topological_sort(obj_to_abs_name.keys(),bindings)
-  # TODO: error if cycle is detected
-  # creating the objects
+  try:
+    installing_order = get_topological_sort(obj_to_abs_name.keys(),bindings)
+  except ValueError:
+    log.critical("Found a cycle in the final configuration. Impossible to proceed")
+    log.critical("Exiting")
+    sys.exit(1)
+    
   for i in installing_order:
     for j in i:
       (dcname,dcnum,objname,_) = j

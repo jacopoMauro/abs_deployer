@@ -31,10 +31,6 @@ __email__ = "mauro.jacopo@gmail.com"
 __status__ = "Prototype"
 
 
-# TODO: error if cycle is detected
-# TODO: error if no solution if found
-
-
 import json
 import uuid
 from subprocess import Popen
