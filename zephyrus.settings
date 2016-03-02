@@ -6,11 +6,9 @@ verbose-level = 3
 input-file-repositories     = []
 input-optimization-function = compact
 solver = custom
-#custom-solver-command = "flatzinc -o <OUT> <IN>"
-custom-solver-command = "fzn_or-tools -o <OUT> <IN>"
+custom-solver-command = "flatzinc -o <OUT> <IN>"
+#custom-solver-command = "fzn_or-tools -o <OUT> <IN>"
 #custom-solver-command = "fzn_chuffed -o <OUT> <IN>"
 #custom-fzn2mzn-command = "mzn2fzn -I chuffed/mznlib --no-output-ozn -o <OUT> <IN>"
 
 #results = [("stateful-json-v1", "output.json"); ("graph-deployment", "output.dot")]
-
-#python ../abs_deployer.py -i example.json -d locations.json -t CloudProvider.Client,1
