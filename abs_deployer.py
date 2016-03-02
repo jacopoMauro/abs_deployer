@@ -342,7 +342,7 @@ def main(argv):
 
   log.info("Extracting JSON file from ABS code")
   script_directory = os.path.dirname(os.path.realpath(__file__))
-	proc = Popen( ["java", "autodeploy.Tester", "-JSON=" + absfrontend_file, input_file],
+  proc = Popen( ["java", "autodeploy.Tester", "-JSON=" + absfrontend_file, input_file],
         cwd=script_directory, stdout=DEVNULL, stderr=DEVNULL )
   proc.wait()
 
