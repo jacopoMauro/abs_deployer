@@ -1,13 +1,8 @@
 module FredhopperCloudServices;
 
 import * from ABS.DC;
+import * from ABS.SmartDeploy;
 
-
-// Tests for Deployment
-data DeployParamSpecification = Req | List(Int) | Default(String) | User ;
-data DeployScenarioElement = MaxUse(Int) | Cost(String, Int) | Param(String, DeployParamSpecification) | Name(String);
-type Deploy = List<DeployScenarioElement>;
-// Tests End
 
 //abstraction for a customer
 type Customer = String;
@@ -80,7 +75,7 @@ interface InfrastructureService {
 	Unit release(DC component);
 }
 
-//[Deploy: scenario[Cost("CPU", 1)] ]
+//[Deploy: scenario[Cost("Cores", 1)] ]
 [Deploy: scenario[Name("amazon_internals"), Cost("amazon_res",1)]]
 class InfrastructureServiceImpl implements InfrastructureService {
 	
@@ -88,9 +83,8 @@ class InfrastructureServiceImpl implements InfrastructureService {
 	Map<Id, DC> inUse = EmptyMap;
 	
 	Int cpu(DC dc) {
-		Fut<InfRat> cf = dc!available(CPU);
-		InfRat cpu = cf.get;
-		return truncate(finvalue(cpu));
+		// ... to update according to new cloud api specification
+		return 0;
 	}
 		
 	DC acquire(Id id, Int cpuamount) {
@@ -98,7 +92,7 @@ class InfrastructureServiceImpl implements InfrastructureService {
 		DC dc = null;
 		case md {
 			Nothing => {
-				dc = new DeploymentComponent(intToString(id), map[Pair(CPU, cpuamount)]);
+				dc = new DeploymentComponent(intToString(id), map[Pair(Cores, cpuamount)]);
 				total = total + cpuamount;
 				inUse = InsertAssoc(Pair(id, dc), inUse);
 			}
@@ -106,7 +100,7 @@ class InfrastructureServiceImpl implements InfrastructureService {
 				dc = d;
 				Int cpu = this.cpu(dc);
 				if (cpu < cpuamount) {
-					Fut<Unit> inf = dc!incrementResources(cpuamount - cpu, CPU); inf.get;
+					Fut<Unit> inf = dc!incrementResources(cpuamount - cpu, Cores); inf.get;
 					total = total + (cpuamount - cpu);
 				}	
 			}
@@ -216,7 +210,7 @@ class ServiceImpl(Id serviceId, ServiceType st, Customer c, Int cost) implements
 	
 	Int getCPU() {
 		DeploymentComponent dc = thisDC();
-		Fut<InfRat> fdt = dc!total(CPU);
+		Fut<InfRat> fdt = dc!total(Cores);
 		InfRat dt = fdt.get;
 		return truncate(finvalue(dt));
 	}
@@ -278,7 +272,7 @@ interface DeploymentService {
 } 
 
 
-[Deploy: scenario[MaxUse(2),Cost("CPU", 1), Cost("Memory", 80), Param("rp", Req)]]
+[Deploy: scenario[MaxUse(2),Cost("Cores", 1), Cost("Memory", 80), Param("rp", Req)]]
 class DeploymentServiceImpl(InfrastructureService rp) implements DeploymentService {
 
 	Map<Service, DC> allocations = EmptyMap;
@@ -349,7 +343,7 @@ interface LoadBalancerService {
 //enum to specify whether to increase/decrease load balance resource
 data LBOp = INCR | DECR;
 
-[Deploy: scenario[Cost("CPU", 4), Cost("Memory", 8)] ]
+[Deploy: scenario[Cost("Cores", 4), Cost("Memory", 8)] ]
 //[Deploy: scenario[Name("on_premises"), Cost("on_premises_res",1)]]
 class LoadBalancerServiceImpl implements LoadBalancerService {
 
@@ -561,7 +555,7 @@ def List<Z> lookupTwoMaps<X, Y, Z>(Map<X, List<Y>> m1, Map<Y, Z> m2, X x) =
 		Just(vs) => lookupMap(m2, vs);
 	};
 	
-[Deploy: scenario[Cost("CPU", 4), Cost("Memory", 12), Param("dsList", List(2)), Param("ls", Req)]]
+[Deploy: scenario[Cost("Cores", 4), Cost("Memory", 12), Param("dsList", List(2)), Param("ls", Req)]]
 //[Deploy: scenario[Name("on_premises"), Cost("on_premises_res",1), Param("dsList", List(2)), Param("ls", Req)]]
 class PlatformServiceImpl(List<DeploymentService> dsList, LoadBalancerService ls) 
 implements MonitorPlatformService {
@@ -1185,7 +1179,7 @@ interface IQueryService extends Service {
 }
 
 // Stub implementation of the query service, for use with cost annotations
-[Deploy: scenario[MaxUse(1), Cost("CPU", 1), Cost("Memory", 400), Param("c", User), Param("ds", Req)] ]
+[Deploy: scenario[MaxUse(1), Cost("Cores", 1), Cost("Memory", 400), Param("c", User), Param("ds", Req)] ]
 class QueryServiceImpl(DeploymentService ds, Customer c) implements IQueryService {
 	Int reqCount = 0;
 	State currentState = RUNNING;

@@ -1,12 +1,7 @@
 module CloudProvider;
 import * from ABS.DC;
+import * from ABS.SmartDeploy;
 
-
-// Tests for Deployment
-data DeployParamSpecification = Req | List(Int) | Default(String) | User ;
-data DeployScenarioElement = MaxUse(Int) | Cost(String, Int) | Param(String, DeployParamSpecification) | Name(String);
-type Deploy = List<DeployScenarioElement>;
-// Tests End
 
 interface ICloudProvider { }
 interface IBalancer { }
@@ -15,30 +10,30 @@ interface IClient { }
 
 // This Balancer runs all requests on one server of static size, never
 // releasing it.
-[Deploy: scenario[MaxUse(1), Cost("CPU", 1), Cost("Memory", 50), Param("provider", Req), Param("serverSize", Default("2"))] ]
+[Deploy: scenario[MaxUse(1), Cost("Cores", 1), Cost("Memory", 50), Param("provider", Req), Param("serverSize", Default("2"))] ]
 class ConstantBalancer(ICloudProvider provider, Int serverSize) implements IBalancer { }
 
-[Deploy: scenario[MaxUse(1), Cost("CPU", 1), Cost("Memory", 60), Param("provider", Req)] ]
+[Deploy: scenario[MaxUse(1), Cost("Cores", 1), Cost("Memory", 60), Param("provider", Req)] ]
 class DynamicBalancer(ICloudProvider provider) implements IBalancer { }
 
-[Deploy: scenario[Name("scenario1"), MaxUse(2), Cost("CPU", 1), Cost("Memory", 60), Param("provider", List(2))] ]
-[Deploy: scenario[Name("scenario2"), MaxUse(2), Cost("CPU", 1), Cost("Memory", 70), Param("provider", List(3))] ]
+[Deploy: scenario[Name("scenario1"), MaxUse(2), Cost("Cores", 1), Cost("Memory", 60), Param("provider", List(2))] ]
+[Deploy: scenario[Name("scenario2"), MaxUse(2), Cost("Cores", 1), Cost("Memory", 70), Param("provider", List(3))] ]
 class MultiCloudBalancer(List<ICloudProvider> provider) implements IBalancer { }
 
-[Deploy: scenario[MaxUse(1), Cost("CPU", 1), Cost("Memory", 10)] ]
+[Deploy: scenario[MaxUse(1), Cost("Cores", 1), Cost("Memory", 10)] ]
 class Server implements IServer { }
 
 
 // We will have one Server object per DC.  Balancer requests new DCs
 // from CloudProvider, which generates new machines if needed and keeps
 // track of costs.
-[Deploy: scenario[MaxUse(10), Cost("CPU", 1), Cost("Memory", 100)] ]
+[Deploy: scenario[MaxUse(10), Cost("Cores", 1), Cost("Memory", 100)] ]
 class CloudProvider implements ICloudProvider { }
 
-[Deploy: scenario[MaxUse(1), Cost("CPU", 1), Cost("Memory", 8), Param("b", Req)] ]
+[Deploy: scenario[MaxUse(1), Cost("Cores", 1), Cost("Memory", 8), Param("b", Req)] ]
 class ConstantClient(IBalancer b) implements IClient { }
 
-[Deploy: scenario[MaxUse(1), Cost("CPU", 1), Cost("Memory", 12), Param("b", Req)] ]
+[Deploy: scenario[MaxUse(1), Cost("Cores", 1), Cost("Memory", 12), Param("b", Req)] ]
 
 class SpikeClient(IBalancer b) implements IClient { }
 
