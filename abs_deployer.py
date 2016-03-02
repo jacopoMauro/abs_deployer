@@ -4,6 +4,10 @@ Usage: abs_deployer.py [<options>] <abs program file> <target specification> <de
     -o, --ofile: file where to save the output
     -d, --dot: dot file where to save the configuration computed by Zephyrus
     -v, --verbose
+
+
+Notes:
+  - The absfrontend.jar should be in CLASSPATH 
 """
 
 import json
@@ -338,9 +342,8 @@ def main(argv):
 
   log.info("Extracting JSON file from ABS code")
   script_directory = os.path.dirname(os.path.realpath(__file__))
-  proc = Popen( ["java", "-classpath", script_directory + "/absfrontend.jar",
-        "autodeploy.Tester", "-JSON=" + absfrontend_file, input_file],
-        cwd=script_directory, stdout=DEVNULL )
+	proc = Popen( ["java", "autodeploy.Tester", "-JSON=" + absfrontend_file, input_file],
+        cwd=script_directory, stdout=DEVNULL, stderr=DEVNULL )
   proc.wait()
 
   if proc.returncode != 0:
