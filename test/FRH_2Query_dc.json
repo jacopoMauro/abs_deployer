@@ -1,8 +1,8 @@
 {
  "DC_availability": {
-   "m1.large" : 5,
-   "m1.xlarge" : 5,
-   "m3.medium" : 5,
+   "m1.large" : 0,
+   "m1.xlarge" : 0,
+   "m3.medium" : 0,
    "c3.large" : 5,
    "c3.xlarge" : 5,
    "amazon_internals" : 1}
