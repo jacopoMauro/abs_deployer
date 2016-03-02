@@ -1,4 +1,4 @@
-CLASS[FredhopperCloudServices.QueryServiceImpl] = 20 and
+CLASS[FredhopperCloudServices.QueryServiceImpl] = 2 and
 CLASS[FredhopperCloudServices.LoadBalancerServiceImpl] > 0 and
 CLASS[FredhopperCloudServices.PlatformServiceImpl] > 0 and
 CLASS[FredhopperCloudServices.ServiceProviderImpl] > 0 and
