@@ -7,7 +7,7 @@ Usage: abs_deployer.py [<options>] <abs program file> <target specification> <de
 
 
 Notes:
-  - The absfrontend.jar should be in CLASSPATH 
+  - The absfrontend.jar should be in CLASSPATH (git@github.com:abstools/abstools.git)
 """
 
 import json
