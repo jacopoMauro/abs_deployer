@@ -1,7 +1,6 @@
 '''
 code_generation.py: Procedures to generate the code code
 '''
-from ubuntu_sso.utils.ui import TRY_AGAIN_BUTTON
 __author__ = "Jacopo Mauro"
 __copyright__ = "Copyright 2016, Jacopo Mauro"
 __license__ = "ISC"
