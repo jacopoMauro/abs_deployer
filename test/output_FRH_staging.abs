@@ -1,4 +1,4 @@
-module Deltadcdba807697247e38400168e83bff3fd;
+module Deltad9e8efba036642e6a3d3d1f182f5feef;
 import * from ABS.DC;
 import * from FredhopperCloudServices;
 
@@ -81,7 +81,7 @@ adds class MainSmartDeployer(CloudProvider cloudProvider) implements SmartDeploy
 		ls_PlatformService = Nil;
 		ls_MonitorPlatformService = Nil;
 		while ( !isEmpty(ls_DeploymentComponent) ) {
-			cloudProvider.killInstance(head(ls_DeploymentComponent));
+			cloudProvider.shutdownInstance(head(ls_DeploymentComponent));
 			ls_DeploymentComponent = tail(ls_DeploymentComponent);
 		}
 	}
@@ -109,14 +109,10 @@ adds class AddQueryDeployer(CloudProvider cloudProvider, PlatformService platfor
 	List<DeploymentComponent> getDeploymentComponent() { return ls_DeploymentComponent; }
 
 	Unit deploy() {
-		DeploymentComponent c3_xlarge_eu_1 = cloudProvider.prelaunchInstanceNamed("c3_xlarge_eu");
-		ls_DeploymentComponent = Cons(c3_xlarge_eu_1,ls_DeploymentComponent);
 		DeploymentComponent c3_xlarge_eu_0 = cloudProvider.prelaunchInstanceNamed("c3_xlarge_eu");
 		ls_DeploymentComponent = Cons(c3_xlarge_eu_0,ls_DeploymentComponent);
 		DeploymentComponent c3_xlarge_us_0 = cloudProvider.prelaunchInstanceNamed("c3_xlarge_us");
 		ls_DeploymentComponent = Cons(c3_xlarge_us_0,ls_DeploymentComponent);
-		[DC: c3_xlarge_eu_1] DeploymentService oDef___DeploymentServiceImpl_0_c3_xlarge_eu_1 = new DeploymentServiceImpl(platformObj);
-		ls_DeploymentService = Cons(oDef___DeploymentServiceImpl_0_c3_xlarge_eu_1, ls_DeploymentService);
 		[DC: c3_xlarge_us_0] DeploymentService oDef___DeploymentServiceImpl_0_c3_xlarge_us_0 = new DeploymentServiceImpl(platformObj);
 		ls_DeploymentService = Cons(oDef___DeploymentServiceImpl_0_c3_xlarge_us_0, ls_DeploymentService);
 		[DC: c3_xlarge_eu_0] DeploymentService oDef___DeploymentServiceImpl_0_c3_xlarge_eu_0 = new DeploymentServiceImpl(platformObj);
@@ -129,10 +125,6 @@ adds class AddQueryDeployer(CloudProvider cloudProvider, PlatformService platfor
 		ls_IQueryService = Cons(olive___QueryServiceImpl_0_c3_xlarge_us_0, ls_IQueryService);
 		ls_Service = Cons(olive___QueryServiceImpl_0_c3_xlarge_us_0, ls_Service);
 		ls_EndPoint = Cons(olive___QueryServiceImpl_0_c3_xlarge_us_0, ls_EndPoint);
-		[DC: c3_xlarge_eu_1] IQueryService olive___QueryServiceImpl_0_c3_xlarge_eu_1 = new QueryServiceImpl(oDef___DeploymentServiceImpl_0_c3_xlarge_eu_1, "Customer X", False);
-		ls_IQueryService = Cons(olive___QueryServiceImpl_0_c3_xlarge_eu_1, ls_IQueryService);
-		ls_Service = Cons(olive___QueryServiceImpl_0_c3_xlarge_eu_1, ls_Service);
-		ls_EndPoint = Cons(olive___QueryServiceImpl_0_c3_xlarge_eu_1, ls_EndPoint);
 	}
 
 	Unit undeploy() {
@@ -145,7 +137,7 @@ adds class AddQueryDeployer(CloudProvider cloudProvider, PlatformService platfor
 		ls_PlatformService = Nil;
 		ls_MonitorPlatformService = Nil;
 		while ( !isEmpty(ls_DeploymentComponent) ) {
-			cloudProvider.killInstance(head(ls_DeploymentComponent));
+			cloudProvider.shutdownInstance(head(ls_DeploymentComponent));
 			ls_DeploymentComponent = tail(ls_DeploymentComponent);
 		}
 	}

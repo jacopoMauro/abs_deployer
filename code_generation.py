@@ -155,7 +155,7 @@ def print_undeploy_method(interfaces,out):
     out.write("\t\tls_" + i + " = Nil;\n")
   # we trigger the killInstance from the cloud provider
   out.write("\t\twhile ( !isEmpty(ls_DeploymentComponent) ) {\n")    
-  out.write("\t\t\tcloudProvider.killInstance(head(ls_DeploymentComponent));\n")
+  out.write("\t\t\tcloudProvider.shutdownInstance(head(ls_DeploymentComponent));\n")
   out.write("\t\t\tls_DeploymentComponent = tail(ls_DeploymentComponent);\n")
   out.write("\t\t}\n")  
   out.write("\t}\n") 
