@@ -55,8 +55,8 @@ comparison_op : LEQ | EQ | GEQ | LT | GT | NEQ;
 unaryOp : NOT;
 boolFact : TRUE;
 
-RE : '\'' ([a-zA-Z0-9_] | '-' | '*' | '\\' | '+' | '?' | '[' | ']' | '|' )+ '\''; 
-  // match regular expression           
+RE : '\'' ([a-zA-Z0-9_] | '-' | '*' | '\\' | '+' | '?' | '[' | ']' | '|' | '.' |
+  '^' | '$' | '{' | '}' | '(' | ') ' )+ '\'';   // match regular expression           
 
 AND : 'and';
 OR : 'or';

@@ -1,4 +1,4 @@
-module Delta88e42445253f40f0bdfc2abe9c9c1c9b;
+module Delta8cb27d9da14f4e86874444e9586da0ef;
 import * from ABS.DC;
 import * from FredhopperCloudServices;
 
@@ -109,22 +109,22 @@ adds class AddQueryDeployer(CloudProvider cloudProvider, PlatformService platfor
 	List<DeploymentComponent> getDeploymentComponent() { return ls_DeploymentComponent; }
 
 	Unit deploy() {
-		DeploymentComponent c3_xlarge_eu_2 = cloudProvider.prelaunchInstanceNamed("c3_xlarge_eu");
-		ls_DeploymentComponent = Cons(c3_xlarge_eu_2,ls_DeploymentComponent);
-		DeploymentComponent c3_xlarge_us_1 = cloudProvider.prelaunchInstanceNamed("c3_xlarge_us");
-		ls_DeploymentComponent = Cons(c3_xlarge_us_1,ls_DeploymentComponent);
-		[DC: c3_xlarge_us_1] DeploymentService oDef___DeploymentServiceImpl_0_c3_xlarge_us_1 = new DeploymentServiceImpl(platformObj);
-		ls_DeploymentService = Cons(oDef___DeploymentServiceImpl_0_c3_xlarge_us_1, ls_DeploymentService);
-		[DC: c3_xlarge_eu_2] DeploymentService oDef___DeploymentServiceImpl_0_c3_xlarge_eu_2 = new DeploymentServiceImpl(platformObj);
-		ls_DeploymentService = Cons(oDef___DeploymentServiceImpl_0_c3_xlarge_eu_2, ls_DeploymentService);
-		[DC: c3_xlarge_us_1] IQueryService olive___QueryServiceImpl_0_c3_xlarge_us_1 = new QueryServiceImpl(oDef___DeploymentServiceImpl_0_c3_xlarge_us_1, "Customer X", False);
-		ls_IQueryService = Cons(olive___QueryServiceImpl_0_c3_xlarge_us_1, ls_IQueryService);
-		ls_Service = Cons(olive___QueryServiceImpl_0_c3_xlarge_us_1, ls_Service);
-		ls_EndPoint = Cons(olive___QueryServiceImpl_0_c3_xlarge_us_1, ls_EndPoint);
-		[DC: c3_xlarge_eu_2] IQueryService olive___QueryServiceImpl_0_c3_xlarge_eu_2 = new QueryServiceImpl(oDef___DeploymentServiceImpl_0_c3_xlarge_eu_2, "Customer X", False);
-		ls_IQueryService = Cons(olive___QueryServiceImpl_0_c3_xlarge_eu_2, ls_IQueryService);
-		ls_Service = Cons(olive___QueryServiceImpl_0_c3_xlarge_eu_2, ls_Service);
-		ls_EndPoint = Cons(olive___QueryServiceImpl_0_c3_xlarge_eu_2, ls_EndPoint);
+		DeploymentComponent c3_xlarge_eu_1 = cloudProvider.prelaunchInstanceNamed("c3_xlarge_eu");
+		ls_DeploymentComponent = Cons(c3_xlarge_eu_1,ls_DeploymentComponent);
+		DeploymentComponent c3_xlarge_us_2 = cloudProvider.prelaunchInstanceNamed("c3_xlarge_us");
+		ls_DeploymentComponent = Cons(c3_xlarge_us_2,ls_DeploymentComponent);
+		[DC: c3_xlarge_eu_1] DeploymentService oDef___DeploymentServiceImpl_0_c3_xlarge_eu_1 = new DeploymentServiceImpl(platformObj);
+		ls_DeploymentService = Cons(oDef___DeploymentServiceImpl_0_c3_xlarge_eu_1, ls_DeploymentService);
+		[DC: c3_xlarge_us_2] DeploymentService oDef___DeploymentServiceImpl_0_c3_xlarge_us_2 = new DeploymentServiceImpl(platformObj);
+		ls_DeploymentService = Cons(oDef___DeploymentServiceImpl_0_c3_xlarge_us_2, ls_DeploymentService);
+		[DC: c3_xlarge_eu_1] IQueryService olive___QueryServiceImpl_0_c3_xlarge_eu_1 = new QueryServiceImpl(oDef___DeploymentServiceImpl_0_c3_xlarge_eu_1, "Customer X", False);
+		ls_IQueryService = Cons(olive___QueryServiceImpl_0_c3_xlarge_eu_1, ls_IQueryService);
+		ls_Service = Cons(olive___QueryServiceImpl_0_c3_xlarge_eu_1, ls_Service);
+		ls_EndPoint = Cons(olive___QueryServiceImpl_0_c3_xlarge_eu_1, ls_EndPoint);
+		[DC: c3_xlarge_us_2] IQueryService olive___QueryServiceImpl_0_c3_xlarge_us_2 = new QueryServiceImpl(oDef___DeploymentServiceImpl_0_c3_xlarge_us_2, "Customer X", False);
+		ls_IQueryService = Cons(olive___QueryServiceImpl_0_c3_xlarge_us_2, ls_IQueryService);
+		ls_Service = Cons(olive___QueryServiceImpl_0_c3_xlarge_us_2, ls_Service);
+		ls_EndPoint = Cons(olive___QueryServiceImpl_0_c3_xlarge_us_2, ls_EndPoint);
 	}
 
 	Unit undeploy() {
