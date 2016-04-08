@@ -19,6 +19,7 @@ from antlr4.error.ErrorListener import ErrorListener
 from antlr4.error.ErrorStrategy import DefaultErrorStrategy
 
 import settings
+import re
 
 import sys, getopt, os
 
@@ -60,13 +61,14 @@ class DeclSpecLanguageParsingException(Exception):
 class MyVisitor(DeclSpecLanguageVisitor):
 
 
-  def __init__(self, name_into_DC, name_into_obj):
+  def __init__(self, name_into_DC, name_into_obj, class_names):
     """
     init some variables
     """    
     DeclSpecLanguageVisitor.__init__(self)
     self.name_into_DC = name_into_DC
     self.name_into_obj = name_into_obj
+    self.class_names = class_names
 
 
   def defaultResult(self):
@@ -99,6 +101,24 @@ class MyVisitor(DeclSpecLanguageVisitor):
     return ctx.getChild(0).accept(self)
   
   
+  def visitAtermId(self, ctx):
+    obj = ctx.getChild(0).accept(self)
+    ls = obj.split('||')
+    s = ls[0]
+    for i in ls[1:]: # in case of regexp matching more than one scenarios
+      s += ' + ' + i
+    return s
+  
+  
+  def visitAtermDCObj(self, ctx):
+    dc = ctx.getChild(0).accept(self)
+    obj = ctx.getChild(2).accept(self)
+    ls = obj.split('||')
+    s = dc + '.' + ls[0]
+    for i in ls[1:]: # in case of regexp matching more than one scenarios
+      s += ' + ' + dc + '.' + i
+    return s
+  
   def visitAdcIDID(self, ctx):
     return ctx.getChild(0).accept(self) + '[0]'
   
@@ -111,6 +131,23 @@ class MyVisitor(DeclSpecLanguageVisitor):
     return ctx.getChild(2).accept(self) + settings.SEPARATOR + ctx.getChild(0).accept(self)
   
   
+  def visitAobjIDRE(self, ctx):
+    class_name = ctx.getChild(0).accept(self)
+    pattern = ctx.getChild(2).accept(self)[1:-1]
+    matches = []
+    for i in self.class_names[class_name]:
+      if re.match(pattern, i):
+        matches.append(i)
+    if not matches:
+      raise DeclSpecLanguageParsingException("The regular expression "  +
+            str(pattern) + " does not match with any scenario")
+    s = matches[0] + settings.SEPARATOR + class_name   
+    for i in matches[1:]:
+      s +=  '||' + i + settings.SEPARATOR + class_name
+    return s
+       
+  
+  
   def visitTypeV(self, ctx):
     txt = ctx.getChild(0).accept(self).strip()
     if txt == "DC":
@@ -121,14 +158,14 @@ class MyVisitor(DeclSpecLanguageVisitor):
       return txt
    
 
-def translate_specification(file_stream, name_into_DC, name_into_obj):
+def translate_specification(file_stream, name_into_DC, name_into_obj,class_names):
   lexer = DeclSpecLanguageLexer(file_stream)
   stream = CommonTokenStream(lexer)
   parser = DeclSpecLanguageParser(stream)
 #   parser._listeners = [ MyErrorListener() ]
 #   parser._errHandler = BailErrorStrategy()
   tree = parser.statement()
-  visitor = MyVisitor(name_into_DC, name_into_obj)
+  visitor = MyVisitor(name_into_DC, name_into_obj,class_names)
   spec = visitor.visit(tree)
 #   initial obj installed only in one amount and in initial_DC  
   for i in name_into_obj.values():

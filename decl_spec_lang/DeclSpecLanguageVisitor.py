@@ -105,6 +105,11 @@ class DeclSpecLanguageVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by DeclSpecLanguageParser#AobjIDRE.
+    def visitAobjIDRE(self, ctx):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by DeclSpecLanguageParser#Avariable.
     def visitAvariable(self, ctx):
         return self.visitChildren(ctx)

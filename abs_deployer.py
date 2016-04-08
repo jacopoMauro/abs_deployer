@@ -401,7 +401,8 @@ def main(argv):
     
     log.info("Parsing and adding specification")
     data["specification"] = decl_spec_lang.translate_specification(
-                InputStream(i["specification"]),name_into_dc,name_into_obj)
+                InputStream(i["specification"]),name_into_dc,
+                name_into_obj,class_names)
     
     log.debug("Zephyrus input")
     log.debug(json.dumps(data,indent=1))
@@ -413,7 +414,12 @@ def main(argv):
     log.info("Running Zephyrus")
     zephyrus_out_file = "/tmp/" + pid + i["id"] + "_zep_output.txt"
     TMP_FILES.append(zephyrus_out_file)
-    zephyrus2.zephyrus2.main(["-o",zephyrus_out_file,zephyrus_in_file])
+    cmd = []
+    if KEEP:
+      cmd += ['-k']
+      
+    cmd += ["-o",zephyrus_out_file,zephyrus_in_file]
+    zephyrus2.zephyrus2.main(cmd)
     #zephyrus2.zephyrus2.main(["-v", "-k", "-o",zephyrus_out_file,zephyrus_in_file])
     
     log.info("Exctracting last solution")

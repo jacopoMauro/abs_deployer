@@ -29,7 +29,7 @@ term :
   arith_unary_op expr                                 # AexprUnaryArithmetic |  
   '(' b_expr ')'                                      # AtermBrackets ;
 
-typeV : OBJ | DC | ID;
+typeV : OBJ | DC | RE;
 
 dcId :
   ID                                # AdcIDID | // DC[0]
@@ -42,7 +42,8 @@ objId :
   // variable to capture all the obj
   variable                        # AobjIDVar |
   // id with non default scenario
-  ID '[' ID ']'                   # AobjIDScenario ;
+  ID '[' ID ']'                   # AobjIDScenario |
+  ID '[' RE ']'                   # AobjIDRE ; 
 
 variable : VARIABLE   # Avariable;
 	
@@ -53,6 +54,9 @@ arith_unary_op : ABS ;
 comparison_op : LEQ | EQ | GEQ | LT | GT | NEQ;
 unaryOp : NOT;
 boolFact : TRUE;
+
+RE : '\'' ([a-zA-Z0-9_] | '-' | '*' | '\\' | '+' | '?' | '[' | ']' | '|' )+ '\''; 
+  // match regular expression           
 
 AND : 'and';
 OR : 'or';
@@ -82,7 +86,7 @@ OBJ: 'obj';
 DC: 'DC';
 
 VARIABLE : '?'[a-zA-Z_][a-zA-Z0-9_]*;
-      
+ 
 ID : [a-zA-Z_][a-zA-Z0-9_]* ;    // match letters, numbers, underscore
 INT : [-]?[0-9]+ ;
 WS : [ \t\r\n]+ -> skip ; // skip spaces, tabs, newlines
