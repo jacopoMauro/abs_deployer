@@ -75,7 +75,7 @@ interface LoadBalancerService { }
 //enum to specify whether to increase/decrease load balance resource
 data LBOp = INCR | DECR;
 
-[Deploy: scenario[Cost("Cores", 4), Cost("Memory", 8)] ]
+[Deploy: scenario[Cost("Cores", 4), Cost("Memory", 800)] ]
 class LoadBalancerServiceImpl implements LoadBalancerService {
 	// ...
 }
@@ -87,7 +87,7 @@ interface PlatformService { }
 interface MonitorPlatformService extends PlatformService { }
 
 
-[Deploy: scenario[Cost("Cores", 4), Cost("Memory", 12), Param("ls", Req)]]
+[Deploy: scenario[Cost("Cores", 4), Cost("Memory", 1200), Param("ls", Req)]]
 class PlatformServiceImpl(LoadBalancerService ls) 
 implements MonitorPlatformService {
 	// ...
@@ -145,8 +145,8 @@ interface Item {
 interface IQueryService extends Service { }
 
 // Stub implementation of the query service, for use with cost annotations
-[Deploy: scenario[Name("staging"), MaxUse(1), Cost("Cores", 2), Cost("Memory", 800), Param("c", Default("\\\"Customer X\\\"")), Param("staging", Default("True")), Param("ds", Req)] ]
-[Deploy: scenario[Name("live"), MaxUse(1), Cost("Cores", 1), Cost("Memory", 400), Param("c", Default("\\\"Customer X\\\"")), Param("staging", Default("False")), Param("ds", Req)] ]
+[Deploy: scenario[Name("staging"), MaxUse(1), Cost("Cores", 2), Cost("Memory", 700), Param("c", Default("\\\"Customer X\\\"")), Param("staging", Default("True")), Param("ds", Req)] ]
+[Deploy: scenario[Name("live"), MaxUse(1), Cost("Cores", 1), Cost("Memory", 300), Param("c", Default("\\\"Customer X\\\"")), Param("staging", Default("False")), Param("ds", Req)] ]
 class QueryServiceImpl(DeploymentService ds, Customer c, Bool staging) implements IQueryService {
 	// ....
 }
