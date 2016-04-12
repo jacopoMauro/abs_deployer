@@ -20,6 +20,10 @@ import sys, getopt, os, json
 
 import settings
 
+# to allow the use of symmetry breaking constraints use a fictional resource
+# associated to every different type of DC
+fictional_resource_counter = 1
+
 class ABSParsingException(Exception):
   
   def __init__(self,value):
@@ -90,6 +94,9 @@ class MyABSVisitor(ABSVisitor):
     specification.
     """
     # TODO: handle removeInstanceDescription method
+    global fictional_resource_counter
+    # to allow the of symmetry breaking constraints add a fictional resource
+    # per type of component
     method_name = ctx.getChild(2).accept(self).strip()
     if method_name == "setInstanceDescriptions":
       params = ctx.getChild(4).accept(self)[0]
@@ -107,6 +114,8 @@ class MyABSVisitor(ABSVisitor):
                   "resources": {},
                   "cost":0 }
           for k in i[j]:
+            self.dc_json[j]["resources"]['fictional_res'] = fictional_resource_counter
+            fictional_resource_counter += 1
             for h in k.keys():
               if h == "CostPerInterval":
                 self.dc_json[j]["cost"] = k[h]
@@ -127,6 +136,8 @@ class MyABSVisitor(ABSVisitor):
                   "cost":0 }
         for j in data[i]:
           for k in j.keys():
+            self.dc_json[i]["resources"]['fictional_res'] = fictional_resource_counter
+            fictional_resource_counter += 1
             if k == "CostPerInterval":
               self.dc_json[i]["cost"] = j[k]
             else:

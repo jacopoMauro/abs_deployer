@@ -418,7 +418,7 @@ def main(argv):
     if KEEP:
       cmd += ['-k']
       
-    cmd += ["-o",zephyrus_out_file,'-s','smt','-S', zephyrus_in_file]
+    cmd += ["-o",zephyrus_out_file,'-s','lex-gecode', zephyrus_in_file]
     zephyrus2.zephyrus2.main(cmd)
     #zephyrus2.zephyrus2.main(["-v", "-k", "-o",zephyrus_out_file,zephyrus_in_file])
     
