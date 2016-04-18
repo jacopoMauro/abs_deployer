@@ -68,7 +68,6 @@ IFF: 'iff';
 EXISTS: 'exists';
 FORALL: 'forall';
 SUM: 'sum';
-COST: 'cost';
 
 LEQ : '<=';
 EQ : '=';

@@ -7,7 +7,7 @@ from io import StringIO
 def serializedATN():
     with StringIO() as buf:
         buf.write(u"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3")
-        buf.write(u"%\u008a\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t")
+        buf.write(u"$\u008a\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t")
         buf.write(u"\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t\13\4\f\t\f\4\r\t\r")
         buf.write(u"\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22\3")
         buf.write(u"\2\3\2\3\2\3\3\3\3\3\3\3\3\7\3,\n\3\f\3\16\3/\13\3\3")
@@ -19,10 +19,10 @@ def serializedATN():
         buf.write(u"\3\13\3\13\3\13\3\13\3\13\3\13\3\13\3\13\3\13\3\13\5")
         buf.write(u"\13z\n\13\3\f\3\f\3\r\3\r\3\16\3\16\3\17\3\17\3\20\3")
         buf.write(u"\20\3\21\3\21\3\22\3\22\3\22\2\2\23\2\4\6\b\n\f\16\20")
-        buf.write(u"\22\24\26\30\32\34\36 \"\2\b\3\2\22\23\4\2\n\n !\4\2")
-        buf.write(u"\13\f\20\21\3\2\34\36\3\2\26\33\3\2\16\17\u0088\2$\3")
-        buf.write(u"\2\2\2\4\'\3\2\2\2\6\61\3\2\2\2\b\67\3\2\2\2\n9\3\2\2")
-        buf.write(u"\2\f?\3\2\2\2\16c\3\2\2\2\20e\3\2\2\2\22m\3\2\2\2\24")
+        buf.write(u"\22\24\26\30\32\34\36 \"\2\b\3\2\22\23\4\2\n\n\37 \4")
+        buf.write(u"\2\13\f\20\21\3\2\33\35\3\2\25\32\3\2\16\17\u0088\2$")
+        buf.write(u"\3\2\2\2\4\'\3\2\2\2\6\61\3\2\2\2\b\67\3\2\2\2\n9\3\2")
+        buf.write(u"\2\2\f?\3\2\2\2\16c\3\2\2\2\20e\3\2\2\2\22m\3\2\2\2\24")
         buf.write(u"y\3\2\2\2\26{\3\2\2\2\30}\3\2\2\2\32\177\3\2\2\2\34\u0081")
         buf.write(u"\3\2\2\2\36\u0083\3\2\2\2 \u0085\3\2\2\2\"\u0087\3\2")
         buf.write(u"\2\2$%\5\4\3\2%&\7\2\2\3&\3\3\2\2\2\'-\5\6\4\2()\5\30")
@@ -35,19 +35,19 @@ def serializedATN():
         buf.write(u"\2@A\5\32\16\2AB\5\16\b\2BD\3\2\2\2C@\3\2\2\2DG\3\2\2")
         buf.write(u"\2EC\3\2\2\2EF\3\2\2\2F\r\3\2\2\2GE\3\2\2\2HI\t\2\2\2")
         buf.write(u"IJ\5\26\f\2JK\7\3\2\2KL\5\20\t\2LM\7\4\2\2MN\5\4\3\2")
-        buf.write(u"Nd\3\2\2\2Od\7$\2\2Pd\5\24\13\2QR\5\22\n\2RS\7\5\2\2")
+        buf.write(u"Nd\3\2\2\2Od\7#\2\2Pd\5\24\13\2QR\5\22\n\2RS\7\5\2\2")
         buf.write(u"ST\5\24\13\2Td\3\2\2\2UV\7\24\2\2VW\5\26\f\2WX\7\3\2")
         buf.write(u"\2XY\5\20\t\2YZ\7\4\2\2Z[\5\f\7\2[d\3\2\2\2\\]\5\34\17")
         buf.write(u"\2]^\5\f\7\2^d\3\2\2\2_`\7\6\2\2`a\5\4\3\2ab\7\7\2\2")
         buf.write(u"bd\3\2\2\2cH\3\2\2\2cO\3\2\2\2cP\3\2\2\2cQ\3\2\2\2cU")
         buf.write(u"\3\2\2\2c\\\3\2\2\2c_\3\2\2\2d\17\3\2\2\2ef\t\3\2\2f")
-        buf.write(u"\21\3\2\2\2gn\7#\2\2hn\5\26\f\2ij\7#\2\2jk\7\b\2\2kl")
-        buf.write(u"\7$\2\2ln\7\t\2\2mg\3\2\2\2mh\3\2\2\2mi\3\2\2\2n\23\3")
-        buf.write(u"\2\2\2oz\7#\2\2pz\5\26\f\2qr\7#\2\2rs\7\b\2\2st\7#\2")
-        buf.write(u"\2tz\7\t\2\2uv\7#\2\2vw\7\b\2\2wx\7\n\2\2xz\7\t\2\2y")
-        buf.write(u"o\3\2\2\2yp\3\2\2\2yq\3\2\2\2yu\3\2\2\2z\25\3\2\2\2{")
-        buf.write(u"|\7\"\2\2|\27\3\2\2\2}~\t\4\2\2~\31\3\2\2\2\177\u0080")
-        buf.write(u"\t\5\2\2\u0080\33\3\2\2\2\u0081\u0082\7\37\2\2\u0082")
+        buf.write(u"\21\3\2\2\2gn\7\"\2\2hn\5\26\f\2ij\7\"\2\2jk\7\b\2\2")
+        buf.write(u"kl\7#\2\2ln\7\t\2\2mg\3\2\2\2mh\3\2\2\2mi\3\2\2\2n\23")
+        buf.write(u"\3\2\2\2oz\7\"\2\2pz\5\26\f\2qr\7\"\2\2rs\7\b\2\2st\7")
+        buf.write(u"\"\2\2tz\7\t\2\2uv\7\"\2\2vw\7\b\2\2wx\7\n\2\2xz\7\t")
+        buf.write(u"\2\2yo\3\2\2\2yp\3\2\2\2yq\3\2\2\2yu\3\2\2\2z\25\3\2")
+        buf.write(u"\2\2{|\7!\2\2|\27\3\2\2\2}~\t\4\2\2~\31\3\2\2\2\177\u0080")
+        buf.write(u"\t\5\2\2\u0080\33\3\2\2\2\u0081\u0082\7\36\2\2\u0082")
         buf.write(u"\35\3\2\2\2\u0083\u0084\t\6\2\2\u0084\37\3\2\2\2\u0085")
         buf.write(u"\u0086\7\r\2\2\u0086!\3\2\2\2\u0087\u0088\t\7\2\2\u0088")
         buf.write(u"#\3\2\2\2\n-\61\67=Ecmy")
@@ -67,17 +67,17 @@ class DeclSpecLanguageParser ( Parser ):
     literalNames = [ u"<INVALID>", u"'in'", u"':'", u"'.'", u"'('", u"')'", 
                      u"'['", u"']'", u"<INVALID>", u"'and'", u"'or'", u"'not'", 
                      u"'true'", u"'false'", u"'impl'", u"'iff'", u"'exists'", 
-                     u"'forall'", u"'sum'", u"'cost'", u"'<='", u"'='", 
-                     u"'>='", u"'<'", u"'>'", u"'!='", u"'+'", u"'-'", u"'*'", 
-                     u"'abs'", u"'obj'", u"'DC'" ]
+                     u"'forall'", u"'sum'", u"'<='", u"'='", u"'>='", u"'<'", 
+                     u"'>'", u"'!='", u"'+'", u"'-'", u"'*'", u"'abs'", 
+                     u"'obj'", u"'DC'" ]
 
     symbolicNames = [ u"<INVALID>", u"<INVALID>", u"<INVALID>", u"<INVALID>", 
                       u"<INVALID>", u"<INVALID>", u"<INVALID>", u"<INVALID>", 
                       u"RE", u"AND", u"OR", u"NOT", u"TRUE", u"FALSE", u"IMPL", 
-                      u"IFF", u"EXISTS", u"FORALL", u"SUM", u"COST", u"LEQ", 
-                      u"EQ", u"GEQ", u"LT", u"GT", u"NEQ", u"PLUS", u"MINUS", 
-                      u"TIMES", u"ABS", u"OBJ", u"DC", u"VARIABLE", u"ID", 
-                      u"INT", u"WS" ]
+                      u"IFF", u"EXISTS", u"FORALL", u"SUM", u"LEQ", u"EQ", 
+                      u"GEQ", u"LT", u"GT", u"NEQ", u"PLUS", u"MINUS", u"TIMES", 
+                      u"ABS", u"OBJ", u"DC", u"VARIABLE", u"ID", u"INT", 
+                      u"WS" ]
 
     RULE_statement = 0
     RULE_b_expr = 1
@@ -121,23 +121,22 @@ class DeclSpecLanguageParser ( Parser ):
     EXISTS=16
     FORALL=17
     SUM=18
-    COST=19
-    LEQ=20
-    EQ=21
-    GEQ=22
-    LT=23
-    GT=24
-    NEQ=25
-    PLUS=26
-    MINUS=27
-    TIMES=28
-    ABS=29
-    OBJ=30
-    DC=31
-    VARIABLE=32
-    ID=33
-    INT=34
-    WS=35
+    LEQ=19
+    EQ=20
+    GEQ=21
+    LT=22
+    GT=23
+    NEQ=24
+    PLUS=25
+    MINUS=26
+    TIMES=27
+    ABS=28
+    OBJ=29
+    DC=30
+    VARIABLE=31
+    ID=32
+    INT=33
+    WS=34
 
     def __init__(self, input):
         super(DeclSpecLanguageParser, self).__init__(input)
