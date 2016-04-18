@@ -19,38 +19,38 @@ def serializedATN():
         buf.write(u"\3\13\3\13\3\13\3\13\3\13\3\13\3\13\3\13\3\13\3\13\5")
         buf.write(u"\13z\n\13\3\f\3\f\3\r\3\r\3\16\3\16\3\17\3\17\3\20\3")
         buf.write(u"\20\3\21\3\21\3\22\3\22\3\22\2\2\23\2\4\6\b\n\f\16\20")
-        buf.write(u"\22\24\26\30\32\34\36 \"\2\7\3\2\22\23\4\2\n\n !\4\2")
-        buf.write(u"\13\f\20\21\3\2\34\36\3\2\26\33\u0088\2$\3\2\2\2\4\'")
-        buf.write(u"\3\2\2\2\6\61\3\2\2\2\b\67\3\2\2\2\n9\3\2\2\2\f?\3\2")
-        buf.write(u"\2\2\16c\3\2\2\2\20e\3\2\2\2\22m\3\2\2\2\24y\3\2\2\2")
-        buf.write(u"\26{\3\2\2\2\30}\3\2\2\2\32\177\3\2\2\2\34\u0081\3\2")
-        buf.write(u"\2\2\36\u0083\3\2\2\2 \u0085\3\2\2\2\"\u0087\3\2\2\2")
-        buf.write(u"$%\5\4\3\2%&\7\2\2\3&\3\3\2\2\2\'-\5\6\4\2()\5\30\r\2")
-        buf.write(u")*\5\6\4\2*,\3\2\2\2+(\3\2\2\2,/\3\2\2\2-+\3\2\2\2-.")
-        buf.write(u"\3\2\2\2.\5\3\2\2\2/-\3\2\2\2\60\62\5 \21\2\61\60\3\2")
-        buf.write(u"\2\2\61\62\3\2\2\2\62\63\3\2\2\2\63\64\5\b\5\2\64\7\3")
-        buf.write(u"\2\2\2\658\5\"\22\2\668\5\n\6\2\67\65\3\2\2\2\67\66\3")
-        buf.write(u"\2\2\28\t\3\2\2\29=\5\f\7\2:;\5\36\20\2;<\5\f\7\2<>\3")
-        buf.write(u"\2\2\2=:\3\2\2\2=>\3\2\2\2>\13\3\2\2\2?E\5\16\b\2@A\5")
-        buf.write(u"\32\16\2AB\5\16\b\2BD\3\2\2\2C@\3\2\2\2DG\3\2\2\2EC\3")
-        buf.write(u"\2\2\2EF\3\2\2\2F\r\3\2\2\2GE\3\2\2\2HI\t\2\2\2IJ\5\26")
-        buf.write(u"\f\2JK\7\3\2\2KL\5\20\t\2LM\7\4\2\2MN\5\4\3\2Nd\3\2\2")
-        buf.write(u"\2Od\7$\2\2Pd\5\24\13\2QR\5\22\n\2RS\7\5\2\2ST\5\24\13")
-        buf.write(u"\2Td\3\2\2\2UV\7\24\2\2VW\5\26\f\2WX\7\3\2\2XY\5\20\t")
-        buf.write(u"\2YZ\7\4\2\2Z[\5\f\7\2[d\3\2\2\2\\]\5\34\17\2]^\5\f\7")
-        buf.write(u"\2^d\3\2\2\2_`\7\6\2\2`a\5\4\3\2ab\7\7\2\2bd\3\2\2\2")
-        buf.write(u"cH\3\2\2\2cO\3\2\2\2cP\3\2\2\2cQ\3\2\2\2cU\3\2\2\2c\\")
-        buf.write(u"\3\2\2\2c_\3\2\2\2d\17\3\2\2\2ef\t\3\2\2f\21\3\2\2\2")
-        buf.write(u"gn\7#\2\2hn\5\26\f\2ij\7#\2\2jk\7\b\2\2kl\7$\2\2ln\7")
-        buf.write(u"\t\2\2mg\3\2\2\2mh\3\2\2\2mi\3\2\2\2n\23\3\2\2\2oz\7")
-        buf.write(u"#\2\2pz\5\26\f\2qr\7#\2\2rs\7\b\2\2st\7#\2\2tz\7\t\2")
-        buf.write(u"\2uv\7#\2\2vw\7\b\2\2wx\7\n\2\2xz\7\t\2\2yo\3\2\2\2y")
-        buf.write(u"p\3\2\2\2yq\3\2\2\2yu\3\2\2\2z\25\3\2\2\2{|\7\"\2\2|")
-        buf.write(u"\27\3\2\2\2}~\t\4\2\2~\31\3\2\2\2\177\u0080\t\5\2\2\u0080")
-        buf.write(u"\33\3\2\2\2\u0081\u0082\7\37\2\2\u0082\35\3\2\2\2\u0083")
-        buf.write(u"\u0084\t\6\2\2\u0084\37\3\2\2\2\u0085\u0086\7\r\2\2\u0086")
-        buf.write(u"!\3\2\2\2\u0087\u0088\7\16\2\2\u0088#\3\2\2\2\n-\61\67")
-        buf.write(u"=Ecmy")
+        buf.write(u"\22\24\26\30\32\34\36 \"\2\b\3\2\22\23\4\2\n\n !\4\2")
+        buf.write(u"\13\f\20\21\3\2\34\36\3\2\26\33\3\2\16\17\u0088\2$\3")
+        buf.write(u"\2\2\2\4\'\3\2\2\2\6\61\3\2\2\2\b\67\3\2\2\2\n9\3\2\2")
+        buf.write(u"\2\f?\3\2\2\2\16c\3\2\2\2\20e\3\2\2\2\22m\3\2\2\2\24")
+        buf.write(u"y\3\2\2\2\26{\3\2\2\2\30}\3\2\2\2\32\177\3\2\2\2\34\u0081")
+        buf.write(u"\3\2\2\2\36\u0083\3\2\2\2 \u0085\3\2\2\2\"\u0087\3\2")
+        buf.write(u"\2\2$%\5\4\3\2%&\7\2\2\3&\3\3\2\2\2\'-\5\6\4\2()\5\30")
+        buf.write(u"\r\2)*\5\6\4\2*,\3\2\2\2+(\3\2\2\2,/\3\2\2\2-+\3\2\2")
+        buf.write(u"\2-.\3\2\2\2.\5\3\2\2\2/-\3\2\2\2\60\62\5 \21\2\61\60")
+        buf.write(u"\3\2\2\2\61\62\3\2\2\2\62\63\3\2\2\2\63\64\5\b\5\2\64")
+        buf.write(u"\7\3\2\2\2\658\5\"\22\2\668\5\n\6\2\67\65\3\2\2\2\67")
+        buf.write(u"\66\3\2\2\28\t\3\2\2\29=\5\f\7\2:;\5\36\20\2;<\5\f\7")
+        buf.write(u"\2<>\3\2\2\2=:\3\2\2\2=>\3\2\2\2>\13\3\2\2\2?E\5\16\b")
+        buf.write(u"\2@A\5\32\16\2AB\5\16\b\2BD\3\2\2\2C@\3\2\2\2DG\3\2\2")
+        buf.write(u"\2EC\3\2\2\2EF\3\2\2\2F\r\3\2\2\2GE\3\2\2\2HI\t\2\2\2")
+        buf.write(u"IJ\5\26\f\2JK\7\3\2\2KL\5\20\t\2LM\7\4\2\2MN\5\4\3\2")
+        buf.write(u"Nd\3\2\2\2Od\7$\2\2Pd\5\24\13\2QR\5\22\n\2RS\7\5\2\2")
+        buf.write(u"ST\5\24\13\2Td\3\2\2\2UV\7\24\2\2VW\5\26\f\2WX\7\3\2")
+        buf.write(u"\2XY\5\20\t\2YZ\7\4\2\2Z[\5\f\7\2[d\3\2\2\2\\]\5\34\17")
+        buf.write(u"\2]^\5\f\7\2^d\3\2\2\2_`\7\6\2\2`a\5\4\3\2ab\7\7\2\2")
+        buf.write(u"bd\3\2\2\2cH\3\2\2\2cO\3\2\2\2cP\3\2\2\2cQ\3\2\2\2cU")
+        buf.write(u"\3\2\2\2c\\\3\2\2\2c_\3\2\2\2d\17\3\2\2\2ef\t\3\2\2f")
+        buf.write(u"\21\3\2\2\2gn\7#\2\2hn\5\26\f\2ij\7#\2\2jk\7\b\2\2kl")
+        buf.write(u"\7$\2\2ln\7\t\2\2mg\3\2\2\2mh\3\2\2\2mi\3\2\2\2n\23\3")
+        buf.write(u"\2\2\2oz\7#\2\2pz\5\26\f\2qr\7#\2\2rs\7\b\2\2st\7#\2")
+        buf.write(u"\2tz\7\t\2\2uv\7#\2\2vw\7\b\2\2wx\7\n\2\2xz\7\t\2\2y")
+        buf.write(u"o\3\2\2\2yp\3\2\2\2yq\3\2\2\2yu\3\2\2\2z\25\3\2\2\2{")
+        buf.write(u"|\7\"\2\2|\27\3\2\2\2}~\t\4\2\2~\31\3\2\2\2\177\u0080")
+        buf.write(u"\t\5\2\2\u0080\33\3\2\2\2\u0081\u0082\7\37\2\2\u0082")
+        buf.write(u"\35\3\2\2\2\u0083\u0084\t\6\2\2\u0084\37\3\2\2\2\u0085")
+        buf.write(u"\u0086\7\r\2\2\u0086!\3\2\2\2\u0087\u0088\t\7\2\2\u0088")
+        buf.write(u"#\3\2\2\2\n-\61\67=Ecmy")
         return buf.getvalue()
 
 
@@ -334,7 +334,7 @@ class DeclSpecLanguageParser ( Parser ):
         try:
             self.state = 53
             token = self._input.LA(1)
-            if token in [DeclSpecLanguageParser.TRUE]:
+            if token in [DeclSpecLanguageParser.TRUE, DeclSpecLanguageParser.FALSE]:
                 self.enterOuterAlt(localctx, 1)
                 self.state = 51
                 self.boolFact()
@@ -1320,6 +1320,9 @@ class DeclSpecLanguageParser ( Parser ):
         def TRUE(self):
             return self.getToken(DeclSpecLanguageParser.TRUE, 0)
 
+        def FALSE(self):
+            return self.getToken(DeclSpecLanguageParser.FALSE, 0)
+
         def getRuleIndex(self):
             return DeclSpecLanguageParser.RULE_boolFact
 
@@ -1336,10 +1339,15 @@ class DeclSpecLanguageParser ( Parser ):
 
         localctx = DeclSpecLanguageParser.BoolFactContext(self, self._ctx, self.state)
         self.enterRule(localctx, 32, self.RULE_boolFact)
+        self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 133
-            self.match(DeclSpecLanguageParser.TRUE)
+            _la = self._input.LA(1)
+            if not(_la==DeclSpecLanguageParser.TRUE or _la==DeclSpecLanguageParser.FALSE):
+                self._errHandler.recoverInline(self)
+            else:
+                self.consume()
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)

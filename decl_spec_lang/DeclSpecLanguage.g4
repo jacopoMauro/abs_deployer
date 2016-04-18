@@ -53,7 +53,7 @@ arith_unary_op : ABS ;
 
 comparison_op : LEQ | EQ | GEQ | LT | GT | NEQ;
 unaryOp : NOT;
-boolFact : TRUE;
+boolFact : TRUE | FALSE;
 
 RE : '\'' ([a-zA-Z0-9_] | '-' | '*' | '\\' | '+' | '?' | '[' | ']' | '|' | '.' |
   '^' | '$' | '{' | '}' | '(' | ') ' )+ '\'';   // match regular expression           

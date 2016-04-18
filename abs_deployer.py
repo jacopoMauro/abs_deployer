@@ -3,9 +3,11 @@ abs_deployer.py:
 
 Usage: abs_deployer.py [<options>] <abs program file>
   Options:
-    -o, --ofile: file where to save the output
+    -o, --ofile
+      file where to save the output
     -v, --verbose
-    -k, --keep: keep temp files
+    -k, --keep
+      keep temp files
 
 It requires the installation of zephyrus2 available from git@bitbucket.org:jacopomauro/zephyrus2.git    
 
