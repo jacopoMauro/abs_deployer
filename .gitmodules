@@ -1,0 +1,6 @@
+[submodule "docker_scripts"]
+	path = docker_scripts
+	url = https://jacopomauro@bitbucket.org/jacopomauro/docker_scripts.git
+[submodule "docker/docker_scripts"]
+	path = docker/docker_scripts
+	url = https://jacopomauro@bitbucket.org/jacopomauro/docker_scripts.git
