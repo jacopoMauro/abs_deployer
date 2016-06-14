@@ -5,7 +5,7 @@ MAINTAINER Jacopo Mauro
 RUN cd / && \
 	mkdir solvers_exec && \
   cd /solvers_exec && \
-  git clone --depth=1 https://jacopomauro@bitbucket.org/jacopomauro/zephyrus2.git && \
+  git clone --recursive --depth=1 https://jacopomauro@bitbucket.org/jacopomauro/zephyrus2.git && \
   pip install -e /solvers_exec/zephyrus2
 
 # MiniSearch need to be installed before MiniZincIde
@@ -172,7 +172,7 @@ RUN ( [ -d /solvers_exec ] || mkdir /solvers_exec ) && \
 
 # clone abs_deployer
 RUN cd /solvers_exec && \
-	git clone --depth=1 -b smart_deployer https://github.com/jacopoMauro/abs_deployer.git
+	git clone --recursive --depth=1 -b smart_deployer https://github.com/jacopoMauro/abs_deployer.git
 
 ENV PATH /solvers_exec/abs_deployer:$PATH
 
