@@ -5,7 +5,11 @@ MAINTAINER Jacopo Mauro
 RUN cd / && \
 	mkdir solvers_exec && \
   cd /solvers_exec && \
-  git clone --recursive --depth=1 https://jacopomauro@bitbucket.org/jacopomauro/zephyrus2.git && \
+  #git clone --recursive --depth=1 https://jacopomauro@bitbucket.org/jacopomauro/zephyrus2.git && \
+	git clone --recursive -b bind_preferences https://jacopomauro@bitbucket.org/jacopomauro/zephyrus2.git && \
+	cd zephyrus2 && \
+	git checkout 0f464ebb4fa07598875756a8fdc88e3ed3418b5f && \ 
+	#check out tested version with smartdeployer
   pip install -e /solvers_exec/zephyrus2
 
 # MiniSearch need to be installed before MiniZincIde
