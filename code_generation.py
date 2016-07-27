@@ -139,11 +139,11 @@ def print_list_and_get_methods(interfaces,out):
   Print the definition of the lists to store the DC and the objs
   """
   for i in interfaces:
-    out.write("\tList<" + i + "> ls_" + i + " = Nil;\n")  
+    out.write("\tList<Pair<" + i + ",DeploymentComponent>> ls_" + i + " = Nil;\n")
   out.write("\tList<DeploymentComponent> ls_DeploymentComponent = Nil;\n")
   out.write("\n")    
   for i in interfaces:
-    out.write("\tList<" + i + "> get" + i + "() { return ls_" + i + "; }\n")
+    out.write("\tList<Pair<" + i + ",DeploymentComponent>> get" + i + "() { return ls_" + i + "; }\n")
   out.write("\tList<DeploymentComponent> getDeploymentComponent() ")
   out.write("{ return ls_DeploymentComponent; }\n")
 
@@ -160,7 +160,7 @@ def print_undeploy_method(interfaces,out):
   out.write("\t\t}\n")  
   out.write("\t}\n") 
 
-def print_deploy_method(zep_last_conf,bindings,
+def print_deploy_method(smart_dep_annotation, zep_last_conf,bindings,
       initial_dc_into_name, initial_obj_into_name,
       cost_annotations,
       out):
@@ -184,7 +184,7 @@ def print_deploy_method(zep_last_conf,bindings,
     log.critical("Found a cycle in the final configuration. Impossible to proceed")
     log.critical("Exiting")
     sys.exit(1)
-    
+
   for i in installing_order:
     for j in i:
       (dcname,dcnum,objname,_) = j
@@ -222,8 +222,24 @@ def print_deploy_method(zep_last_conf,bindings,
         # adding obj into the list
         interfaces = cost_annotations["hierarchy"][class_name]
         for k in interfaces:
-          out.write("\t\tls_" + k + " = Cons(" + obj_to_abs_name[j] + \
-              ", ls_" + k + ");\n") 
+          out.write("\t\tls_" + k + " = Cons(Pair(" + obj_to_abs_name[j] + "," + dc_to_abs_names[(dcname,dcnum)] + \
+              "), ls_" + k + ");\n")
+      else: # initial object with possible new incoming links
+        for k in bindings:
+          if objname == k["req_comp"] and (not k["prov_comp"].startswith(settings.SEPARATOR)): # if new object to add
+            prov = (k["prov_location"], k["prov_location_num"], k["prov_comp"], k["prov_comp_num"])
+            interface = k["port"]
+            real_objname = obj_to_abs_name[j]
+            for l in smart_dep_annotation["obj"]:
+              if l["name"] == real_objname and "may_add_reference_to" in l:
+                try:
+                  method = next(x for x in l["may_add_reference_to"] if x["interface"] == interface)["method"]
+                except StopIteration:
+                  log.critical("The object " + real_objname + " requires a method to add " + obj_to_abs_name[prov])
+                  log.critical("The method was not found")
+                  log.critical("Exiting")
+                  sys.exit(1)
+            out.write("\t\t" + real_objname + "." + method + "(" + obj_to_abs_name[prov] + ");\n" )
   # ends deploy method
   out.write("\t}\n") 
 
@@ -241,7 +257,7 @@ def print_class(smart_dep_annotation,interfaces,
   out.write("\n")
   print_list_and_get_methods(interfaces,out)
   out.write("\n")
-  print_deploy_method(zep_last_conf, bindings_opt_out,
+  print_deploy_method(smart_dep_annotation,zep_last_conf, bindings_opt_out,
       initial_dc_into_name, initial_obj_into_name,
       cost_annotations, out)
   out.write("\n")
@@ -263,7 +279,7 @@ def print_interface(module_name,interfaces,out):
   out.write("adds import * from ABS.DC;\n")
   out.write("modifies interface SmartDeployInterface {\n")
   for i in interfaces:
-    out.write("\tadds List<" + i + "> get" + i + "();\n")
+    out.write("\tadds List<Pair<" + i + ",DeploymentComponent>> get" + i + "();\n")
   out.write("\tadds List<DeploymentComponent> getDeploymentComponent();\n")
   out.write("\tadds Unit deploy();\n")
   out.write("\tadds Unit undeploy();\n")

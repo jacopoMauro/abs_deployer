@@ -112,6 +112,7 @@ class MyVisitor(DeclSpecLanguageVisitor):
   
   def visitAtermDCObj(self, ctx):
     dc = ctx.getChild(0).accept(self)
+    dc = ctx.getChild(0).accept(self)
     obj = ctx.getChild(2).accept(self)
     ls = obj.split('||')
     s = dc + '.' + ls[0]
@@ -133,7 +134,7 @@ class MyVisitor(DeclSpecLanguageVisitor):
   
   def visitAobjIDRE(self, ctx):
     class_name = ctx.getChild(0).accept(self)
-    pattern = ctx.getChild(2).accept(self)[1:-1]
+    pattern = ctx.getChild(2).accept(self).strip()[1:-1]
     matches = []
     for i in self.class_names[class_name]:
       if re.match(pattern, i):

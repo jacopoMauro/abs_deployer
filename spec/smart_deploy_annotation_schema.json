@@ -64,6 +64,24 @@
             "interface": {
               "description": "interface of the obj",
               "type": "string"
+            },
+            "may_add_reference_to": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "interface": {
+                    "type": "string"
+                  },
+                  "method": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "interface",
+                  "method"
+                ]
+              }
             }
           },
           "required": [

@@ -47,6 +47,7 @@ import zephyrus2
 
 import settings
 import code_generation
+import bind_preferences_translator
 import decl_spec_lang.decl_spec_lang as decl_spec_lang
 import ABS.abs_extractor as abs_extractor
 
@@ -259,14 +260,30 @@ def initialObjects(annotation):
     name = settings.SEPARATOR + uuid.uuid4().hex
     zep[name] = {}
     for j in i.keys():
-      if j != "name":
-        zep[name]["provides"] = i["provides"]
-        zep[name]["resources"] = { "initial_obj_resource" : 1}
+      zep[name]["provides"] = i["provides"]
+      zep[name]["resources"] = { "initial_obj_resource" : 1}
     obj_into_name[name] = i["name"]
     name_into_obj[i["name"]] = name
-  
+
   return (zep, obj_into_name, name_into_obj)
 
+
+def allow_incoming_bindings_for_initial_objects(annotation,name_into_obj,zep):
+  """
+  this function inject a -1 as a requirer for the intial objects
+  this allows the binder to add bindings also to the intial object
+  :param the intial json annotation
+  :param the zephyrus json specification
+  :return: the zephyrus json specification
+  """
+  for i in annotation["obj"]:
+    if "may_add_reference_to" in i:
+      comp = zep["components"][name_into_obj[i["name"]]]
+      comp["requires"] = {}
+      for j in i["may_add_reference_to"]:
+          # set value to -1 to allow the possible income of non mandatory bindings
+        comp["requires"][j["interface"]] = -1
+  return zep
 
 def extract_last_solution(inFile,outFile):
   """
@@ -405,14 +422,19 @@ def main(argv):
     data["specification"] = decl_spec_lang.translate_specification(
                 InputStream(i["specification"]),name_into_dc,
                 name_into_obj,class_names)
-    
+
+    log.info("Parsing and adding bind preferences")
+    if "bind preferences" in i:
+      data["bind preferences"] = map(lambda x: bind_preferences_translator.translate_preference(x,name_into_dc,
+                name_into_obj,class_names),i["bind preferences"])
+
     log.debug("Zephyrus input")
     log.debug(json.dumps(data,indent=1))
     zephyrus_in_file = "/tmp/" + pid + i["id"] + "_zep_input.json"
     TMP_FILES.append(zephyrus_in_file)
     with open(zephyrus_in_file, 'w') as f:
       json.dump(data,f,indent=1)
-         
+
     log.info("Running Zephyrus")
     zephyrus_out_file = "/tmp/" + pid + i["id"] + "_zep_output.txt"
     TMP_FILES.append(zephyrus_out_file)
@@ -422,7 +444,6 @@ def main(argv):
       
     cmd += ["-o",zephyrus_out_file,'-s','lex-gecode', zephyrus_in_file]
     zephyrus2.zephyrus2.main(cmd)
-    #zephyrus2.zephyrus2.main(["-v", "-k", "-o",zephyrus_out_file,zephyrus_in_file])
     
     log.info("Exctracting last solution")
     binding_in_file = "/tmp/" + pid + i["id"] + "_binding_in.json"
@@ -431,15 +452,32 @@ def main(argv):
       log.critical("No solution found for " + i["id"])
       log.critical("Exiting")
       sys.exit(1)
-    else:
-      log.debug("Zephyrus last solution")
-      zep_last_conf = read_json(binding_in_file)
-      log.debug(json.dumps(zep_last_conf,indent=1))
-      
+
+    log.debug("Zephyrus last solution")
+    zep_last_conf = read_json(binding_in_file)
+    log.debug(json.dumps(zep_last_conf,indent=1))
+
+    # reset the number of bindings with initial components (to allow the binder to decide the connections)
+    for j in zep_last_conf["bindings"]:
+      if (j["provider"] in obj_into_name) or (j["requirer"] in obj_into_name):
+        j["num"] = 0
+    log.debug("Modified configuration for the binding optimizer")
+    log.debug(json.dumps(zep_last_conf, indent=1))
+    with open(binding_in_file, 'w') as f:
+      f.write(json.dumps(zep_last_conf, indent=1))
+
+    log.debug("Modified Zephyrus input for binding optimizer")
+    data = allow_incoming_bindings_for_initial_objects(i, name_into_obj, data)
+    log.debug(json.dumps(data,indent=1))
+    with open(zephyrus_in_file, 'w') as f:
+      json.dump(data,f,indent=1)
+
+
     log.info("Running bind optimizer")
     binding_out_file = "/tmp/" + pid + i["id"] + "_binding_out.json"
     TMP_FILES.append(binding_out_file)
     zephyrus2.bindings_optimizer.main(["-o",binding_out_file,zephyrus_in_file,binding_in_file])
+    #zephyrus2.bindings_optimizer.main(["-o",binding_out_file,"-d","log"+i["id"]+".dot",zephyrus_in_file, binding_in_file])
     log.debug("Binding optimizer solution")
     bindings_opt_out = read_json(binding_out_file)
     log.debug(json.dumps(binding_out_file,indent=1))
