@@ -75,6 +75,9 @@
                   },
                   "method": {
                     "type": "string"
+                  },
+                  "DC_as_additional_parameter": {
+                    "type": "boolean"
                   }
                 },
                 "required": [

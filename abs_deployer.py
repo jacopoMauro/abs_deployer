@@ -285,6 +285,30 @@ def allow_incoming_bindings_for_initial_objects(annotation,name_into_obj,zep):
         comp["requires"][j["interface"]] = -1
   return zep
 
+
+def allow_more_bindings_for_list_parameters(annotation, zep):
+    """
+    this function inject a -1 as a requirer for the objects having as input paramter a list
+    this allows the binder to add more than required number of bindings
+    :param annotation: the intial json annotation
+    :param zep: the zephyrus json specification
+    :return: the zephyrus json specification
+    """
+    for i in annotation["classes"]:
+        for j in i["activates"]:
+            if len(j["scenarios"]) == 0:
+                name = settings.DEFAULT_SCENARIO_NAME + settings.SEPARATOR + i["name"]
+            else:
+                name = j["scenarios"][0] + settings.SEPARATOR + i["name"]
+            for k in j["sig"]:
+                if k["type"] == "list":
+                    zep["components"][name]["requires"][k["value"]] = -1
+            for k in j["optional_list"]:
+                if k["interface"] not in zep["components"][name]["requires"]:
+                    zep["components"][name]["requires"][k["interface"]] = -1
+    return zep
+
+
 def extract_last_solution(inFile,outFile):
   """
   Extracts from a file the last solution saving it in another file.
@@ -366,7 +390,7 @@ def main(argv):
   annotation = remove_dots(read_json(annotation_file))
   log.debug("Internal json representation extracted from the abs program")
   log.debug(json.dumps(annotation, indent=1))
-  
+
   log.info("Extracting class, resource, interface")
   class_names, resouce_names, interface_names = get_abs_names(annotation)
   
@@ -468,6 +492,7 @@ def main(argv):
 
     log.debug("Modified Zephyrus input for binding optimizer")
     data = allow_incoming_bindings_for_initial_objects(i, name_into_obj, data)
+    data = allow_more_bindings_for_list_parameters(annotation, data)
     log.debug(json.dumps(data,indent=1))
     with open(zephyrus_in_file, 'w') as f:
       json.dump(data,f,indent=1)
@@ -476,8 +501,9 @@ def main(argv):
     log.info("Running bind optimizer")
     binding_out_file = "/tmp/" + pid + i["id"] + "_binding_out.json"
     TMP_FILES.append(binding_out_file)
-    zephyrus2.bindings_optimizer.main(["-o",binding_out_file,zephyrus_in_file,binding_in_file])
-    #zephyrus2.bindings_optimizer.main(["-o",binding_out_file,"-d","log"+i["id"]+".dot",zephyrus_in_file, binding_in_file])
+    #zephyrus2.bindings_optimizer.main(["-o",binding_out_file,zephyrus_in_file,binding_in_file])
+    # tofix
+    zephyrus2.bindings_optimizer.main(["-o",binding_out_file,"-d","log"+i["id"]+".dot",zephyrus_in_file, binding_in_file])
     log.debug("Binding optimizer solution")
     bindings_opt_out = read_json(binding_out_file)
     log.debug(json.dumps(binding_out_file,indent=1))

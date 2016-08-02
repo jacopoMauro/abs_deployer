@@ -53,6 +53,7 @@ interface LoadBalancerEndPoint extends EndPoint { }
 interface Service extends EndPoint { }
 
 // load balance over n services in round robin style
+[Deploy: scenario[Cost("Cores", 2), Cost("Memory", 100),Param("services", List(0))]]
 class LoadBalancerEndPointImpl(List<Service> services) implements LoadBalancerEndPoint {
 }
 
@@ -61,7 +62,7 @@ class LoadBalancerEndPointImpl(List<Service> services) implements LoadBalancerEn
 interface DeploymentService { } 
 
 
-[Deploy: scenario[MaxUse(2),Cost("Cores", 1), Cost("Memory", 80), Param("p",Req)]]
+[Deploy: scenario[Cost("Cores", 1), Cost("Memory", 80), Param("p",Req)]]
 class DeploymentServiceImpl(PlatformService p) implements DeploymentService {
 	// ...
 }
@@ -70,13 +71,18 @@ class DeploymentServiceImpl(PlatformService p) implements DeploymentService {
 // A load balancer can enable or disable a service
 // TODO annotations on interfaces might help to restrict or specifiy 
 // requirements such that they should be observed by any object impl.
-interface LoadBalancerService { }
+interface LoadBalancerService { 
+	Unit add(LoadBalancerEndPoint endpoint);
+}
 
 //enum to specify whether to increase/decrease load balance resource
 data LBOp = INCR | DECR;
 
-[Deploy: scenario[Cost("Cores", 4), Cost("Memory", 800)] ]
-class LoadBalancerServiceImpl implements LoadBalancerService {
+//[Deploy: scenario[Cost("Cores", 4), Cost("Memory", 800),Param("ls", List(0))] ]
+//class LoadBalancerServiceImpl(List<LoadBalancerEndPoint> ls) implements LoadBalancerService  {
+[Deploy: scenario[Cost("Cores", 4), Cost("Memory", 800),Param("LoadBalancerEndPoint", OptList("add"))] ]
+class LoadBalancerServiceImpl implements LoadBalancerService  {
+	Unit add(LoadBalancerEndPoint endpoint) {}
 	// ...
 }
 
@@ -149,8 +155,8 @@ interface Item {
 interface IQueryService extends Service { }
 
 // Stub implementation of the query service, for use with cost annotations
-[Deploy: scenario[Name("staging"), MaxUse(1), Cost("Cores", 2), Cost("Memory", 700), Param("c", Default("\\\"Customer X\\\"")), Param("staging", Default("True")), Param("ds", Req)] ]
-[Deploy: scenario[Name("live"), MaxUse(1), Cost("Cores", 1), Cost("Memory", 300), Param("c", Default("\\\"Customer X\\\"")), Param("staging", Default("False")), Param("ds", Req)] ]
+[Deploy: scenario[Name("staging"), Cost("Cores", 2), Cost("Memory", 700), Param("c", Default("\\\"Customer X\\\"")), Param("staging", Default("True")), Param("ds", Req)] ]
+[Deploy: scenario[Name("live"), Cost("Cores", 1), Cost("Memory", 300), Param("c", Default("\\\"Customer X\\\"")), Param("staging", Default("False")), Param("ds", Req)] ]
 class QueryServiceImpl(DeploymentService ds, Customer c, Bool staging) implements IQueryService {
 	// ....
 }
@@ -184,12 +190,16 @@ class ScalingMonitor() implements ScalingMonitor {
 /* JSON ANNOTATION
 {
 	"id": "MainSmartDeployer",
-	"specification": "(sum ?x in '.*_eu': ?x.QueryServiceImpl['staging']) > 0 and (sum ?x in '.*_us': ?x.QueryServiceImpl['staging']) > 0 and QueryServiceImpl['.*'] = 4 and (sum ?x in '.*_eu': ?x.LoadBalancerServiceImpl) = 1 and (sum ?x in '.*_us': ?x.LoadBalancerServiceImpl) = 1 and (forall ?x in DC: ( ?x.QueryServiceImpl['.*'] < 2 and ( ?x.QueryServiceImpl['.*'] = 1 impl ?x.DeploymentServiceImpl > 0) and ( ?x.ServiceProviderImpl > 0 impl  (sum ?y in obj:  ?x.?y) = ?x.ServiceProviderImpl + ?x.PlatformServiceImpl) and (?x.LoadBalancerServiceImpl > 0 impl (sum ?y in obj: ?x.?y) = ?x.LoadBalancerServiceImpl))) and abs((sum ?x in '.*_eu': ?x.QueryServiceImpl['.*']) - (sum ?x in '.*_us': ?x.QueryServiceImpl['.*']) ) < 2 and (((sum ?x in '.*_us': ?x.QueryServiceImpl['staging']) > 0) impl (sum ?x in '.*_us': ?x.PlatformServiceImpl) > 0) and (((sum ?x in '.*_eu': ?x.QueryServiceImpl['staging']) > 0) impl (sum ?x in '.*_eu': ?x.PlatformServiceImpl) > 0)",
+	"specification": "(sum ?x in '.*_eu': ?x.QueryServiceImpl['staging']) > 0 and (sum ?x in '.*_us': ?x.QueryServiceImpl['staging']) > 0 and QueryServiceImpl['.*'] = 4 and (sum ?x in '.*_eu': ?x.LoadBalancerServiceImpl) = 1 and (sum ?x in '.*_us': ?x.LoadBalancerServiceImpl) = 1 and (sum ?x in '.*_eu': ?x.LoadBalancerEndPointImpl) = 2 and (sum ?x in '.*_us': ?x.LoadBalancerEndPointImpl) = 1 and (forall ?x in DC: ( ?x.QueryServiceImpl['.*'] < 2 and ( ?x.QueryServiceImpl['.*'] = 1 impl ?x.DeploymentServiceImpl > 0) and ( ?x.ServiceProviderImpl > 0 impl  (sum ?y in obj:  ?x.?y) = ?x.ServiceProviderImpl + ?x.PlatformServiceImpl) and (?x.LoadBalancerServiceImpl > 0 impl (sum ?y in obj: ?x.?y) = 1) and (?x.LoadBalancerEndPointImpl > 0 impl (sum ?y in obj: ?x.?y) = 1) )) and abs((sum ?x in '.*_eu': ?x.QueryServiceImpl['.*']) - (sum ?x in '.*_us': ?x.QueryServiceImpl['.*']) ) < 2 and (((sum ?x in '.*_us': ?x.QueryServiceImpl['staging']) > 0) impl (sum ?x in '.*_us': ?x.PlatformServiceImpl) > 0) and (((sum ?x in '.*_eu': ?x.QueryServiceImpl['staging']) > 0) impl (sum ?x in '.*_eu': ?x.PlatformServiceImpl) > 0)",
 	"DC": [],
 	"obj": [],
 	"cloud_provider_DC_availability" : { "c3_2xlarge_eu" : 3, "c3_2xlarge_us" : 3},
 	"bind preferences" : [
 	    "local",
+			"sum ?x of type QueryServiceImpl['.*'] in '.*_eu' :  forall ?y of type LoadBalancerEndPointImpl in '.*_eu' : ?x used by ?y",
+			"sum ?x of type QueryServiceImpl['.*'] in '.*_us' :  forall ?y of type LoadBalancerEndPointImpl in '.*_us' : ?x used by ?y",
+			"sum ?x of type LoadBalancerEndPointImpl in '.*_eu' :  exists ?y of type LoadBalancerServiceImpl in '.*_eu' : ?x used by ?y",
+			"sum ?x of type LoadBalancerEndPointImpl in '.*_us' :  exists ?y of type LoadBalancerServiceImpl in '.*_us' : ?x used by ?y",
 	    "sum ?x of type DeploymentServiceImpl in '.*_eu' :  exists ?y of type PlatformServiceImpl in '.*_eu' : ?y used by ?x",
 			"sum ?x of type DeploymentServiceImpl in '.*_us' :  exists ?y of type PlatformServiceImpl in '.*_us' : ?y used by ?x",
 			"forall ?x of type LoadBalancerServiceImpl in '.*_eu' : forall ?y of type PlatformServiceImpl in '.*_eu' : ?x used by ?y",
@@ -199,7 +209,7 @@ class ScalingMonitor() implements ScalingMonitor {
 **/
 
 
-	[ SmartDeploy : "{\"id\":\"MainSmartDeployer\",\"specification\":\"(sum ?x in '.*_eu': ?x.QueryServiceImpl['staging']) > 0 and (sum ?x in '.*_us': ?x.QueryServiceImpl['staging']) > 0 and QueryServiceImpl['.*'] = 4 and (sum ?x in '.*_eu': ?x.LoadBalancerServiceImpl) = 1 and (sum ?x in '.*_us': ?x.LoadBalancerServiceImpl) = 1 and (forall ?x in DC: ( ?x.QueryServiceImpl['.*'] < 2 and ( ?x.QueryServiceImpl['.*'] = 1 impl ?x.DeploymentServiceImpl > 0) and ( ?x.ServiceProviderImpl > 0 impl  (sum ?y in obj:  ?x.?y) = ?x.ServiceProviderImpl + ?x.PlatformServiceImpl) and (?x.LoadBalancerServiceImpl > 0 impl (sum ?y in obj: ?x.?y) = ?x.LoadBalancerServiceImpl))) and abs((sum ?x in '.*_eu': ?x.QueryServiceImpl['.*']) - (sum ?x in '.*_us': ?x.QueryServiceImpl['.*']) ) < 2 and (((sum ?x in '.*_us': ?x.QueryServiceImpl['staging']) > 0) impl (sum ?x in '.*_us': ?x.PlatformServiceImpl) > 0) and (((sum ?x in '.*_eu': ?x.QueryServiceImpl['staging']) > 0) impl (sum ?x in '.*_eu': ?x.PlatformServiceImpl) > 0)\",\"DC\":[],\"obj\":[],\"cloud_provider_DC_availability\":{\"c3_2xlarge_eu\":3,\"c3_2xlarge_us\":3},\"bind preferences\":[\"local\",\"sum ?x of type DeploymentServiceImpl in '.*_eu' :  exists ?y of type PlatformServiceImpl in '.*_eu' : ?y used by ?x\",\"sum ?x of type DeploymentServiceImpl in '.*_us' :  exists ?y of type PlatformServiceImpl in '.*_us' : ?y used by ?x\",\"forall ?x of type LoadBalancerServiceImpl in '.*_eu' : forall ?y of type PlatformServiceImpl in '.*_eu' : ?x used by ?y\",\"forall ?x of type LoadBalancerServiceImpl in '.*_us' : forall ?y of type PlatformServiceImpl in '.*_us' : ?x used by ?y\"]}" ]
+	[ SmartDeploy : "{\"id\":\"MainSmartDeployer\",\"specification\":\"(sum ?x in '.*_eu': ?x.QueryServiceImpl['staging']) > 0 and (sum ?x in '.*_us': ?x.QueryServiceImpl['staging']) > 0 and QueryServiceImpl['.*'] = 4 and (sum ?x in '.*_eu': ?x.LoadBalancerServiceImpl) = 1 and (sum ?x in '.*_us': ?x.LoadBalancerServiceImpl) = 1 and (sum ?x in '.*_eu': ?x.LoadBalancerEndPointImpl) = 2 and (sum ?x in '.*_us': ?x.LoadBalancerEndPointImpl) = 1 and (forall ?x in DC: ( ?x.QueryServiceImpl['.*'] < 2 and ( ?x.QueryServiceImpl['.*'] = 1 impl ?x.DeploymentServiceImpl > 0) and ( ?x.ServiceProviderImpl > 0 impl  (sum ?y in obj:  ?x.?y) = ?x.ServiceProviderImpl + ?x.PlatformServiceImpl) and (?x.LoadBalancerServiceImpl > 0 impl (sum ?y in obj: ?x.?y) = 1) and (?x.LoadBalancerEndPointImpl > 0 impl (sum ?y in obj: ?x.?y) = 1) )) and abs((sum ?x in '.*_eu': ?x.QueryServiceImpl['.*']) - (sum ?x in '.*_us': ?x.QueryServiceImpl['.*']) ) < 2 and (((sum ?x in '.*_us': ?x.QueryServiceImpl['staging']) > 0) impl (sum ?x in '.*_us': ?x.PlatformServiceImpl) > 0) and (((sum ?x in '.*_eu': ?x.QueryServiceImpl['staging']) > 0) impl (sum ?x in '.*_eu': ?x.PlatformServiceImpl) > 0)\",\"DC\":[],\"obj\":[],\"cloud_provider_DC_availability\":{\"c3_2xlarge_eu\":3,\"c3_2xlarge_us\":3},\"bind preferences\":[\"local\",\"sum ?x of type QueryServiceImpl['.*'] in '.*_eu' :  forall ?y of type LoadBalancerEndPointImpl in '.*_eu' : ?x used by ?y\",\"sum ?x of type QueryServiceImpl['.*'] in '.*_us' :  forall ?y of type LoadBalancerEndPointImpl in '.*_us' : ?x used by ?y\",\"sum ?x of type LoadBalancerEndPointImpl in '.*_eu' :  exists ?y of type LoadBalancerServiceImpl in '.*_eu' : ?x used by ?y\",\"sum ?x of type LoadBalancerEndPointImpl in '.*_us' :  exists ?y of type LoadBalancerServiceImpl in '.*_us' : ?x used by ?y\",\"sum ?x of type DeploymentServiceImpl in '.*_eu' :  exists ?y of type PlatformServiceImpl in '.*_eu' : ?y used by ?x\",\"sum ?x of type DeploymentServiceImpl in '.*_us' :  exists ?y of type PlatformServiceImpl in '.*_us' : ?y used by ?x\",\"forall ?x of type LoadBalancerServiceImpl in '.*_eu' : forall ?y of type PlatformServiceImpl in '.*_eu' : ?x used by ?y\",\"forall ?x of type LoadBalancerServiceImpl in '.*_us' : forall ?y of type PlatformServiceImpl in '.*_us' : ?x used by ?y\"]}" ]
 	SmartDeployInterface c1 = new MainSmartDeployer(cloudProvider);
 	c1.deploy();
 
@@ -209,92 +219,105 @@ class ScalingMonitor() implements ScalingMonitor {
 
 	
 /** JSON ANNOTATION
-{
-  "id": "AddQueryDeployer",
-  "specification": "QueryServiceImpl['live'] = 4 and (sum ?x in '.*_eu': ?x.LoadBalancerServiceImpl) = 1 and (sum ?x in '.*_us': ?x.LoadBalancerServiceImpl) = 1 and (forall ?x in DC: ( ?x.QueryServiceImpl['.*'] < 2 and ( ?x.QueryServiceImpl['.*'] = 1 impl ?x.DeploymentServiceImpl > 0) and (?x.ServiceProviderImpl > 0 impl ?x.PlatformServiceImpl > 0) and ( ?x.ServiceProviderImpl > 0 impl  (sum ?y in obj:  ?x.?y) = ?x.ServiceProviderImpl + ?x.PlatformServiceImpl) and (?x.LoadBalancerServiceImpl > 0 impl (sum ?y in obj: ?x.?y) = ?x.LoadBalancerServiceImpl))) and abs((sum ?x in '.*_eu': ?x.QueryServiceImpl['.*']) - (sum ?x in '.*_us': ?x.QueryServiceImpl['.*']) ) < 2 and (((sum ?x in '.*_us': ?x.QueryServiceImpl['staging']) > 0) impl (sum ?x in '.*_us': ?x.PlatformServiceImpl) > 0) and (((sum ?x in '.*_eu': ?x.QueryServiceImpl['staging']) > 0) impl (sum ?x in '.*_eu': ?x.PlatformServiceImpl) > 0)",
-  "DC": [],
-  "obj": [
-    {
-      "name": "platformObjUs",
-      "provides": [
-        {
-          "ports": [
+{  
+  "id":"AddQueryDeployer",
+  "specification":"QueryServiceImpl['live'] = 4 and (sum ?x in '.*_eu': ?x.LoadBalancerServiceImpl) = 1 and (sum ?x in '.*_us': ?x.LoadBalancerServiceImpl) = 1 and (forall ?x in DC: ( ?x.QueryServiceImpl['.*'] < 2 and ( ?x.QueryServiceImpl['.*'] = 1 impl ?x.DeploymentServiceImpl > 0) and (?x.ServiceProviderImpl > 0 impl ?x.PlatformServiceImpl > 0) and ( ?x.ServiceProviderImpl > 0 impl  (sum ?y in obj:  ?x.?y) = ?x.ServiceProviderImpl + ?x.PlatformServiceImpl) and (?x.LoadBalancerServiceImpl > 0 impl (sum ?y in obj: ?x.?y) = ?x.LoadBalancerServiceImpl))) and abs((sum ?x in '.*_eu': ?x.QueryServiceImpl['.*']) - (sum ?x in '.*_us': ?x.QueryServiceImpl['.*']) ) < 2 and (((sum ?x in '.*_us': ?x.QueryServiceImpl['staging']) > 0) impl (sum ?x in '.*_us': ?x.PlatformServiceImpl) > 0) and (((sum ?x in '.*_eu': ?x.QueryServiceImpl['staging']) > 0) impl (sum ?x in '.*_eu': ?x.PlatformServiceImpl) > 0)",
+  "DC":[  
+
+  ],
+  "obj":[  
+    {  
+      "name":"platformObjUs",
+      "provides":[  
+        {  
+          "ports":[  
             "MonitorPlatformService",
             "PlatformService"
           ],
-          "num": -1
-        }],
-			"may_add_reference_to": [ {
-    		"interface" : "LoadBalancerService",
-				"method" : "addLoadBalancer"} ],
-      "interface": "PlatformService"
+          "num":-1
+        }
+      ],
+      "may_add_reference_to":[  
+        {  
+          "interface":"LoadBalancerService",
+          "method":"addLoadBalancer",
+          "DC_as_additional_parameter":true
+        }
+      ],
+      "interface":"PlatformService"
     },
-		{
-      "name": "platformObjEu",
-      "provides": [
-        {
-          "ports": [
+    {  
+      "name":"platformObjEu",
+      "provides":[  
+        {  
+          "ports":[  
             "MonitorPlatformService",
             "PlatformService"
           ],
-          "num": -1
+          "num":-1
         }
       ],
-			"may_add_reference_to": [ {
-    		"interface" : "LoadBalancerService",
-				"method" : "addLoadBalancer"} ],
-      "interface": "PlatformService"
+      "may_add_reference_to":[  
+        {  
+          "interface":"LoadBalancerService",
+          "method":"addLoadBalancer",
+          "DC_as_additional_parameter":true
+        }
+      ],
+      "interface":"PlatformService"
     },
-    {
-      "name": "loadBalancerObjEu",
-      "provides": [
-        {
-          "ports": [
+    {  
+      "name":"loadBalancerObjEu",
+      "provides":[  
+        {  
+          "ports":[  
             "LoadBalancerService"
           ],
-          "num": -1
+          "num":-1
         }
       ],
-      "interface": "LoadBalancerService"
+      "interface":"LoadBalancerService"
     },
-    {
-      "name": "loadBalancerObjUs",
-      "provides": [
-        {
-          "ports": [
+    {  
+      "name":"loadBalancerObjUs",
+      "provides":[  
+        {  
+          "ports":[  
             "LoadBalancerService"
           ],
-          "num": -1
+          "num":-1
         }
       ],
-      "interface": "LoadBalancerService"
+      "interface":"LoadBalancerService"
     },
-    {
-      "name": "serviceProviderObj",
-      "provides": [
-        {
-          "ports": [
+    {  
+      "name":"serviceProviderObj",
+      "provides":[  
+        {  
+          "ports":[  
             "ServiceProvider"
           ],
-          "num": -1
+          "num":-1
         }
       ],
-      "interface": "ServiceProvider"
+      "interface":"ServiceProvider"
     }
   ],
-	"bind preferences" : [
-	    "local",
-	    "sum ?x of type DeploymentServiceImpl in '.*_eu' :  exists ?y of type platformObjEu in DC : ?y used by ?x",
-			"sum ?x of type DeploymentServiceImpl in '.*_us' :  exists ?y of type platformObjUs in DC : ?y used by ?x",
-			"forall ?x of type LoadBalancerServiceImpl in '.*_eu' : exists ?y of type platformObjEu in DC : ?x used by ?y",
-			"forall ?x of type LoadBalancerServiceImpl in '.*_us' : exists ?y of type platformObjUs in DC : ?x used by ?y"
-	    ]
+  "bind preferences":[  
+    "local",
+    "sum ?x of type DeploymentServiceImpl in '.*_eu' :  exists ?y of type platformObjEu in DC : ?y used by ?x",
+    "sum ?x of type DeploymentServiceImpl in '.*_us' :  exists ?y of type platformObjUs in DC : ?y used by ?x",
+    "forall ?x of type LoadBalancerServiceImpl in '.*_eu' : exists ?y of type platformObjEu in DC : ?x used by ?y",
+    "forall ?x of type LoadBalancerServiceImpl in '.*_us' : exists ?y of type platformObjUs in DC : ?x used by ?y"
+  ]
 }
 **/
 
-	[ SmartDeploy : "{\"id\":\"AddQueryDeployer\",\"specification\":\"QueryServiceImpl['live'] = 4 and (sum ?x in '.*_eu': ?x.LoadBalancerServiceImpl) = 1 and (sum ?x in '.*_us': ?x.LoadBalancerServiceImpl) = 1 and (forall ?x in DC: ( ?x.QueryServiceImpl['.*'] < 2 and ( ?x.QueryServiceImpl['.*'] = 1 impl ?x.DeploymentServiceImpl > 0) and (?x.ServiceProviderImpl > 0 impl ?x.PlatformServiceImpl > 0) and ( ?x.ServiceProviderImpl > 0 impl  (sum ?y in obj:  ?x.?y) = ?x.ServiceProviderImpl + ?x.PlatformServiceImpl) and (?x.LoadBalancerServiceImpl > 0 impl (sum ?y in obj: ?x.?y) = ?x.LoadBalancerServiceImpl))) and abs((sum ?x in '.*_eu': ?x.QueryServiceImpl['.*']) - (sum ?x in '.*_us': ?x.QueryServiceImpl['.*']) ) < 2 and (((sum ?x in '.*_us': ?x.QueryServiceImpl['staging']) > 0) impl (sum ?x in '.*_us': ?x.PlatformServiceImpl) > 0) and (((sum ?x in '.*_eu': ?x.QueryServiceImpl['staging']) > 0) impl (sum ?x in '.*_eu': ?x.PlatformServiceImpl) > 0)\",\"DC\":[],\"obj\":[{\"name\":\"platformObjUs\",\"provides\":[{\"ports\":[\"MonitorPlatformService\",\"PlatformService\"],\"num\":-1}],\"may_add_reference_to\":[{\"interface\":\"LoadBalancerService\",\"method\":\"addLoadBalancer\"}],\"interface\":\"PlatformService\"},{\"name\":\"platformObjEu\",\"provides\":[{\"ports\":[\"MonitorPlatformService\",\"PlatformService\"],\"num\":-1}],\"may_add_reference_to\":[{\"interface\":\"LoadBalancerService\",\"method\":\"addLoadBalancer\"}],\"interface\":\"PlatformService\"},{\"name\":\"loadBalancerObjEu\",\"provides\":[{\"ports\":[\"LoadBalancerService\"],\"num\":-1}],\"interface\":\"LoadBalancerService\"},{\"name\":\"loadBalancerObjUs\",\"provides\":[{\"ports\":[\"LoadBalancerService\"],\"num\":-1}],\"interface\":\"LoadBalancerService\"},{\"name\":\"serviceProviderObj\",\"provides\":[{\"ports\":[\"ServiceProvider\"],\"num\":-1}],\"interface\":\"ServiceProvider\"}],\"bind preferences\":[\"local\",\"sum ?x of type DeploymentServiceImpl in '.*_eu' :  exists ?y of type platformObjEu in DC : ?y used by ?x\",\"sum ?x of type DeploymentServiceImpl in '.*_us' :  exists ?y of type platformObjUs in DC : ?y used by ?x\",\"forall ?x of type LoadBalancerServiceImpl in '.*_eu' : exists ?y of type platformObjEu in DC : ?x used by ?y\",\"forall ?x of type LoadBalancerServiceImpl in '.*_us' : exists ?y of type platformObjUs in DC : ?x used by ?y\"]}" ]
-
 /**
+
+	[ SmartDeploy : "{\"id\":\"AddQueryDeployer\",\"specification\":\"QueryServiceImpl['live'] = 4 and (sum ?x in '.*_eu': ?x.LoadBalancerServiceImpl) = 1 and (sum ?x in '.*_us': ?x.LoadBalancerServiceImpl) = 1 and (forall ?x in DC: ( ?x.QueryServiceImpl['.*'] < 2 and ( ?x.QueryServiceImpl['.*'] = 1 impl ?x.DeploymentServiceImpl > 0) and (?x.ServiceProviderImpl > 0 impl ?x.PlatformServiceImpl > 0) and ( ?x.ServiceProviderImpl > 0 impl  (sum ?y in obj:  ?x.?y) = ?x.ServiceProviderImpl + ?x.PlatformServiceImpl) and (?x.LoadBalancerServiceImpl > 0 impl (sum ?y in obj: ?x.?y) = ?x.LoadBalancerServiceImpl))) and abs((sum ?x in '.*_eu': ?x.QueryServiceImpl['.*']) - (sum ?x in '.*_us': ?x.QueryServiceImpl['.*']) ) < 2 and (((sum ?x in '.*_us': ?x.QueryServiceImpl['staging']) > 0) impl (sum ?x in '.*_us': ?x.PlatformServiceImpl) > 0) and (((sum ?x in '.*_eu': ?x.QueryServiceImpl['staging']) > 0) impl (sum ?x in '.*_eu': ?x.PlatformServiceImpl) > 0)\",\"DC\":[],\"obj\":[{\"name\":\"platformObjUs\",\"provides\":[{\"ports\":[\"MonitorPlatformService\",\"PlatformService\"],\"num\":-1}],\"may_add_reference_to\":[{\"interface\":\"LoadBalancerService\",\"method\":\"addLoadBalancer\",\"DC_as_additional_parameter\":true}],\"interface\":\"PlatformService\"},{\"name\":\"platformObjEu\",\"provides\":[{\"ports\":[\"MonitorPlatformService\",\"PlatformService\"],\"num\":-1}],\"may_add_reference_to\":[{\"interface\":\"LoadBalancerService\",\"method\":\"addLoadBalancer\",\"DC_as_additional_parameter\":true}],\"interface\":\"PlatformService\"},{\"name\":\"loadBalancerObjEu\",\"provides\":[{\"ports\":[\"LoadBalancerService\"],\"num\":-1}],\"interface\":\"LoadBalancerService\"},{\"name\":\"loadBalancerObjUs\",\"provides\":[{\"ports\":[\"LoadBalancerService\"],\"num\":-1}],\"interface\":\"LoadBalancerService\"},{\"name\":\"serviceProviderObj\",\"provides\":[{\"ports\":[\"ServiceProvider\"],\"num\":-1}],\"interface\":\"ServiceProvider\"}],\"bind preferences\":[\"local\",\"sum ?x of type DeploymentServiceImpl in '.*_eu' :  exists ?y of type platformObjEu in DC : ?y used by ?x\",\"sum ?x of type DeploymentServiceImpl in '.*_us' :  exists ?y of type platformObjUs in DC : ?y used by ?x\",\"forall ?x of type LoadBalancerServiceImpl in '.*_eu' : exists ?y of type platformObjEu in DC : ?x used by ?y\",\"forall ?x of type LoadBalancerServiceImpl in '.*_us' : exists ?y of type platformObjUs in DC : ?x used by ?y\"]}" ]
+
+
 
 Check with Rudy new DC API
 	List<SmartDeployInterface> depl_list = Nil;

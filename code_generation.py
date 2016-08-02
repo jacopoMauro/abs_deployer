@@ -104,15 +104,17 @@ def get_map_class_signature(cost_annotations):
 def get_providers(bindings,(dcname,dcnum,objname,objnum)):
   prov = {}
   for i in bindings:
-    if (dcname == i["req_location"] and  
-        dcnum == i["req_location_num"] and  
-        objname == i["req_comp"] and 
+    if (dcname == i["req_location"] and
+        dcnum == i["req_location_num"] and
+        objname == i["req_comp"] and
         objnum == i["req_comp_num"]):
+
+
       obj = (i["prov_location"],i["prov_location_num"],i["prov_comp"],i["prov_comp_num"])
       if i["port"] in prov:
-        prov[i["port"]].append(obj)
+          prov[i["port"]].append(obj)
       else:
-        prov[i["port"]] = [ obj ]
+          prov[i["port"]] = [ obj ]
   return prov
 
 
@@ -160,7 +162,7 @@ def print_undeploy_method(interfaces,out):
   out.write("\t\t}\n")  
   out.write("\t}\n") 
 
-def print_deploy_method(smart_dep_annotation, zep_last_conf,bindings,
+def print_deploy_method(smart_dep_annotation, zep_last_conf,all_bindings,
       initial_dc_into_name, initial_obj_into_name,
       cost_annotations,
       out):
@@ -178,6 +180,26 @@ def print_deploy_method(smart_dep_annotation, zep_last_conf,bindings,
   # decide the order to create the obj and creating useful maps
   obj_to_abs_name = get_map_obj_abs_name(zep_last_conf,initial_obj_into_name)
   class_to_signature = get_map_class_signature(cost_annotations)
+
+  # differentiate bindings that are optional and can be added later invoking a method from required bindings
+  to_add_later_bindings = []
+  bindings = []
+  bindings_to_add_method = {}
+  for i in all_bindings:
+    scenario_name = i["req_comp"].split(settings.SEPARATOR)[0]
+    class_name = i["req_comp"].split(settings.SEPARATOR)[-1]
+    activates = [x["activates"] for x in cost_annotations["classes"] if x["name"] == class_name][0]
+    if scenario_name == settings.DEFAULT_SCENARIO_NAME:
+      opt_list_interfaces = activates[0]["optional_list"]
+    else:
+      opt_list_interfaces = [ x["optional_list"] for x in activates if x["scenarios"][0] == scenario_name ][0]
+    if i["port"] in [x["interface"] for x in opt_list_interfaces]:
+      to_add_later_bindings.append(i)
+      bindings_to_add_method[(i["prov_comp"],i["req_comp"],i["port"])] = [y["method"] for y in opt_list_interfaces][0]
+    else:
+      bindings.append(i)
+
+  # perform the topological sort
   try:
     installing_order = get_topological_sort(obj_to_abs_name.keys(),bindings)
   except ValueError:
@@ -208,10 +230,11 @@ def print_deploy_method(smart_dep_annotation, zep_last_conf,bindings,
           elif k["type"] == "list":
             arity = int(k["arity"])
             s = "list["
-            if arity > 0:
+            if k["value"] in req_objects and req_objects[k["value"]]: # add in the list the remaining objects
+            # fixme -> may give problems when the new requires later other objects of the same type
               s += obj_to_abs_name[req_objects[k["value"]].pop()]
-            for _ in range(arity-1):
-              s += ", " + obj_to_abs_name[req_objects[k["value"]].pop()]
+              while req_objects[k["value"]]:
+                s += ", " + obj_to_abs_name[req_objects[k["value"]].pop()]
             s += "]"
             ls.append(s)
         for k in range(len(ls)-1):
@@ -233,13 +256,24 @@ def print_deploy_method(smart_dep_annotation, zep_last_conf,bindings,
             for l in smart_dep_annotation["obj"]:
               if l["name"] == real_objname and "may_add_reference_to" in l:
                 try:
-                  method = next(x for x in l["may_add_reference_to"] if x["interface"] == interface)["method"]
+                  method = next(x for x in l["may_add_reference_to"] if x["interface"] == interface)
                 except StopIteration:
                   log.critical("The object " + real_objname + " requires a method to add " + obj_to_abs_name[prov])
                   log.critical("The method was not found")
                   log.critical("Exiting")
                   sys.exit(1)
-            out.write("\t\t" + real_objname + "." + method + "(" + obj_to_abs_name[prov] + ");\n" )
+            out.write("\t\t" + real_objname + "." + method["method"] + "(" + obj_to_abs_name[prov])
+            if "DC_as_additional_parameter" in method and method["DC_as_additional_parameter"]:
+                out.write("," + dc_to_abs_names[(k["prov_location"], k["prov_location_num"])])
+
+            out.write(");\n" )
+
+  # add the remaining optional bindings
+  for i in to_add_later_bindings:
+    prov = obj_to_abs_name[(i["prov_location"], i["prov_location_num"], i["prov_comp"], i["prov_comp_num"])]
+    req = obj_to_abs_name[(i["req_location"], i["req_location_num"], i["req_comp"], i["req_comp_num"])]
+    out.write("\t\t" + req + "." + bindings_to_add_method[(i["prov_comp"],i["req_comp"],i["port"])] + "(" + prov + ");\n")
+
   # ends deploy method
   out.write("\t}\n") 
 
