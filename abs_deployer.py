@@ -359,13 +359,12 @@ def main(argv):
       log.basicConfig(format="%(levelname)s: %(message)s", level=log.DEBUG)
       log.info("Verbose output.")
   
-  if len(args) != 1:
+  if len(args) < 1:
     print "1 argument is required"
     usage()
     sys.exit(1)
     
-  input_file = args[0]   
-  input_file = os.path.abspath(input_file)
+  input_files = [os.path.abspath(x) for x in args]
   out_stream = sys.stdout
   if output_file:
     out_stream = open(output_file, "w") 
@@ -377,7 +376,7 @@ def main(argv):
   log.info("Extracting JSON cost annotations from ABS code")
   annotation_file = "/tmp/" + pid + "_annotation.json"
   TMP_FILES = [ annotation_file ]
-  proc = Popen( ["java", "autodeploy.Tester", "-JSON=" + annotation_file, input_file],
+  proc = Popen( ["java", "autodeploy.Tester", "-JSON=" + annotation_file] + input_files,
         cwd=script_directory, stdout=DEVNULL, stderr=DEVNULL )
   proc.wait()
 
@@ -403,7 +402,7 @@ def main(argv):
   
   log.info("Extract smart deployment and dc annotations")
   try:
-    (smart_dep_json, dc_json, module_name) = abs_extractor.get_annotation_from_abs(input_file)
+    (smart_dep_json, dc_json, module_name) = abs_extractor.get_annotation_from_abs(input_files[0])
   except ValueError:
     log.critical("Parsing error in JSON smart deployment annotations")
     log.critical("Exiting")
