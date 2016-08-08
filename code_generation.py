@@ -186,18 +186,29 @@ def print_deploy_method(smart_dep_annotation, zep_last_conf,all_bindings,
   bindings = []
   bindings_to_add_method = {}
   for i in all_bindings:
-    scenario_name = i["req_comp"].split(settings.SEPARATOR)[0]
-    class_name = i["req_comp"].split(settings.SEPARATOR)[-1]
-    activates = [x["activates"] for x in cost_annotations["classes"] if x["name"] == class_name][0]
-    if scenario_name == settings.DEFAULT_SCENARIO_NAME:
-      opt_list_interfaces = activates[0]["optional_list"]
-    else:
-      opt_list_interfaces = [ x["optional_list"] for x in activates if x["scenarios"][0] == scenario_name ][0]
-    if i["port"] in [x["interface"] for x in opt_list_interfaces]:
-      to_add_later_bindings.append(i)
-      bindings_to_add_method[(i["prov_comp"],i["req_comp"],i["port"])] = [y["method"] for y in opt_list_interfaces][0]
-    else:
-      bindings.append(i)
+      if i["req_comp"] not in initial_obj_into_name.keys():
+        scenario_name = i["req_comp"].split(settings.SEPARATOR)[0]
+        class_name = i["req_comp"].split(settings.SEPARATOR)[-1]
+        activates_ls = [x["activates"] for x in cost_annotations["classes"] if x["name"] == class_name]
+        if activates_ls:
+            activates = activates_ls[0]
+        else:
+            log.critical("Did not find the interface information for class " + unicode(class_name))
+            log.critical("Exiting")
+            exit(1)
+        if scenario_name == settings.DEFAULT_SCENARIO_NAME:
+          opt_list_interfaces = activates[0]["optional_list"]
+        else:
+          opt_list_interfaces = [ x["optional_list"] for x in activates if x["scenarios"][0] == scenario_name ][0]
+        if i["port"] in [x["interface"] for x in opt_list_interfaces]:
+          to_add_later_bindings.append(i)
+          bindings_to_add_method[(i["prov_comp"],i["req_comp"],i["port"])] = [y["method"] for y in opt_list_interfaces][0]
+        else:
+          bindings.append(i)
+      else: # initial object as a requirer
+        bindings.append(i)
+
+
 
   # perform the topological sort
   try:

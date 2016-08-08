@@ -35,7 +35,7 @@ __status__ = "Prototype"
 
 import json
 import uuid
-from subprocess import Popen
+from subprocess import Popen, PIPE
 import sys, getopt
 import os
 import logging as log
@@ -268,6 +268,16 @@ def initialObjects(annotation):
   return (zep, obj_into_name, name_into_obj)
 
 
+def add_fictional_bindings_with_initial_objects(obj_into_name,zep_last_conf):
+    """
+    this function modifies the final configuraiton to allow bindings with initial objects
+    """
+    for j in zep_last_conf["bindings"]:
+        if (j["provider"] in obj_into_name) or (j["requirer"] in obj_into_name):
+          j["num"] = 0
+    return zep_last_conf
+
+
 def allow_incoming_bindings_for_initial_objects(annotation,name_into_obj,zep):
   """
   this function inject a -1 as a requirer for the intial objects
@@ -377,8 +387,12 @@ def main(argv):
   annotation_file = "/tmp/" + pid + "_annotation.json"
   TMP_FILES = [ annotation_file ]
   proc = Popen( ["java", "autodeploy.Tester", "-JSON=" + annotation_file] + input_files,
-        cwd=script_directory, stdout=DEVNULL, stderr=DEVNULL )
-  proc.wait()
+        cwd=script_directory, stdout=PIPE, stderr=PIPE )
+  out, err = proc.communicate()
+  log.debug('Stdout of JSON cost annotations extractor')
+  log.debug(out)
+  log.debug('Stderr of JSON cost annotations extractor')
+  log.debug(err)
 
   if not os.path.isfile(annotation_file): 
     log.critical("absfrontend execution terminated without writing its output file")
@@ -481,9 +495,7 @@ def main(argv):
     log.debug(json.dumps(zep_last_conf,indent=1))
 
     # reset the number of bindings with initial components (to allow the binder to decide the connections)
-    for j in zep_last_conf["bindings"]:
-      if (j["provider"] in obj_into_name) or (j["requirer"] in obj_into_name):
-        j["num"] = 0
+    zep_last_conf = add_fictional_bindings_with_initial_objects(obj_into_name,zep_last_conf)
     log.debug("Modified configuration for the binding optimizer")
     log.debug(json.dumps(zep_last_conf, indent=1))
     with open(binding_in_file, 'w') as f:
