@@ -1,4 +1,4 @@
-module Delta7d7713fe78164703a5765a5c5661e831;
+module Delta0136f1bd4b8249e9a1813f11d5d77084;
 import * from ABS.DC;
 import * from FredhopperCloudServices;
 
@@ -65,26 +65,26 @@ adds class MainSmartDeployer(CloudProvider cloudProvider, InfrastructureService 
 		ls_DeploymentComponent = Cons(c4_2xlarge_us_0,ls_DeploymentComponent);
 		DeploymentComponent m4_xlarge_us_0 = cloudProvider.prelaunchInstanceNamed("m4_xlarge_us");
 		ls_DeploymentComponent = Cons(m4_xlarge_us_0,ls_DeploymentComponent);
-		[DC: c4_2xlarge_eu_0] LoadBalancerService oDef___LoadBalancerServiceImpl_0_c4_2xlarge_eu_0 = new LoadBalancerServiceImpl();
-		ls_LoadBalancerService = Cons(Pair(oDef___LoadBalancerServiceImpl_0_c4_2xlarge_eu_0,c4_2xlarge_eu_0), ls_LoadBalancerService);
+		[DC: m4_xlarge_eu_0] DeploymentService oDef___DeploymentServiceImpl_0_m4_xlarge_eu_0 = new DeploymentServiceImpl(infrastructureServiceObj);
+		ls_DeploymentService = Cons(Pair(oDef___DeploymentServiceImpl_0_m4_xlarge_eu_0,m4_xlarge_eu_0), ls_DeploymentService);
 		[DC: m4_xlarge_us_0] DeploymentService oDef___DeploymentServiceImpl_0_m4_xlarge_us_0 = new DeploymentServiceImpl(infrastructureServiceObj);
 		ls_DeploymentService = Cons(Pair(oDef___DeploymentServiceImpl_0_m4_xlarge_us_0,m4_xlarge_us_0), ls_DeploymentService);
+		[DC: c4_2xlarge_eu_0] LoadBalancerService oDef___LoadBalancerServiceImpl_0_c4_2xlarge_eu_0 = new LoadBalancerServiceImpl();
+		ls_LoadBalancerService = Cons(Pair(oDef___LoadBalancerServiceImpl_0_c4_2xlarge_eu_0,c4_2xlarge_eu_0), ls_LoadBalancerService);
 		[DC: c4_2xlarge_us_0] LoadBalancerService oDef___LoadBalancerServiceImpl_0_c4_2xlarge_us_0 = new LoadBalancerServiceImpl();
 		ls_LoadBalancerService = Cons(Pair(oDef___LoadBalancerServiceImpl_0_c4_2xlarge_us_0,c4_2xlarge_us_0), ls_LoadBalancerService);
 		[DC: m4_large_eu_0] DeploymentService oDef___DeploymentServiceImpl_0_m4_large_eu_0 = new DeploymentServiceImpl(infrastructureServiceObj);
 		ls_DeploymentService = Cons(Pair(oDef___DeploymentServiceImpl_0_m4_large_eu_0,m4_large_eu_0), ls_DeploymentService);
-		[DC: m4_xlarge_eu_0] DeploymentService oDef___DeploymentServiceImpl_0_m4_xlarge_eu_0 = new DeploymentServiceImpl(infrastructureServiceObj);
-		ls_DeploymentService = Cons(Pair(oDef___DeploymentServiceImpl_0_m4_xlarge_eu_0,m4_xlarge_eu_0), ls_DeploymentService);
 		[DC: m4_large_us_0] DeploymentService oDef___DeploymentServiceImpl_0_m4_large_us_0 = new DeploymentServiceImpl(infrastructureServiceObj);
 		ls_DeploymentService = Cons(Pair(oDef___DeploymentServiceImpl_0_m4_large_us_0,m4_large_us_0), ls_DeploymentService);
 		[DC: m4_xlarge_us_0] IQueryService ostaging___QueryServiceImpl_0_m4_xlarge_us_0 = new QueryServiceImpl(oDef___DeploymentServiceImpl_0_m4_xlarge_us_0, "Customer X", True);
 		ls_IQueryService = Cons(Pair(ostaging___QueryServiceImpl_0_m4_xlarge_us_0,m4_xlarge_us_0), ls_IQueryService);
 		ls_Service = Cons(Pair(ostaging___QueryServiceImpl_0_m4_xlarge_us_0,m4_xlarge_us_0), ls_Service);
 		ls_EndPoint = Cons(Pair(ostaging___QueryServiceImpl_0_m4_xlarge_us_0,m4_xlarge_us_0), ls_EndPoint);
-		[DC: c4_2xlarge_eu_1] MonitorPlatformService oDef___PlatformServiceImpl_0_c4_2xlarge_eu_1 = new PlatformServiceImpl(oDef___DeploymentServiceImpl_0_m4_large_eu_0, oDef___LoadBalancerServiceImpl_0_c4_2xlarge_eu_0);
+		[DC: c4_2xlarge_eu_1] MonitorPlatformService oDef___PlatformServiceImpl_0_c4_2xlarge_eu_1 = new PlatformServiceImpl(oDef___LoadBalancerServiceImpl_0_c4_2xlarge_eu_0);
 		ls_MonitorPlatformService = Cons(Pair(oDef___PlatformServiceImpl_0_c4_2xlarge_eu_1,c4_2xlarge_eu_1), ls_MonitorPlatformService);
 		ls_PlatformService = Cons(Pair(oDef___PlatformServiceImpl_0_c4_2xlarge_eu_1,c4_2xlarge_eu_1), ls_PlatformService);
-		[DC: c4_2xlarge_us_1] MonitorPlatformService oDef___PlatformServiceImpl_0_c4_2xlarge_us_1 = new PlatformServiceImpl(oDef___DeploymentServiceImpl_0_m4_xlarge_us_0, oDef___LoadBalancerServiceImpl_0_c4_2xlarge_us_0);
+		[DC: c4_2xlarge_us_1] MonitorPlatformService oDef___PlatformServiceImpl_0_c4_2xlarge_us_1 = new PlatformServiceImpl(oDef___LoadBalancerServiceImpl_0_c4_2xlarge_us_0);
 		ls_MonitorPlatformService = Cons(Pair(oDef___PlatformServiceImpl_0_c4_2xlarge_us_1,c4_2xlarge_us_1), ls_MonitorPlatformService);
 		ls_PlatformService = Cons(Pair(oDef___PlatformServiceImpl_0_c4_2xlarge_us_1,c4_2xlarge_us_1), ls_PlatformService);
 		[DC: m4_xlarge_eu_0] IQueryService ostaging___QueryServiceImpl_0_m4_xlarge_eu_0 = new QueryServiceImpl(oDef___DeploymentServiceImpl_0_m4_xlarge_eu_0, "Customer X", True);
@@ -107,6 +107,10 @@ adds class MainSmartDeployer(CloudProvider cloudProvider, InfrastructureService 
 		ls_EndPoint = Cons(Pair(oDef___LoadBalancerEndPointImpl_0_c4_xlarge_eu_0,c4_xlarge_eu_0), ls_EndPoint);
 		oDef___LoadBalancerServiceImpl_0_c4_2xlarge_us_0.add(oDef___LoadBalancerEndPointImpl_0_c4_xlarge_us_0);
 		oDef___LoadBalancerServiceImpl_0_c4_2xlarge_eu_0.add(oDef___LoadBalancerEndPointImpl_0_c4_xlarge_eu_0);
+		oDef___PlatformServiceImpl_0_c4_2xlarge_eu_1.addDeploymentService(oDef___DeploymentServiceImpl_0_m4_large_eu_0);
+		oDef___PlatformServiceImpl_0_c4_2xlarge_eu_1.addDeploymentService(oDef___DeploymentServiceImpl_0_m4_xlarge_eu_0);
+		oDef___PlatformServiceImpl_0_c4_2xlarge_us_1.addDeploymentService(oDef___DeploymentServiceImpl_0_m4_large_us_0);
+		oDef___PlatformServiceImpl_0_c4_2xlarge_us_1.addDeploymentService(oDef___DeploymentServiceImpl_0_m4_xlarge_us_0);
 	}
 
 	Unit undeploy() {
@@ -150,16 +154,30 @@ adds class AddQueryDeployer(CloudProvider cloudProvider, InfrastructureService i
 	List<DeploymentComponent> getDeploymentComponent() { return ls_DeploymentComponent; }
 
 	Unit deploy() {
+		DeploymentComponent m4_large_us_1 = cloudProvider.prelaunchInstanceNamed("m4_large_us");
+		ls_DeploymentComponent = Cons(m4_large_us_1,ls_DeploymentComponent);
 		DeploymentComponent m4_large_us_0 = cloudProvider.prelaunchInstanceNamed("m4_large_us");
 		ls_DeploymentComponent = Cons(m4_large_us_0,ls_DeploymentComponent);
+		DeploymentComponent m4_large_eu_1 = cloudProvider.prelaunchInstanceNamed("m4_large_eu");
+		ls_DeploymentComponent = Cons(m4_large_eu_1,ls_DeploymentComponent);
 		DeploymentComponent m4_large_eu_0 = cloudProvider.prelaunchInstanceNamed("m4_large_eu");
 		ls_DeploymentComponent = Cons(m4_large_eu_0,ls_DeploymentComponent);
+		[DC: m4_large_us_1] DeploymentService oDef___DeploymentServiceImpl_0_m4_large_us_1 = new DeploymentServiceImpl(infrastructureServiceObj);
+		ls_DeploymentService = Cons(Pair(oDef___DeploymentServiceImpl_0_m4_large_us_1,m4_large_us_1), ls_DeploymentService);
 		[DC: m4_large_eu_0] DeploymentService oDef___DeploymentServiceImpl_0_m4_large_eu_0 = new DeploymentServiceImpl(infrastructureServiceObj);
 		ls_DeploymentService = Cons(Pair(oDef___DeploymentServiceImpl_0_m4_large_eu_0,m4_large_eu_0), ls_DeploymentService);
+		[DC: m4_large_eu_1] DeploymentService oDef___DeploymentServiceImpl_0_m4_large_eu_1 = new DeploymentServiceImpl(infrastructureServiceObj);
+		ls_DeploymentService = Cons(Pair(oDef___DeploymentServiceImpl_0_m4_large_eu_1,m4_large_eu_1), ls_DeploymentService);
 		[DC: m4_large_us_0] DeploymentService oDef___DeploymentServiceImpl_0_m4_large_us_0 = new DeploymentServiceImpl(infrastructureServiceObj);
 		ls_DeploymentService = Cons(Pair(oDef___DeploymentServiceImpl_0_m4_large_us_0,m4_large_us_0), ls_DeploymentService);
-		platformObjUs.add(oDef___DeploymentServiceImpl_0_m4_large_us_0);
-		platformObjUs.add(oDef___DeploymentServiceImpl_0_m4_large_eu_0);
+		[DC: m4_large_us_1] IQueryService olive___QueryServiceImpl_0_m4_large_us_1 = new QueryServiceImpl(oDef___DeploymentServiceImpl_0_m4_large_us_1, "Customer X", False);
+		ls_IQueryService = Cons(Pair(olive___QueryServiceImpl_0_m4_large_us_1,m4_large_us_1), ls_IQueryService);
+		ls_Service = Cons(Pair(olive___QueryServiceImpl_0_m4_large_us_1,m4_large_us_1), ls_Service);
+		ls_EndPoint = Cons(Pair(olive___QueryServiceImpl_0_m4_large_us_1,m4_large_us_1), ls_EndPoint);
+		[DC: m4_large_eu_1] IQueryService olive___QueryServiceImpl_0_m4_large_eu_1 = new QueryServiceImpl(oDef___DeploymentServiceImpl_0_m4_large_eu_1, "Customer X", False);
+		ls_IQueryService = Cons(Pair(olive___QueryServiceImpl_0_m4_large_eu_1,m4_large_eu_1), ls_IQueryService);
+		ls_Service = Cons(Pair(olive___QueryServiceImpl_0_m4_large_eu_1,m4_large_eu_1), ls_Service);
+		ls_EndPoint = Cons(Pair(olive___QueryServiceImpl_0_m4_large_eu_1,m4_large_eu_1), ls_EndPoint);
 		[DC: m4_large_us_0] IQueryService olive___QueryServiceImpl_0_m4_large_us_0 = new QueryServiceImpl(oDef___DeploymentServiceImpl_0_m4_large_us_0, "Customer X", False);
 		ls_IQueryService = Cons(Pair(olive___QueryServiceImpl_0_m4_large_us_0,m4_large_us_0), ls_IQueryService);
 		ls_Service = Cons(Pair(olive___QueryServiceImpl_0_m4_large_us_0,m4_large_us_0), ls_Service);
@@ -168,8 +186,14 @@ adds class AddQueryDeployer(CloudProvider cloudProvider, InfrastructureService i
 		ls_IQueryService = Cons(Pair(olive___QueryServiceImpl_0_m4_large_eu_0,m4_large_eu_0), ls_IQueryService);
 		ls_Service = Cons(Pair(olive___QueryServiceImpl_0_m4_large_eu_0,m4_large_eu_0), ls_Service);
 		ls_EndPoint = Cons(Pair(olive___QueryServiceImpl_0_m4_large_eu_0,m4_large_eu_0), ls_EndPoint);
+		loadBalancerEndPointObjEu.add(olive___QueryServiceImpl_0_m4_large_eu_1);
 		loadBalancerEndPointObjEu.add(olive___QueryServiceImpl_0_m4_large_eu_0);
+		loadBalancerEndPointObjUs.add(olive___QueryServiceImpl_0_m4_large_us_1);
 		loadBalancerEndPointObjUs.add(olive___QueryServiceImpl_0_m4_large_us_0);
+		platformObjEu.add(oDef___DeploymentServiceImpl_0_m4_large_eu_1);
+		platformObjEu.add(oDef___DeploymentServiceImpl_0_m4_large_eu_0);
+		platformObjUs.add(oDef___DeploymentServiceImpl_0_m4_large_us_1);
+		platformObjUs.add(oDef___DeploymentServiceImpl_0_m4_large_us_0);
 	}
 
 	Unit undeploy() {

@@ -1,111 +1,131 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema#",
-  "type": "array",
-  "items": {
-    "type": "object",
-    "properties": {
-      "id": {
-        "description": "name of the class associated to the smart deploy spec",
-        "type": "string"
+  "$schema":"http://json-schema.org/draft-04/schema#",
+  "type":"array",
+  "items":{
+    "type":"object",
+    "properties":{
+      "id":{
+        "description":"name of the class associated to the smart deploy spec",
+        "type":"string"
       },
-      "specification": {
-        "description": "declarative specification",
-        "type": "string"
+      "specification":{
+        "description":"declarative specification",
+        "type":"string"
       },
-      "DC": {
-        "description": "list of already available DC",
-        "type": "array",
-        "items": {
-          "type": "object",
-          "properties": {
-            "name": {
-              "description": "name of the available DC",
-              "type": "string"
+      "DC":{
+        "description":"list of already available DC",
+        "type":"array",
+        "items":{
+          "type":"object",
+          "properties":{
+            "name":{
+              "description":"name of the available DC",
+              "type":"string"
             },
-            "additionalProperties": {
-              "description": "provided resources by the DC",
-              "type": "integer"
+            "additionalProperties":{
+              "description":"provided resources by the DC",
+              "type":"integer"
             }
           }
         }
       },
-      "obj": {
-        "type": "array",
-        "items": {
-          "type": "object",
-          "properties": {
-            "name": {
-              "type": "string"
+      "obj":{
+        "type":"array",
+        "items":{
+          "type":"object",
+          "properties":{
+            "name":{
+              "type":"string"
             },
-            "provides": {
-              "type": "array",
-              "description": "Provide (multi)ports",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "ports": {
-                    "type": "array",
-                    "description": "List of the provide components",
-                    "items": {
-                      "type": "string"
+            "provides":{
+              "type":"array",
+              "description":"Provide (multi)ports",
+              "items":{
+                "type":"object",
+                "properties":{
+                  "ports":{
+                    "type":"array",
+                    "description":"List of the provide components",
+                    "items":{
+                      "type":"string"
                     }
                   },
-                  "num": {
-                    "type": "integer",
-                    "description": "Number associated to a provide port (-1 for infinite)"
+                  "num":{
+                    "type":"integer",
+                    "description":"Number associated to a provide port (-1 for infinite)"
                   }
                 },
-                "required": [
+                "required":[
                   "ports",
                   "num"
                 ]
               }
             },
-            "interface": {
-              "description": "interface of the obj",
-              "type": "string"
+            "interface":{
+              "description":"interface of the obj",
+              "type":"string"
             },
-            "may_add_reference_to": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "interface": {
-                    "type": "string"
+            "may_add_reference_to":{
+              "type":"array",
+              "items":{
+                "type":"object",
+                "properties":{
+                  "interface":{
+                    "type":"string"
                   },
-                  "method": {
-                    "type": "string"
+                  "method":{
+                    "type":"string"
                   },
-                  "DC_as_additional_parameter": {
-                    "type": "boolean"
+                  "DC_as_additional_parameter":{
+                    "type":"boolean"
                   }
                 },
-                "required": [
+                "required":[
                   "interface",
                   "method"
                 ]
               }
             }
           },
-          "required": [
+          "required":[
             "name",
             "provides",
             "interface"
           ]
         }
       },
-      "cloud_provider_DC_availability": {
-        "description": "optional - map to define the number of DC provided by the cloud provider if they differ from the default value",
-        "type": "object",
-        "properties": {
-          "additionalProperties": {
-            "description": "DC type name",
-            "type": "integer"
+      "cloud_provider_DC_availability":{
+        "description":"optional - map to define the number of DC provided by the cloud provider if they differ from the default value",
+        "type":"object",
+        "properties":{
+          "additionalProperties":{
+            "description":"DC type name",
+            "type":"integer"
           }
+        }
+      },
+      "add_method_priorities":{
+        "description": "optional - define the priorities to call the add methods",
+        "type":"array",
+        "items":{
+          "type":"object",
+          "properties":{
+            "class":{
+              "description": "may be the class name or the name of an initial object",
+              "type":"string"
+            },
+            "method":{
+              "type":"string"
+            }
+          },
+          "required":[
+            "class",
+            "method"
+          ]
         }
       }
     },
-    "required": [
+    "required":[
       "id",
       "specification",
       "DC",
