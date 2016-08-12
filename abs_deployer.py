@@ -512,9 +512,9 @@ def main(argv):
     log.info("Running bind optimizer")
     binding_out_file = "/tmp/" + pid + i["id"] + "_binding_out.json"
     TMP_FILES.append(binding_out_file)
-    #zephyrus2.bindings_optimizer.main(["-o",binding_out_file,zephyrus_in_file,binding_in_file])
-    # tofix
-    zephyrus2.bindings_optimizer.main(["-o",binding_out_file,"-d","log"+i["id"]+".dot",zephyrus_in_file, binding_in_file])
+    zephyrus2.bindings_optimizer.main(["-o",binding_out_file,zephyrus_in_file,binding_in_file])
+    # if a graphical representation is needed replace the previous line with the following commented one
+    # zephyrus2.bindings_optimizer.main(["-o",binding_out_file,"-d","log"+i["id"]+".dot",zephyrus_in_file, binding_in_file])
     log.debug("Binding optimizer solution")
     bindings_opt_out = read_json(binding_out_file)
     log.debug(json.dumps(binding_out_file,indent=1))
