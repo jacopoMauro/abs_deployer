@@ -5,25 +5,19 @@ MAINTAINER Jacopo Mauro
 RUN cd / && \
 	mkdir solvers_exec && \
   cd /solvers_exec && \
-  #git clone --recursive --depth=1 https://jacopomauro@bitbucket.org/jacopomauro/zephyrus2.git && \
-	git clone --recursive -b bind_preferences https://jacopomauro@bitbucket.org/jacopomauro/zephyrus2.git && \
+  git clone --recursive -b bind_preferences https://jacopomauro@bitbucket.org/jacopomauro/zephyrus2.git && \
 	cd zephyrus2 && \
-	git checkout 0f464ebb4fa07598875756a8fdc88e3ed3418b5f && \ 
+	git checkout 924b50f04c73b8269d3b14157dd0abbf7b5bd99c && \ 
 	#check out tested version with smartdeployer
   pip install -e /solvers_exec/zephyrus2
 
-# MiniSearch need to be installed before MiniZincIde
-include(`MiniSearch_binary.m4')
 include(`MiniZincIDE_binary.m4')
-include(`ortools_binary.m4')
 include(`gecode_binary.m4')
-include(`fzn2smt.m4')
 include(`chuffed.m4')
-include(`z3.m4')
 
 # clone abs_deployer
 RUN cd /solvers_exec && \
-	git clone --recursive --depth=1 -b smart_deployer https://github.com/jacopoMauro/abs_deployer.git
+	git clone --recursive --depth=1 -b bind_pref https://github.com/jacopoMauro/abs_deployer.git
 
 ENV PATH /solvers_exec/abs_deployer:$PATH
 
