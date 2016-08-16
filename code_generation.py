@@ -184,7 +184,6 @@ def print_deploy_method(smart_dep_annotation, zep_last_conf,all_bindings,
   # differentiate bindings that are optional and can be added later invoking a method from required bindings
   to_add_later_bindings = []
   bindings = []
-  bindings_to_add_method = {}
   for i in all_bindings:
       if i["req_comp"] not in initial_obj_into_name.keys():
         scenario_name = i["req_comp"].split(settings.SEPARATOR)[0]
@@ -201,9 +200,9 @@ def print_deploy_method(smart_dep_annotation, zep_last_conf,all_bindings,
         else:
           opt_list_interfaces = [ x["optional_list"] for x in activates if x["scenarios"][0] == scenario_name ][0]
         if i["port"] in [x["interface"] for x in opt_list_interfaces]:
-          method = [y["method"] for y in opt_list_interfaces][0]
           prov = obj_to_abs_name[(i["prov_location"], i["prov_location_num"], i["prov_comp"], i["prov_comp_num"])]
           req = obj_to_abs_name[(i["req_location"], i["req_location_num"], i["req_comp"], i["req_comp_num"])]
+          method = [y["method"] for y in opt_list_interfaces if y["interface"] == i["port"]][0]
           to_add_later_bindings.append((i["req_comp"].split(settings.SEPARATOR)[-1],
                                        method,
                                        "\t\t" + req + "." + method + "(" + prov + ");\n"))

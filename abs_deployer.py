@@ -399,7 +399,7 @@ def main(argv):
     log.critical("Exiting")
     sys.exit(1)
 
-  log.info("Parsing JSON costs annotations file")
+  log.info("Parsing JSON costs annotations file " + annotation_file)
   annotation = remove_dots(read_json(annotation_file))
   log.debug("Internal json representation extracted from the abs program")
   log.debug(json.dumps(annotation, indent=1))

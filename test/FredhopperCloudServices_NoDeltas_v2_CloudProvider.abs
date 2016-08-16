@@ -34,6 +34,7 @@ data Config = Config(ServiceType serviceType, List<ResourceCapacities> instances
 // Process state
 data State = RUNNING | STOP;
 
+//find last key (if any) that maps to e
 def Maybe<X> mapValue<X, A>(Map<X, A> ss, A e) =
   case ss {
     EmptyMap => Nothing;
@@ -234,6 +235,7 @@ interface LoadBalancerEndPoint extends EndPoint {
 // A service exposes logging information
 interface Service extends EndPoint {
 	Id getServiceId();
+	Unit setServiceId(Id id);
 	ServiceType getServiceType();
 	Customer getCustomer();
 	Int getLatency();
@@ -245,7 +247,7 @@ interface Service extends EndPoint {
 }
 
 // load balance over n services in round robin style
-[Deploy: scenario[Cost("Cores", 2), Cost("Memory", 100),Param("services", List(0))]]
+[Deploy: scenario[Cost("Cores", 2), Cost("Memory", 400),Param("services", Default("Nil")),Param("Service", OptList("add"))]]
 class LoadBalancerEndPointImpl(List<Service> services) implements LoadBalancerEndPoint {
 
 	Int log = 0;
@@ -354,6 +356,13 @@ class ServiceImpl(Id serviceId, ServiceType st, Customer c, Int cost) implements
 	Id getServiceId() {
 		return serviceId;
 	}
+
+	Unit setServiceId(Id id) {
+		// ensure serviceId was not set previously
+		assert serviceId == 0;
+
+		serviceId = id;
+	}
 	
 	Response invoke(Request request) {
 		assert state == RUNNING;
@@ -383,32 +392,84 @@ interface DeploymentService {
 	Unit uninstall(Id serviceId);
 	Unit start(Id serviceId);
 	Unit stop(Id serviceId);
+	Unit add(DeploymentAgent agent);
 } 
 
-[Deploy: scenario[Cost("Cores", 1), Cost("Memory", 80), Param("rp", Default("infrastructureServiceObj"))]]
-class DeploymentServiceImpl(InfrastructureService rp) implements DeploymentService {
+// A deployment agent creates or removes an instance of a specified servicetype
+// and installs it onto a virtual machine (deployment component) of the specified type
+interface DeploymentAgent {
+	Unit install(Service s);
+	Unit uninstall();
+	Unit start();
+	Unit stop();
+	Service getService();
+} 
 
-	Map<Service, DC> allocations = EmptyMap;
+[Deploy: scenario[Cost("Cores", 1), Cost("Memory", 80), Param("DeploymentServiceImpl", OptList("add")),
+	Param("Service", OptList("install"))]]
+class DeploymentAgentImpl implements DeploymentAgent {
+	Service service = null;
+
+	Unit install(Service s) {
+		//ensure no service is currently installed
+		assert service == null;
+
+		// check that service is stopped
+		State state = await service!getStatus();
+		assert state == STOP;
+
+		// install service
+		service = s;
+	}
+	
+	Unit uninstall() {
+		// ensure a service is installed
+		assert service != null;
+
+		// check that service is stopped
+		State state = await service!getStatus();
+		assert state == STOP;
+
+		// remove service
+		service = null;
+	}
+	
+	Unit start() {
+		await service!setStatus(RUNNING);
+	}
+	
+	Unit stop() {
+		await service!setStatus(STOP);
+	}
+
+	Service getService() {
+		return service;
+	}
+}
+
+[Deploy: scenario[Cost("Cores", 1), Cost("Memory", 10), Param("DeploymentAgent", OptList("add"))]]
+class DeploymentServiceImpl implements DeploymentService {
+
+	Map<Service, DeploymentAgent> allocations = EmptyMap;
 	Map<Id, Service> services = EmptyMap;
 
-	/** 
-     * Create a service of type st and deploy it on a given virtual machine
+	/** Create a service of type st and deploy it on virtual machine with the given type
 	 * @param customer The customer for which the service is deployed
 	 * @param st The type of the service
-     * @param serviceId A unique identity of the service instance to be created
+	 * @param serviceId A unique identity of the service instance to be created
 	 * @param v The type of virtual machine on which to deploy the service
     */
 	Service install(Customer customer, ServiceType st, Id serviceId, VMType v) {
 		assert lookup(services, serviceId) == Nothing;
 		
-		//acquire resource
-		DC dc = await rp!acquireInstance(serviceId, v);
-		
 		//instantiate service
 		//base query costs at least 2 time units
-		[DC: dc] Service service = new ServiceImpl(serviceId, st, customer, 2);
+		Service service = new ServiceImpl(serviceId, st, customer, 2);
+		// install service using new deployment agent
+		DeploymentAgent agent = new DeploymentAgentImpl();
+		await agent!install(service);
 		
-		allocations = InsertAssoc(Pair(service, dc), allocations);
+		allocations = InsertAssoc(Pair(service, agent), allocations);
 		services = InsertAssoc(Pair(serviceId, service), services);
 		return service;
 	}
@@ -424,10 +485,11 @@ class DeploymentServiceImpl(InfrastructureService rp) implements DeploymentServi
 		State state = await service!getStatus();
 		assert state == STOP;
 
-		Maybe<DC> md = lookup(allocations, service);
-		assert md != Nothing;
+		Maybe<DeploymentAgent> mAgent = lookup(allocations, service);
+		assert mAgent != Nothing;
+		DeploymentAgent agent = fromJust(mAgent);
 
-		await rp!release(fromJust(md));  
+		await agent!uninstall();
 		
 		allocations = removeKey(allocations, service);
 		services = removeKey(services, serviceId);
@@ -445,6 +507,22 @@ class DeploymentServiceImpl(InfrastructureService rp) implements DeploymentServi
 	Unit stop(Id serviceId) {
 		this.invoke(serviceId, STOP);
 	}
+
+	Unit add(DeploymentAgent agent) {
+		// get service deployed using agent
+		Fut<Service> fs = agent!getService();
+		await fs?;
+		Service s = fs.get;
+
+		// get service Id
+		Fut<Id> fId = s!getServiceId();
+		await fId?;
+		Id serviceId = fId.get;
+		assert serviceId != 0; // ensure id has been set
+
+		allocations = InsertAssoc(Pair(s, agent), allocations);
+		services = InsertAssoc(Pair(serviceId, s), services);
+	}
 }
 
 // A load balancer service distributes request over service instances
@@ -455,10 +533,16 @@ interface LoadBalancerService {
 	//creates a new LB endpoint with the specified id
 	//and connects it to the specified service instances
 	Bool create(List<Service> services, Int endPointId);
-	//adds a new LB endpoint with the specified id
+	//add the LB endpoint ep with endPointId
 	Bool add(Int endPointId, LoadBalancerEndPoint ep);
+	//remove the endpoint with the given endPointId
 	Bool remove(Id endPointId);
-	Maybe<EndPoint> getServiceEndPoint(Int endPointId);
+	//get (if any) the id of the specified endpoint
+	Maybe<Id> getEndPointId(LoadBalancerEndPoint lb);
+	//get (if any) the endpoint with endPointId
+	Maybe<LoadBalancerEndPoint> getEndPointById(Int endPointId);
+	//get all endpoints that use the service s
+	List<Id> getEndPointIdsByService(Service s);
 	//take service off load balancing
 	Bool decrease(Id endPointId, List<Service> services);
 	//put service on load balancing 
@@ -468,11 +552,10 @@ interface LoadBalancerService {
 //enum to specify whether to increase/decrease load balance resource
 data LBOp = INCR | DECR;
 
-[Deploy: scenario[Cost("Cores", 4), Cost("Memory", 800),Param("LoadBalancerEndPoint", OptList("add"))] ]
-// tofixJAC: the add method need to be called only with the object of type LoadBalancerEndPoint
+[Deploy: scenario[Cost("Cores", 1), Cost("Memory", 10)] ]
 class LoadBalancerServiceImpl implements LoadBalancerService {
 
-	//from end point id to end point
+	//1-1 map from end point id to end point
 	Map<Int, LoadBalancerEndPoint> endPoints = EmptyMap;
 	
 	Bool change(Id endPointId, List<Service> services, LBOp op) {
@@ -558,8 +641,41 @@ class LoadBalancerServiceImpl implements LoadBalancerService {
 		return removed;
 	}
 	
-	Maybe<EndPoint> getServiceEndPoint(Id endPointId) {
+	Maybe<LoadBalancerEndPoint> getEndPointById(Id endPointId) {
 		return lookup(endPoints, endPointId);
+	}
+
+	List<Id> getEndPointIdsByService(Service s) {
+		List<LoadBalancerEndPoint> endPointsToCheck = values(endPoints);
+		List<Id> foundEndPoints = Nil;
+
+		while(endPointsToCheck != Nil) {
+			LoadBalancerEndPoint lb = head(endPointsToCheck);
+
+			//get services used by load balancer lb
+			Fut<List<Service>> fServices = lb!getServices();
+			await fServices?;
+			List<Service> services = fServices.get;
+
+			if(inList(services, s)) {
+				Maybe<Id> mep = mapValue(endPoints, lb);
+				case mep {
+					Nothing => {
+						foundEndPoints = Nil;
+					}
+					Just(id) => {
+						foundEndPoints = Cons(id, foundEndPoints);
+					}
+				}
+				
+			}
+		}
+
+		return foundEndPoints;
+	}
+
+	Maybe<Id> getEndPointId(LoadBalancerEndPoint lb) {
+		return mapValue(endPoints, lb);
 	}
 }
 
@@ -590,6 +706,8 @@ interface MonitorPlatformService extends PlatformService {
 	Id addEndPoint(LoadBalancerEndPoint lb);
 	//remove end point
 	Id removeEndPoint(LoadBalancerEndPoint lb);
+	//add service instance
+	Id addServiceInstance(Service s);
 }
 
 def List<X> toList<X>(Set<X> s) =
@@ -701,8 +819,8 @@ def List<Z> lookupTwoMaps<X, Y, Z>(Map<X, List<Y>> m1, Map<Y, Z> m2, X x) =
 	};
 
 
-[Deploy: scenario[Cost("Cores", 4), Cost("Memory", 1200), Param("ls", Req), Param("DeploymentService", OptList("addDeploymentService"))]]
-class PlatformServiceImpl(LoadBalancerService ls) 
+[Deploy: scenario[Cost("Cores", 2), Cost("Memory", 1200), Param("ds", Req),Param("ls", Req),Param("LoadBalancerEndPoint", OptList("addEndPoint")),Param("Service", OptList("addServiceInstance"))]]
+class PlatformServiceImpl(DeploymentService ds, LoadBalancerService ls) 
 implements MonitorPlatformService {
 
 	// service instance id to service instance
@@ -730,7 +848,8 @@ implements MonitorPlatformService {
 		assert instances != Nil;
 		
 		//endpoint id
-		Int endPoint = serviceId + 1;
+		serviceId = incr(serviceId);
+		Int endPoint = serviceId;
 		
 		//create service instances
 		List<Service> currentServices = Nil;
@@ -763,7 +882,6 @@ implements MonitorPlatformService {
 	}
 	
 	Unit removeService(Int endPoint) {
-	
 		//disable end point 
 		Bool b = await ls!disable(endPoint); 
 		assert b;
@@ -793,9 +911,53 @@ implements MonitorPlatformService {
 		customers = removeGlobalEndPoint(customers, endPoint);
 	}
 
+
+	/* This method should be called _after_ service is added to load balancer endpoint */
+	Id addServiceInstance(Service s) {
+		//generate new service instance id
+		serviceId = incr(serviceId);
+		Id id = serviceId;
+
+		//set the id in the service instance
+		Fut<Unit> f = s!setServiceId(id);
+		await f?;
+		f.get;
+
+		//insert into id-to-services map
+		services = put(services, id, s);
+
+		//get id's of endpoints that use this service instance
+		Fut< List<Id> > fOnEndPoints = ls!getEndPointIdsByService(s);
+		await fOnEndPoints?;
+		List<Id> onEndPoints = fOnEndPoints.get;
+
+		List<Id> endPointsToProcess = onEndPoints;
+		while(endPointsToProcess != Nil) {
+			Id endPointId = head(endPointsToProcess);
+
+			// update maps with service-endpoint relation
+			serviceToEndPoints = InsertAssoc(Pair(id, endPointId), serviceToEndPoints);
+			Maybe<List<Id>> mSerEndpoints = lookup(endPoints, endPointId);
+			case mSerEndpoints {
+				Nothing => {
+					endPoints = InsertAssoc(Pair(endPointId, list[id]), endPoints);
+				}
+				Just(l) => {
+					endPoints = InsertAssoc(Pair(endPointId, Cons(id, l)), endPoints);
+				}
+			}
+			
+			endPointsToProcess = tail(endPointsToProcess);
+		}
+
+		// TODO deployment service
+		
+		return serviceId;
+	}
+
 	Id addEndPoint(LoadBalancerEndPoint lb) {
 		//generate id for the endpoint
-		Int endPoint = serviceId + 1;
+		Int endPoint = incr(serviceId);
 
 		//find service instances connected to the endpoint
 		Fut<List<Service>> fServices = lb!getServices();
@@ -1368,7 +1530,7 @@ class ServiceProviderImpl(PlatformService ps, LoadBalancerService ls) implements
 		
 		customers = put(customers, c, InsertAssoc(Pair(sc, id), map));
 		
-		Fut<Maybe<EndPoint>> ef = ls!getServiceEndPoint(id);
+		Fut<Maybe<EndPoint>> ef = ls!getEndPointById(id);
 		Maybe<EndPoint> eps = ef.get;
 		assert eps != Nothing;
 		return fromJust(eps);
@@ -1402,35 +1564,48 @@ interface IQueryService extends Service {
 }
 
 // Stub implementation of the query service, for use with BOL cost annotations
-[Deploy: scenario[Name("staging"), Cost("Cores", 2), Cost("Memory", 700), Param("c", Default("\\\"Customer X\\\"")), Param("staging", Default("True")), Param("ds", Req)] ]
-[Deploy: scenario[Name("live"), Cost("Cores", 1), Cost("Memory", 300), Param("c", Default("\\\"Customer X\\\"")), Param("staging", Default("False")), Param("ds", Req)] ]
+[Deploy: scenario[Name("staging"), Cost("Cores", 2), Cost("Memory", 700), Param("c", Default("\\\"Customer X\\\"")), Param("staging", Default("True")), Param("da", Req)] ]
+[Deploy: scenario[Name("live"), Cost("Cores", 1), Cost("Memory", 300), Param("c", Default("\\\"Customer X\\\"")), Param("staging", Default("False")), Param("da", Req)] ]
 // tofixJAC: add staging parameter
-class QueryServiceImpl(DeploymentService ds, Customer c, Bool staging) implements IQueryService {
+class QueryServiceImpl(DeploymentAgent da, Customer c, Bool staging) implements IQueryService {
 	Int reqCount = 0;
 	State currentState = RUNNING;
+	Id serviceId = 0;
 	
 	Response invoke(Request request) {
 		reqCount = reqCount+1;
 		return True;
 	}
 	Unit setStatus(State status) {
+		currentState = status;
 	}
+
 	State getStatus() {
 		return currentState;
 	}
 	
 	Id getServiceId() {
-		return 0;
+		return serviceId;
 	}
+
+	Unit setServiceId(Id id) {
+		// ensure serviceId was not set previously
+		assert serviceId == 0;
+
+		serviceId = id;
+	}
+
 	ServiceType getServiceType(){
 		return FAS;
 	}
 	Customer getCustomer() {
 		return c;
 	}
+
 	Int getLatency() {
 		return 0;
 	}
+
 	Int getRequestCount() {
 		return reqCount;
 	}
@@ -1550,7 +1725,7 @@ class ExampleSetup implements Main {
 		
 		Fut<DC> d1 = rp!acquireInstance(0, M4_LARGE);
 		DC m4_large_1 = d1.get;
-		[DC: m4_large_1] DeploymentService ds = new DeploymentServiceImpl(rp);
+		[DC: m4_large_1] DeploymentService ds = new DeploymentServiceImpl();
 		
 		Fut<DC> d2 = rp!acquireInstance(1, M4_XLARGE);
 		DC m4_xlarge_1 = d2.get;
@@ -1662,45 +1837,67 @@ def String getInstanceName(String s) =
 
 	
 /** JSON ANNOTATION
-{
-	"id": "MainSmartDeployer",
-	"specification": "(sum ?x in '.*_eu': ?x.QueryServiceImpl['staging']) > 0 and (sum ?x in '.*_us': ?x.QueryServiceImpl['staging']) > 0 and QueryServiceImpl['.*'] = 4 and (sum ?x in '.*_eu': ?x.LoadBalancerServiceImpl) = 1 and (sum ?x in '.*_us': ?x.LoadBalancerServiceImpl) = 1 and (sum ?x in '.*_eu': ?x.LoadBalancerEndPointImpl) = 1 and (sum ?x in '.*_us': ?x.LoadBalancerEndPointImpl) = 1 and (forall ?x in DC: ( ?x.QueryServiceImpl['.*'] < 2 and ( ?x.QueryServiceImpl['.*'] = 1 impl ?x.DeploymentServiceImpl > 0) and ( ?x.PlatformServiceImpl > 0 impl  (sum ?y in obj:  ?x.?y) = 1) and (?x.LoadBalancerServiceImpl > 0 impl (sum ?y in obj: ?x.?y) = 1) and (?x.LoadBalancerEndPointImpl > 0 impl (sum ?y in obj: ?x.?y) = 1) ))  and abs((sum ?x in '.*_eu': ?x.QueryServiceImpl['.*']) - (sum ?x in '.*_us': ?x.QueryServiceImpl['.*']) ) = 0 and (((sum ?x in '.*_eu': ?x.QueryServiceImpl['staging']) > 0) impl (sum ?x in '.*_eu': ?x.PlatformServiceImpl) > 0) and (((sum ?x in '.*_us': ?x.QueryServiceImpl['staging']) > 0) impl (sum ?x in '.*_us': ?x.PlatformServiceImpl) > 0) and (sum ?x in 'c.*': ?x.QueryServiceImpl['.*'] = 0) and (sum ?x in 'm.*': ?x.LoadBalancerEndPointImpl = 0) and (sum ?x in 'm.*': ?x.LoadBalancerServiceImpl = 0) and (sum ?x in 'm.*': ?x.PlatformServiceImpl = 0)",
-	"DC": [],
-	"obj":[  
+{  
+  "id":"MainSmartDeployer",
+  "specification":"(sum ?x in '.*_eu': ?x.QueryServiceImpl['staging']) > 0 and (sum ?x in '.*_us': ?x.QueryServiceImpl['staging']) > 0 and QueryServiceImpl['.*'] = 4 and (sum ?x in '.*_eu': ?x.LoadBalancerServiceImpl) = 1 and (sum ?x in '.*_us': ?x.LoadBalancerServiceImpl) = 1 and (sum ?x in '.*_eu': ?x.PlatformServiceImpl) = 1 and (sum ?x in '.*_us': ?x.PlatformServiceImpl) = 1 and (sum ?x in '.*_eu': ?x.LoadBalancerEndPointImpl) = 1 and (sum ?x in '.*_us': ?x.LoadBalancerEndPointImpl) = 2 and (sum ?x in '.*_eu': ?x.DeploymentServiceImpl) = 1 and (sum ?x in '.*_us': ?x.DeploymentServiceImpl) = 1 and (forall ?x in DC: ( ?x.QueryServiceImpl['.*'] < 2 and ( ?x.QueryServiceImpl['.*'] = 1 impl ?x.DeploymentAgentImpl > 0) and ( ?x.PlatformServiceImpl > 0 impl  ((?x.LoadBalancerServiceImpl > 0) and (?x.DeploymentServiceImpl > 0) and (sum ?y in obj:  ?x.?y) = 3)) and (?x.LoadBalancerEndPointImpl > 0 impl (sum ?y in obj: ?x.?y) = 1) ))  and abs((sum ?x in '.*_eu': ?x.QueryServiceImpl['.*']) - (sum ?x in '.*_us': ?x.QueryServiceImpl['.*']) ) = 0 and (((sum ?x in '.*_eu': ?x.QueryServiceImpl['staging']) > 0) impl (sum ?x in '.*_eu': ?x.PlatformServiceImpl) > 0) and (((sum ?x in '.*_us': ?x.QueryServiceImpl['staging']) > 0) impl (sum ?x in '.*_us': ?x.PlatformServiceImpl) > 0) and (sum ?x in 'c.*': ?x.QueryServiceImpl['.*'] = 0) and (sum ?x in 'm.*': ?x.LoadBalancerEndPointImpl = 0) and (sum ?x in 'm.*': ?x.LoadBalancerServiceImpl = 0) and (sum ?x in 'm.*': ?x.PlatformServiceImpl = 0)",
+  "DC":[  
+
+  ],
+  "obj":[  
+
+  ],
+  "cloud_provider_DC_availability":{  
+    "c4_2xlarge_eu":3,
+    "c4_2xlarge_us":3,
+    "m4_large_eu":3,
+    "m4_large_us":3,
+    "c4_xlarge_eu":3,
+    "c4_xlarge_us":3,
+    "m4_xlarge_eu":2,
+    "m4_xlarge_us":2
+  },
+  "bind preferences":[  
+    "local",
+    "sum ?x of type QueryServiceImpl['.*'] in '.*_eu' :  forall ?y of type LoadBalancerEndPointImpl in '.*_eu' : ?x used by ?y",
+    "sum ?x of type QueryServiceImpl['.*'] in '.*_us' :  forall ?y of type LoadBalancerEndPointImpl in '.*_us' : ?x used by ?y",
+    "sum ?x of type QueryServiceImpl['.*'] in '.*_eu' :  forall ?y of type PlatformServiceImpl in '.*_eu' : ?x used by ?y",
+    "sum ?x of type QueryServiceImpl['.*'] in '.*_us' :  forall ?y of type PlatformServiceImpl in '.*_us' : ?x used by ?y",
+    "sum ?x of type LoadBalancerEndPointImpl['.*'] in '.*_eu' :  exists ?y of type PlatformServiceImpl in '.*_eu' : ?x used by ?y",
+    "sum ?x of type LoadBalancerEndPointImpl['.*'] in '.*_us' :  exists ?y of type PlatformServiceImpl in '.*_us' : ?x used by ?y",
+    "sum ?x of type LoadBalancerEndPointImpl in '.*_eu' :  exists ?y of type LoadBalancerServiceImpl in '.*_eu' : ?x used by ?y",
+    "sum ?x of type LoadBalancerEndPointImpl in '.*_us' :  exists ?y of type LoadBalancerServiceImpl in '.*_us' : ?x used by ?y",
+    "sum ?x of type DeploymentAgentImpl in '.*_eu' :  exists ?y of type DeploymentServiceImpl in '.*_eu' : ?x used by ?y",
+    "sum ?x of type DeploymentAgentImpl in '.*_us' :  exists ?y of type DeploymentServiceImpl in '.*_us' : ?x used by ?y"
+  ],
+  "add_method_priorities":[  
     {  
-      "name":"infrastructureServiceObj",
-      "provides":[  
-        {  
-          "ports":[ "InfrastructureService" ],
-										 
-          "num":-1
-        }
-      ],
-      "interface":"InfrastructureService"
-    }],
-	"cloud_provider_DC_availability" : { "c4_2xlarge_eu" : 3, "c4_2xlarge_us" : 3, "m4_large_eu" : 3, "m4_large_us" : 3, "c4_xlarge_eu" : 3, "c4_xlarge_us" : 3, "m4_xlarge_eu" : 2, "m4_xlarge_us" : 2},
-	"bind preferences" : [
-	    "local",
-			"sum ?x of type QueryServiceImpl['.*'] in '.*_eu' :  forall ?y of type LoadBalancerEndPointImpl in '.*_eu' : ?x used by ?y",
-			"sum ?x of type QueryServiceImpl['.*'] in '.*_us' :  forall ?y of type LoadBalancerEndPointImpl in '.*_us' : ?x used by ?y",
-			"sum ?x of type QueryServiceImpl['.*'] in '.*_eu' :  exists ?y of type PlatformServiceImpl in '.*_eu' : ?x used by ?y",
-			"sum ?x of type QueryServiceImpl['.*'] in '.*_us' :  exists ?y of type PlatformServiceImpl in '.*_us' : ?x used by ?y",
-			"sum ?x of type LoadBalancerEndPointImpl in '.*_eu' :  exists ?y of type LoadBalancerServiceImpl in '.*_eu' : ?x used by ?y",
-			"sum ?x of type LoadBalancerEndPointImpl in '.*_us' :  exists ?y of type LoadBalancerServiceImpl in '.*_us' : ?x used by ?y",
-	    "sum ?x of type DeploymentServiceImpl in '.*_eu' :  exists ?y of type PlatformServiceImpl in '.*_eu' : ?x used by ?y",
-			"sum ?x of type DeploymentServiceImpl in '.*_us' :  exists ?y of type PlatformServiceImpl in '.*_us' : ?x used by ?y",
-			"forall ?x of type LoadBalancerServiceImpl in '.*_eu' : forall ?y of type PlatformServiceImpl in '.*_eu' : ?x used by ?y",
-			"forall ?x of type LoadBalancerServiceImpl in '.*_us' : forall ?y of type PlatformServiceImpl in '.*_us' : ?x used by ?y"
-	    ],
-	"add_method_priorities" : [ { "class" : "LoadBalancerServiceImpl", "method" : "add" }, { "class" : "PlatformServiceImpl", "method" : "addDeploymentService" }] 
-
+      "class":"PlatformServiceImpl",
+      "method":"addEndPoint"
+    },
+    {  
+      "class":"DeploymentServiceImpl",
+      "method":"add"
+    },
+		{  
+      "class":"LoadBalancerEndPointImpl",
+      "method":"add"
+    },
+    
+		{  
+      "class":"PlatformServiceImpl",
+      "method":"addServiceInstance"
+    },
+    {  
+      "class":"DeploymentAgentImpl",
+      "method":"install"
+    }
+  ]
 }
-
 **/
 
 
 
-	[ SmartDeploy : "{\"id\":\"MainSmartDeployer\",\"specification\":\"(sum ?x in '.*_eu': ?x.QueryServiceImpl['staging']) > 0 and (sum ?x in '.*_us': ?x.QueryServiceImpl['staging']) > 0 and QueryServiceImpl['.*'] = 4 and (sum ?x in '.*_eu': ?x.LoadBalancerServiceImpl) = 1 and (sum ?x in '.*_us': ?x.LoadBalancerServiceImpl) = 1 and (sum ?x in '.*_eu': ?x.LoadBalancerEndPointImpl) = 1 and (sum ?x in '.*_us': ?x.LoadBalancerEndPointImpl) = 1 and (forall ?x in DC: ( ?x.QueryServiceImpl['.*'] < 2 and ( ?x.QueryServiceImpl['.*'] = 1 impl ?x.DeploymentServiceImpl > 0) and ( ?x.PlatformServiceImpl > 0 impl  (sum ?y in obj:  ?x.?y) = 1) and (?x.LoadBalancerServiceImpl > 0 impl (sum ?y in obj: ?x.?y) = 1) and (?x.LoadBalancerEndPointImpl > 0 impl (sum ?y in obj: ?x.?y) = 1) ))  and abs((sum ?x in '.*_eu': ?x.QueryServiceImpl['.*']) - (sum ?x in '.*_us': ?x.QueryServiceImpl['.*']) ) = 0 and (((sum ?x in '.*_eu': ?x.QueryServiceImpl['staging']) > 0) impl (sum ?x in '.*_eu': ?x.PlatformServiceImpl) > 0) and (((sum ?x in '.*_us': ?x.QueryServiceImpl['staging']) > 0) impl (sum ?x in '.*_us': ?x.PlatformServiceImpl) > 0) and (sum ?x in 'c.*': ?x.QueryServiceImpl['.*'] = 0) and (sum ?x in 'm.*': ?x.LoadBalancerEndPointImpl = 0) and (sum ?x in 'm.*': ?x.LoadBalancerServiceImpl = 0) and (sum ?x in 'm.*': ?x.PlatformServiceImpl = 0)\",\"DC\":[],\"obj\":[{\"name\":\"infrastructureServiceObj\",\"provides\":[{\"ports\":[\"InfrastructureService\"],\"num\":-1}],\"interface\":\"InfrastructureService\"}],\"cloud_provider_DC_availability\":{\"c4_2xlarge_eu\":3,\"c4_2xlarge_us\":3,\"m4_large_eu\":3,\"m4_large_us\":3,\"c4_xlarge_eu\":3,\"c4_xlarge_us\":3,\"m4_xlarge_eu\":2,\"m4_xlarge_us\":2},\"bind preferences\":[\"local\",\"sum ?x of type QueryServiceImpl['.*'] in '.*_eu' :  forall ?y of type LoadBalancerEndPointImpl in '.*_eu' : ?x used by ?y\",\"sum ?x of type QueryServiceImpl['.*'] in '.*_us' :  forall ?y of type LoadBalancerEndPointImpl in '.*_us' : ?x used by ?y\",\"sum ?x of type QueryServiceImpl['.*'] in '.*_eu' :  exists ?y of type PlatformServiceImpl in '.*_eu' : ?x used by ?y\",\"sum ?x of type QueryServiceImpl['.*'] in '.*_us' :  exists ?y of type PlatformServiceImpl in '.*_us' : ?x used by ?y\",\"sum ?x of type LoadBalancerEndPointImpl in '.*_eu' :  exists ?y of type LoadBalancerServiceImpl in '.*_eu' : ?x used by ?y\",\"sum ?x of type LoadBalancerEndPointImpl in '.*_us' :  exists ?y of type LoadBalancerServiceImpl in '.*_us' : ?x used by ?y\",\"sum ?x of type DeploymentServiceImpl in '.*_eu' :  exists ?y of type PlatformServiceImpl in '.*_eu' : ?x used by ?y\",\"sum ?x of type DeploymentServiceImpl in '.*_us' :  exists ?y of type PlatformServiceImpl in '.*_us' : ?x used by ?y\",\"forall ?x of type LoadBalancerServiceImpl in '.*_eu' : forall ?y of type PlatformServiceImpl in '.*_eu' : ?x used by ?y\",\"forall ?x of type LoadBalancerServiceImpl in '.*_us' : forall ?y of type PlatformServiceImpl in '.*_us' : ?x used by ?y\"],\"add_method_priorities\":[{\"class\":\"LoadBalancerServiceImpl\",\"method\":\"add\"},{\"class\":\"PlatformServiceImpl\",\"method\":\"addDeploymentService\"}]}" ]
+	[ SmartDeploy : "{\"id\":\"MainSmartDeployer\",\"specification\":\"(sum ?x in '.*_eu': ?x.QueryServiceImpl['staging']) > 0 and (sum ?x in '.*_us': ?x.QueryServiceImpl['staging']) > 0 and QueryServiceImpl['.*'] = 4 and (sum ?x in '.*_eu': ?x.LoadBalancerServiceImpl) = 1 and (sum ?x in '.*_us': ?x.LoadBalancerServiceImpl) = 1 and (sum ?x in '.*_eu': ?x.PlatformServiceImpl) = 1 and (sum ?x in '.*_us': ?x.PlatformServiceImpl) = 1 and (sum ?x in '.*_eu': ?x.LoadBalancerEndPointImpl) = 1 and (sum ?x in '.*_us': ?x.LoadBalancerEndPointImpl) = 2 and (sum ?x in '.*_eu': ?x.DeploymentServiceImpl) = 1 and (sum ?x in '.*_us': ?x.DeploymentServiceImpl) = 1 and (forall ?x in DC: ( ?x.QueryServiceImpl['.*'] < 2 and ( ?x.QueryServiceImpl['.*'] = 1 impl ?x.DeploymentAgentImpl > 0) and ( ?x.PlatformServiceImpl > 0 impl  ((?x.LoadBalancerServiceImpl > 0) and (?x.DeploymentServiceImpl > 0) and (sum ?y in obj:  ?x.?y) = 3)) and (?x.LoadBalancerEndPointImpl > 0 impl (sum ?y in obj: ?x.?y) = 1) ))  and abs((sum ?x in '.*_eu': ?x.QueryServiceImpl['.*']) - (sum ?x in '.*_us': ?x.QueryServiceImpl['.*']) ) = 0 and (((sum ?x in '.*_eu': ?x.QueryServiceImpl['staging']) > 0) impl (sum ?x in '.*_eu': ?x.PlatformServiceImpl) > 0) and (((sum ?x in '.*_us': ?x.QueryServiceImpl['staging']) > 0) impl (sum ?x in '.*_us': ?x.PlatformServiceImpl) > 0) and (sum ?x in 'c.*': ?x.QueryServiceImpl['.*'] = 0) and (sum ?x in 'm.*': ?x.LoadBalancerEndPointImpl = 0) and (sum ?x in 'm.*': ?x.LoadBalancerServiceImpl = 0) and (sum ?x in 'm.*': ?x.PlatformServiceImpl = 0)\",\"DC\":[],\"obj\":[],\"cloud_provider_DC_availability\":{\"c4_2xlarge_eu\":3,\"c4_2xlarge_us\":3,\"m4_large_eu\":3,\"m4_large_us\":3,\"c4_xlarge_eu\":3,\"c4_xlarge_us\":3,\"m4_xlarge_eu\":2,\"m4_xlarge_us\":2},\"bind preferences\":[\"local\",\"sum ?x of type QueryServiceImpl['.*'] in '.*_eu' :  forall ?y of type LoadBalancerEndPointImpl in '.*_eu' : ?x used by ?y\",\"sum ?x of type QueryServiceImpl['.*'] in '.*_us' :  forall ?y of type LoadBalancerEndPointImpl in '.*_us' : ?x used by ?y\",\"sum ?x of type QueryServiceImpl['.*'] in '.*_eu' :  forall ?y of type PlatformServiceImpl in '.*_eu' : ?x used by ?y\",\"sum ?x of type QueryServiceImpl['.*'] in '.*_us' :  forall ?y of type PlatformServiceImpl in '.*_us' : ?x used by ?y\",\"sum ?x of type LoadBalancerEndPointImpl['.*'] in '.*_eu' :  exists ?y of type PlatformServiceImpl in '.*_eu' : ?x used by ?y\",\"sum ?x of type LoadBalancerEndPointImpl['.*'] in '.*_us' :  exists ?y of type PlatformServiceImpl in '.*_us' : ?x used by ?y\",\"sum ?x of type LoadBalancerEndPointImpl in '.*_eu' :  exists ?y of type LoadBalancerServiceImpl in '.*_eu' : ?x used by ?y\",\"sum ?x of type LoadBalancerEndPointImpl in '.*_us' :  exists ?y of type LoadBalancerServiceImpl in '.*_us' : ?x used by ?y\",\"sum ?x of type DeploymentAgentImpl in '.*_eu' :  exists ?y of type DeploymentServiceImpl in '.*_eu' : ?x used by ?y\",\"sum ?x of type DeploymentAgentImpl in '.*_us' :  exists ?y of type DeploymentServiceImpl in '.*_us' : ?x used by ?y\"],\"add_method_priorities\":[{\"class\":\"PlatformServiceImpl\",\"method\":\"addEndPoint\"},{\"class\":\"DeploymentServiceImpl\",\"method\":\"add\"},{\"class\":\"LoadBalancerEndPointImpl\",\"method\":\"add\"},{\"class\":\"PlatformServiceImpl\",\"method\":\"addServiceInstance\"},{\"class\":\"DeploymentAgentImpl\",\"method\":\"install\"}]}" ]
 /*
 	SmartDeployInterface c1 = new MainSmartDeployer(cp,rp);
 	c1.deploy();
@@ -1814,10 +2011,10 @@ def String getInstanceName(String s) =
   ],
 	"add_method_priorities" : [ { "class" : "loadBalancerEndPointObjEu", "method" : "add" },{ "class" : "loadBalancerEndPointObjUs", "method" : "add" },{ "class" : "platformObjEu", "method" : "add" },{ "class" : "platformObjUs", "method" : "add" }]
 }
-**/
+
 
 	[ SmartDeploy : "{\"id\":\"AddQueryDeployer\",\"specification\":\"QueryServiceImpl['live'] = 4 and (sum ?x in '.*': ?x.LoadBalancerServiceImpl) = 0 and (sum ?x in '.*': ?x.LoadBalancerEndPointImpl) = 0 and (sum ?x in '.*': ?x.PlatformServiceImpl) = 0 and (forall ?x in DC: ( ?x.QueryServiceImpl['.*'] < 2 and ( ?x.QueryServiceImpl['.*'] = 1 impl ?x.DeploymentServiceImpl > 0))) and abs((sum ?x in '.*_eu': ?x.QueryServiceImpl['.*']) - (sum ?x in '.*_us': ?x.QueryServiceImpl['.*']) ) = 0 and (((sum ?x in '.*_us': ?x.QueryServiceImpl['staging']) > 0) impl (sum ?x in '.*_us': ?x.PlatformServiceImpl) > 0) and (((sum ?x in '.*_eu': ?x.QueryServiceImpl['staging']) > 0) impl (sum ?x in '.*_eu': ?x.PlatformServiceImpl) > 0) and (sum ?x in 'c.*': ?x.QueryServiceImpl['.*'] = 0)\",\"DC\":[],\"obj\":[{\"name\":\"infrastructureServiceObj\",\"provides\":[{\"ports\":[\"InfrastructureService\"],\"num\":-1}],\"interface\":\"InfrastructureService\"},{\"name\":\"platformObjUs\",\"provides\":[{\"ports\":[\"MonitorPlatformService\",\"PlatformService\"],\"num\":-1}],\"may_add_reference_to\":[{\"interface\":\"DeploymentService\",\"method\":\"add\",\"DC_as_additional_parameter\":false}],\"interface\":\"PlatformService\"},{\"name\":\"platformObjEu\",\"provides\":[{\"ports\":[\"MonitorPlatformService\",\"PlatformService\"],\"num\":-1}],\"may_add_reference_to\":[{\"interface\":\"DeploymentService\",\"method\":\"add\",\"DC_as_additional_parameter\":false}],\"interface\":\"PlatformService\"},{\"name\":\"loadBalancerEndPointObjEu\",\"provides\":[{\"ports\":[\"LoadBalancerEndPoint\"],\"num\":-1}],\"may_add_reference_to\":[{\"interface\":\"Service\",\"method\":\"add\",\"DC_as_additional_parameter\":false}],\"interface\":\"LoadBalancerEndPoint\"},{\"name\":\"loadBalancerEndPointObjUs\",\"provides\":[{\"ports\":[\"LoadBalancerEndPoint\"],\"num\":-1}],\"may_add_reference_to\":[{\"interface\":\"Service\",\"method\":\"add\",\"DC_as_additional_parameter\":false}],\"interface\":\"LoadBalancerEndPoint\"}],\"bind preferences\":[\"local\",\"sum ?x of type DeploymentServiceImpl in '.*_eu' :  exists ?y of type platformObjEu in DC : ?x used by ?y\",\"sum ?x of type DeploymentServiceImpl in '.*_us' :  exists ?y of type platformObjUs in DC : ?x used by ?y\",\"sum ?x of type QueryServiceImpl['.*'] in '.*_eu' :  exists ?y of type loadBalancerEndPointObjEu in DC : ?x used by ?y\",\"sum ?x of type QueryServiceImpl['.*'] in '.*_us' :  exists ?y of type loadBalancerEndPointObjUs in DC : ?x used by ?y\"],\"add_method_priorities\":[{\"class\":\"loadBalancerEndPointObjEu\",\"method\":\"add\"},{\"class\":\"loadBalancerEndPointObjUs\",\"method\":\"add\"},{\"class\":\"platformObjEu\",\"method\":\"add\"},{\"class\":\"platformObjUs\",\"method\":\"add\"}]}" ]
-
+**/
 	//SmartDeployInterface c2 = new AddQueryDeployer(cp,rp,platformServicesEu,platformServicesUs,loadBalancerEndPointEu,loadBalancerEndPointUs);
 	print("FRH model simulation terminated\n");
 
