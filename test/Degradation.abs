@@ -62,6 +62,7 @@ class DegradationMonitorImpl(DeployerIF deployer) implements DegradationMonitorI
    Unit monitor() {
      //corrective actions to improve metric
      {
+	  println("monitor invoked");
           Rat degradation = snd(head(snd(head(metricHist))));
           if(degradation > 5/1000) {
           	deployer.scaleUp();
@@ -77,7 +78,6 @@ class DegradationMonitorImpl(DeployerIF deployer) implements DegradationMonitorI
    }
 
    Unit notify_query(Time t, Rat procTime) {
-     println("updating monitor");
      Pair<String, Rat> measurement = metric.notify_query(t, procTime);
      metricHist = Cons(Pair(t, list[measurement]), metricHist); // add measurement to history
    }

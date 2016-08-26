@@ -525,7 +525,10 @@ def main(argv):
       annotation,
       dc_into_name, obj_into_name,
       out_stream)
-  
+
+  log.info("Print code to add instances in CloudProvider")
+  code_generation.print_cloud_provider_modification(dc_json,out_stream)
+
   log.info("Print producline info")
   code_generation.print_productline(out_stream)    
   log.info("Clean.")

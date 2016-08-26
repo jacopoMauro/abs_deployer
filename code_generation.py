@@ -318,6 +318,28 @@ def print_class(smart_dep_annotation,interfaces,
   print_undeploy_method(interfaces,out)
   out.write("}\n")
 
+def print_cloud_provider_modification(annotations, out):
+  """
+  Prints the class used to create the main deployer
+  The name of this class is SmartDeployerCloudProviderImpl
+  """
+  out.write("modifies interface ABS.DC.CloudProvider {\n")
+  out.write("adds Unit addSmartDeployInstances();\n")
+  out.write("}\n")
+
+  out.write("modifies class ABS.DC.CloudProvider {\n")
+  out.write("\tadds Unit addSmartDeployInstances() {\n")
+  for i in annotations.keys():
+    if "initial_DC" not in i:
+      out.write('\t\tthis.addInstanceDescription(Pair("' + unicode(i) + '",\n')
+      out.write('\t\t\tmap[')
+      out.write('Pair(CostPerInterval,' + unicode(annotations[i]["cost"]) + ")\n")
+      for j in annotations[i]["resources"].keys():
+        if j != "fictional_res":
+          out.write('\t\t\t,Pair(' + j + ',' + unicode(annotations[i]["resources"][j]) + ")\n")
+      out.write('\t\t\t]));\n')
+  out.write("\t}\n")
+  out.write("}\n")
 
 def print_interface(module_name,interfaces,out):
   """

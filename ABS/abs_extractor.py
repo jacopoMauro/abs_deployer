@@ -84,95 +84,105 @@ class MyABSVisitor(ABSVisitor):
       name = ctx.getChild(1).accept(self).strip()
       if name == "SmartDeploy":
         data = ctx.getChild(3).accept(self).strip().decode("string-escape")[1:-1]
-        self.smart_dep_json.append(json.loads(data))  
+        self.smart_dep_json.append(json.loads(data))
+      elif name == "SmartDeployCloudProvider":
+        data = ctx.getChild(3).accept(self).strip().decode("string-escape")[1:-1]
+        self.dc_json = json.loads(data)
+        fictional_resource_counter = 1
+        for i in self.dc_json.keys():
+          self.dc_json[i]["num"] = settings.DEFAULT_NUMBER_OF_DC
+          if "cost" not in self.dc_json[i]:
+            self.dc_json[i]["cost"] = 0
+          self.dc_json[i]["resources"]['fictional_res'] = fictional_resource_counter
+          fictional_resource_counter += 1
     return ""
   
   
-  def visitSyncCallExp(self, ctx):
-    """
-    Try to find synccall with name setInstanceDescriptions to get the DC
-    specification.
-    """
-    # TODO: handle removeInstanceDescription method
-    global fictional_resource_counter
-    # to allow the of symmetry breaking constraints add a fictional resource
-    # per type of component
-    method_name = ctx.getChild(2).accept(self).strip()
-    if method_name == "setInstanceDescriptions":
-      params = ctx.getChild(4).accept(self)[0]
-      try:
-        data = json.loads(params)
-      except ValueError:
-        raise ABSParsingException("CloudProvider parsing failed")      
-      # example JSON from parser
-      # [{"c3.xlarge": [{"CostPerInterval": 210},{"Memory": 750}]}]
-      # transformed into JSON for Zephyrus "locations" : XXX
-      for i in data:
-        for j in i.keys():
-          self.dc_json[j] = {
-                  "num": settings.DEFAULT_NUMBER_OF_DC,
-                  "resources": {},
-                  "cost":0 }
-          for k in i[j]:
-            self.dc_json[j]["resources"]['fictional_res'] = fictional_resource_counter
-            fictional_resource_counter += 1
-            for h in k.keys():
-              if h == "CostPerInterval":
-                self.dc_json[j]["cost"] = k[h]
-              else:
-                self.dc_json[j]["resources"][h] = k[h]
-    elif method_name == "addInstanceDescription":
-      params = ctx.getChild(4).accept(self)[0]
-      try:
-        data = json.loads(params)
-      except ValueError:
-        raise ABSParsingException("CloudProvider parsing failed")
-      # example JSON from parser
-      # {'c3.xlarge': [{'CostPerInterval': 210}, {'Memory': 750}, {'Cores': 4}]}
-      for i in data.keys():
-        self.dc_json[i] = {
-                  "num": settings.DEFAULT_NUMBER_OF_DC,
-                  "resources": {},
-                  "cost":0 }
-        for j in data[i]:
-          for k in j.keys():
-            self.dc_json[i]["resources"]['fictional_res'] = fictional_resource_counter
-            fictional_resource_counter += 1
-            if k == "CostPerInterval":
-              self.dc_json[i]["cost"] = j[k]
-            else:
-              self.dc_json[i]["resources"][k] = j[k]
-    return ""
+  # def visitSyncCallExp(self, ctx):
+  #   """
+  #   Try to find synccall with name setInstanceDescriptions to get the DC
+  #   specification.
+  #   """
+  #   # TODO: handle removeInstanceDescription method
+  #   global fictional_resource_counter
+  #   # to allow the of symmetry breaking constraints add a fictional resource
+  #   # per type of component
+  #   method_name = ctx.getChild(2).accept(self).strip()
+  #   if method_name == "setInstanceDescriptions":
+  #     params = ctx.getChild(4).accept(self)[0]
+  #     try:
+  #       data = json.loads(params)
+  #     except ValueError:
+  #       raise ABSParsingException("CloudProvider parsing failed")
+  #     # example JSON from parser
+  #     # [{"c3.xlarge": [{"CostPerInterval": 210},{"Memory": 750}]}]
+  #     # transformed into JSON for Zephyrus "locations" : XXX
+  #     for i in data:
+  #       for j in i.keys():
+  #         self.dc_json[j] = {
+  #                 "num": settings.DEFAULT_NUMBER_OF_DC,
+  #                 "resources": {},
+  #                 "cost":0 }
+  #         for k in i[j]:
+  #           self.dc_json[j]["resources"]['fictional_res'] = fictional_resource_counter
+  #           fictional_resource_counter += 1
+  #           for h in k.keys():
+  #             if h == "CostPerInterval":
+  #               self.dc_json[j]["cost"] = k[h]
+  #             else:
+  #               self.dc_json[j]["resources"][h] = k[h]
+  #   elif method_name == "addInstanceDescription":
+  #     params = ctx.getChild(4).accept(self)[0]
+  #     try:
+  #       data = json.loads(params)
+  #     except ValueError:
+  #       raise ABSParsingException("CloudProvider parsing failed")
+  #     # example JSON from parser
+  #     # {'c3.xlarge': [{'CostPerInterval': 210}, {'Memory': 750}, {'Cores': 4}]}
+  #     for i in data.keys():
+  #       self.dc_json[i] = {
+  #                 "num": settings.DEFAULT_NUMBER_OF_DC,
+  #                 "resources": {},
+  #                 "cost":0 }
+  #       for j in data[i]:
+  #         for k in j.keys():
+  #           self.dc_json[i]["resources"]['fictional_res'] = fictional_resource_counter
+  #           fictional_resource_counter += 1
+  #           if k == "CostPerInterval":
+  #             self.dc_json[i]["cost"] = j[k]
+  #           else:
+  #             self.dc_json[i]["resources"][k] = j[k]
+  #   return ""
   
   
-  def visitConstructorExp(self, ctx):
-    """
-    Dicriminate Pair and Map Constructors to transform an ABS string into a
-    JSON like string.
-    """
-    qualifier = ctx.getChild(0).accept(self).strip()
-    if qualifier == "Pair":
-      ls = ctx.getChild(2).accept(self)
-      return "{" + ls[0] + ": " + ls[1] + "}"
-    elif qualifier == "InsertAssoc":
-      ls = ctx.getChild(2).accept(self)
-      if ls[1] == '"EmptyMap"':
-        return  "["  + ls[0] + "]"
-      else:
-        return "[" + ls[0] + "," + ls[1][1:]
-    else:
-      return '"' + qualifier +'"'
-  
-  
-  def visitPure_exp_list(self, ctx):
-    """
-    Pure expression lists return a list, not a string.
-    """
-    n = ctx.getChildCount()
-    ls = []
-    for i in range(0,n,2):
-      ls.append(ctx.getChild(i).accept(self).strip())
-    return ls
+  # def visitConstructorExp(self, ctx):
+  #   """
+  #   Dicriminate Pair and Map Constructors to transform an ABS string into a
+  #   JSON like string.
+  #   """
+  #   qualifier = ctx.getChild(0).accept(self).strip()
+  #   if qualifier == "Pair":
+  #     ls = ctx.getChild(2).accept(self)
+  #     return "{" + ls[0] + ": " + ls[1] + "}"
+  #   elif qualifier == "InsertAssoc":
+  #     ls = ctx.getChild(2).accept(self)
+  #     if ls[1] == '"EmptyMap"':
+  #       return  "["  + ls[0] + "]"
+  #     else:
+  #       return "[" + ls[0] + "," + ls[1][1:]
+  #   else:
+  #     return '"' + qualifier +'"'
+  #
+  #
+  # def visitPure_exp_list(self, ctx):
+  #   """
+  #   Pure expression lists return a list, not a string.
+  #   """
+  #   n = ctx.getChildCount()
+  #   ls = []
+  #   for i in range(0,n,2):
+  #     ls.append(ctx.getChild(i).accept(self).strip())
+  #   return ls
 
 
 def get_annotation_from_abs(abs_program_file):

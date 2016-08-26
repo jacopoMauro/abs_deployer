@@ -9,5 +9,5 @@ interface Monitor {
   
   //get timestamped,labelled stream of Rat values
   //of the service metric being monitored
-  List< Pair<Time, List<Pair<String, Rat> > > > metricHistory();
+  [RESTCallable] List< Pair<Time, List< Pair<String, Rat > > > > metricHistory();
 }
