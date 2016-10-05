@@ -112,7 +112,6 @@ class MyVisitor(DeclSpecLanguageVisitor):
   
   def visitAtermDCObj(self, ctx):
     dc = ctx.getChild(0).accept(self)
-    dc = ctx.getChild(0).accept(self)
     obj = ctx.getChild(2).accept(self)
     ls = obj.split('||')
     s = dc + '.' + ls[0]
