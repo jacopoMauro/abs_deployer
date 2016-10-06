@@ -128,7 +128,7 @@ def print_class_signature(smart_dep_annotation,out):
   Prints the first line of the class
   """
   out.write("class " + smart_dep_annotation["id"] + "(");
-  out.write("CloudProvider cloudProvider")
+  out.write("SmartCloudProvider cloudProvider")
   for i in smart_dep_annotation["DC"]:
     out.write(", DeploymentComponent " + i["name"])
   for i in smart_dep_annotation["obj"]:
@@ -323,11 +323,14 @@ def print_cloud_provider_modification(annotations, out):
   Prints the class used to create the main deployer
   The name of this class is SmartDeployerCloudProviderImpl
   """
-  out.write("modifies interface ABS.DC.CloudProvider {\n")
+  out.write("delta SmartDeployDelta1;\n")
+  out.write("uses HaskellAux;\n")
+  out.write("adds import * from ABS.DC;\n")
+  out.write("modifies interface SmartCloudProvider {\n")
   out.write("adds Unit addSmartDeployInstances();\n")
   out.write("}\n")
 
-  out.write("modifies class ABS.DC.CloudProvider {\n")
+  out.write("modifies class SmartCloudProvider {\n")
   out.write("\tadds Unit addSmartDeployInstances() {\n")
   for i in annotations.keys():
     if "initial_DC" not in i:
@@ -348,11 +351,13 @@ def print_interface(module_name,interfaces,out):
   
   out.write("module Delta" + uuid.uuid4().hex + ";\n")
   out.write("import * from ABS.DC;\n")
+  out.write("import * from HaskellAux;\n")
   out.write("import * from " + module_name + ";\n\n")
   out.write("delta SmartDeployDelta;\n")
   out.write("uses ABS.SmartDeploy;\n")  
   out.write("adds import * from " + module_name + ";\n")
   out.write("adds import * from ABS.DC;\n")
+  out.write("adds import * from HaskellAux;\n")
   out.write("modifies interface SmartDeployInterface {\n")
   for i in interfaces:
     out.write("\tadds List<Pair<" + i + ",DeploymentComponent>> get" + i + "();\n")
@@ -366,4 +371,5 @@ def print_productline(out):
   out.write("\nproductline SmartDeployProductLine;\n")
   out.write("features SmartDeployFeature;\n")
   out.write("delta SmartDeployDelta when SmartDeployFeature;\n")
+  out.write("delta SmartDeployDelta1 when SmartDeployFeature;\n")
   out.write("product SmartDeploy (SmartDeployFeature);\n")

@@ -1,0 +1,63 @@
+module HaskellAux;
+
+export SmartCloudProvider;
+import * from ABS.DC;
+
+interface SmartCloudProvider extends CloudProvider {}
+
+
+class SmartCloudProvider(CloudProvider cp) implements SmartCloudProvider {
+    DeploymentComponent prelaunchInstance(Map<Resourcetype, Rat> d) {
+			return cp.prelaunchInstance(d);
+		}
+
+    DeploymentComponent launchInstance(Map<Resourcetype, Rat> description) {
+			return cp.launchInstance(description);
+		}
+    
+		Bool acquireInstance(DeploymentComponent instance){
+			return cp.acquireInstance(instance);
+		}
+
+    Bool releaseInstance(DeploymentComponent instance){
+			return cp.releaseInstance(instance);
+		}
+
+    Bool shutdownInstance(DeploymentComponent instance){
+			return cp.shutdownInstance(instance);
+		}
+
+    [Atomic] Rat getAccumulatedCost(){
+			return cp.getAccumulatedCost();
+		}
+
+    [Atomic] Unit shutdown() {
+			cp.shutdown();
+		}
+
+    [Atomic] Unit setInstanceDescriptions(Map<String, Map<Resourcetype, Rat>> instanceDescriptions){
+			cp.setInstanceDescriptions(instanceDescriptions);
+		}
+
+		[Atomic] Unit addInstanceDescription(Pair<String, Map<Resourcetype, Rat>> instanceDescription){
+			cp.addInstanceDescription(instanceDescription);
+		}
+
+		[Atomic] Unit removeInstanceDescription(String instanceDescriptionName){
+			cp.removeInstanceDescription(instanceDescriptionName);
+		}
+
+    [Atomic] Map<String, Map<Resourcetype, Rat>> getInstanceDescriptions(){
+			return cp.getInstanceDescriptions();
+		}
+
+    DeploymentComponent prelaunchInstanceNamed(String instancename){
+			return cp.prelaunchInstanceNamed(instancename);
+		}
+
+    DeploymentComponent launchInstanceNamed(String instancename){
+			return cp.launchInstanceNamed(instancename);
+		}
+
+}
+	
