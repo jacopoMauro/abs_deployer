@@ -2207,11 +2207,11 @@ class AddQueryServicesDeployerImpl(
 	MonitoringService ms = new MonitoringServiceImpl();
 
 	//create Service degradation monitor and register with monitoring service
-	[RESTName: "monitor"] DegradationMonitorIf degradationMonitor = new DegradationMonitorImpl(deployerif);
+	DegradationMonitorIf degradationMonitor = new DegradationMonitorImpl(deployerif);
 	//Fut<Unit> df = ms!add(Rule(10, degradationMonitor)); df.get;
 
 	//create monitoring endpoint
-	[RESTName: "queryService"] MonitoringQueryEndpoint mqep =
+	MonitoringQueryEndpoint mqep =
 		new MonitoringQueryEndpointImpl(loadBalancerEndPoints, degradationMonitor);
 
 	print("FRH model simulation terminated\n");
