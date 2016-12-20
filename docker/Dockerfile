@@ -3,13 +3,11 @@ MAINTAINER Jacopo Mauro
 
 # download and install zephyurs2
 RUN cd / && \
-	mkdir solvers_exec && \
-  cd /solvers_exec && \
-  git clone --recursive -b bind_preferences https://jacopomauro@bitbucket.org/jacopomauro/zephyrus2.git && \
-	cd zephyrus2 && \
-	git checkout 924b50f04c73b8269d3b14157dd0abbf7b5bd99c && \ 
-	#check out tested version with smartdeployer
-  pip install -e /solvers_exec/zephyrus2
+    mkdir solvers_exec && \
+    cd /solvers_exec && \
+    git clone --recursive --depth=1 https://jacopomauro@bitbucket.org/jacopomauro/zephyrus2.git && \
+    cd zephyrus2 && \
+    pip install -e /solvers_exec/zephyrus2
 
 ###############
 # download MiniZincIDE-2.0.13-bundle-linux-x86_64.tgz and untar
@@ -56,6 +54,30 @@ RUN ( [ -d /solvers_exec ] || mkdir /solvers_exec ) && \
 
 
 
+  ###############
+  # download fzn2smt
+  ###############
+
+COPY ./docker_scripts/antlr-runtime-3.2.jar /antlr-runtime-3.2.jar
+
+RUN ( [ -d /solvers_exec ] || mkdir /solvers_exec ) && \
+	###############
+	# install needed packages
+	###############  
+	apt-get update && \
+	# openjdk and unzip for the fzn2smt	
+	apt-get install -y \
+		unzip \
+		openjdk-7-jdk && \
+	rm -rf /var/lib/apt/lists/* && \
+  cd /solvers_exec && \
+  wget http://ima.udg.edu/recerca/lap/fzn2smt/version/fzn2smt-2-0-02.zip && \
+  unzip fzn2smt-2-0-02.zip && \
+  rm -rf fzn2smt-2-0-02.zip
+
+ENV CLASSPATH=/solvers_exec/fzn2smt-2-0-02:/antlr-runtime-3.2.jar:$CLASSPATH
+
+
 ###############
 # download chuffed, add global-dir in minizinc
 ###############
@@ -74,26 +96,52 @@ RUN ( [ -d /solvers_exec ] || mkdir /solvers_exec ) && \
 	ln -s /solvers_exec/chuffed/binary/linux/mznlib /solvers_exec/minisearch/share/minizinc/chuffed || \
 		echo MiniSearch not installed )
 
+###############
+# download and compile z3
+###############
+RUN ( [ -d /solvers_exec ] || mkdir /solvers_exec ) && \
+	###############
+	# install needed packages
+	###############  
+	#apt-get update && \
+	#apt-get install -y \
+	#	cmake \
+	#	bison \
+	#	flex && \
+	#rm -rf /var/lib/apt/lists/* && \
+  cd /solvers_exec && \
+	###############
+	# install z3
+	###############
+	git clone --depth 1 https://github.com/Z3Prover/z3.git && \
+	cd z3 && \
+	python scripts/mk_make.py --python && \
+	cd build && \
+	make && \
+	make install	
+
+
+
 
 # clone abs_deployer
 RUN cd /solvers_exec && \
-	git clone --recursive --depth=1 -b bind_pref https://github.com/jacopoMauro/abs_deployer.git
+	git clone --recursive --depth=1 https://github.com/jacopoMauro/abs_deployer.git
 
 ENV PATH /solvers_exec/abs_deployer:$PATH
 
 # install abs-tools
 RUN cd /solvers_exec && \
 	apt-get update && \
-  apt-get install -y \
+    apt-get install -y \
 		openjdk-7-jdk \
 		ant \
 		cmake \
 		bison \
 		flex && \
-  rm -rf /var/lib/apt/lists/* && \
+    rm -rf /var/lib/apt/lists/* && \
 	cd /solvers_exec && \
 	git clone --depth=1 https://github.com/abstools/abstools.git && \
-  cd /solvers_exec/abstools/frontend && ant
+    cd /solvers_exec/abstools/frontend && ant
 
 ENV CLASSPATH=/solvers_exec/abstools/frontend/dist/absfrontend.jar:$CLASSPATH
 	
