@@ -9,6 +9,13 @@ RUN cd / && \
     cd zephyrus2 && \
     pip install -e /solvers_exec/zephyrus2
 
+# install useful commands
+RUN apt-get update && \
+    apt-get install -y \
+		time \
+		nano && \
+    rm -rf /var/lib/apt/lists/*
+
 ###############
 # download MiniZincIDE-2.0.13-bundle-linux-x86_64.tgz and untar
 ###############

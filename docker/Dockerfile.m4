@@ -9,6 +9,13 @@ RUN cd / && \
     cd zephyrus2 && \
     pip install -e /solvers_exec/zephyrus2
 
+# install useful commands
+RUN apt-get update && \
+    apt-get install -y \
+		time \
+		nano && \
+    rm -rf /var/lib/apt/lists/*
+
 include(`MiniZincIDE_binary.m4')
 include(`gecode_binary.m4')
 include(`fzn2smt.m4')
