@@ -9,17 +9,34 @@ import sys
 import fileinput
 import re
 import os
+import itertools
 
 # log.basicConfig(format="%(levelname)s: %(message)s", level=log.DEBUG)
 
 REPETITIONS = 1
-TEST_FILE = 'test_addquery.abs'
+TEST_FILE = 'test_mainquery.abs'
 
 # doing a grid search
-EUROPE = range(0,5)
-USA = range(0,10)
 
-TIMEOUT = 120
+DCs = [ "c4_2xlarge_us2",
+          "c4_2xlarge_us1",
+          "m4_large_us2",
+          "m4_large_us1",
+          "c4_xlarge_us2",
+          "c4_xlarge_us1",
+          "m4_xlarge_us2",
+          "m4_xlarge_us1",
+          "c4_2xlarge_eu",
+          "c4_xlarge_eu",
+          "m4_large_eu",
+          "m4_xlarge_eu" ]
+
+grid_ranges = []
+for i in DCs:
+    grid_ranges.append(range(2,3))
+grid_ranges[0] = range(3,5)
+
+TIMEOUT = 3600
 
 # OTHER_OPT
 OTHER_OPT = [ ]
@@ -27,9 +44,9 @@ OTHER_ARGS = [ 'Monitor.abs', 'Degradation.abs']
 
 CMDS = [
           # smt
-          # ['time', '-p', 'timeout', str(TIMEOUT),
-          # 'python', '../abs_deployer.py',
-          # '-s', 'smt'],
+          ['time', '-p', 'timeout', str(TIMEOUT),
+           'python', '../abs_deployer.py',
+           '-s', 'smt'],
 
           # chuffed
           ['time', '-p', 'timeout', str(TIMEOUT),
@@ -44,18 +61,17 @@ CMDS = [
         ]
 
 
-def changefile(eu,us):
+def changefile(param):
     f_name = '/tmp/' + uuid.uuid4().hex + '.abs'
     with open(f_name,'w') as f:
         for line in fileinput.input(TEST_FILE):
-            line = re.sub(
-                r"\(sum\s\?x\sin\s'\.\*us\.':\s\?x\.QueryServiceImpl\['live'\]\)\s=\s[0-9]+",
-                "(sum ?x in '.*us.': ?x.QueryServiceImpl['live']) = " + unicode(us),
-                line)
-            line = re.sub(
-                r"\(sum\s\?x\sin\s'\.\*eu':\s\?x\.QueryServiceImpl\['live'\]\)\s=\s[0-9]+",
-                "(sum ?x in '.*eu': ?x.QueryServiceImpl['live']) = " + unicode(us),
-                line)
+            counter = 0
+            for i in DCs:
+                line = re.sub(
+                    '\\\\"' + i + '\\\\":[0-9]+',
+                    '\\\\"' + i + '\\\\":' + unicode(param[counter]),
+                    line)
+                counter += 1
             f.write(line)
     return f_name
 
@@ -105,7 +121,7 @@ def myprint(res):
 def main():
   
   # print first line of the table
-  print 'eu & usa &',
+  print 'param &',
   for i in CMDS:
     for j in range(len(i)):
       if i[j] == '-s':
@@ -115,27 +131,31 @@ def main():
   print '\\\\'
 
   # start performing the grid search
-  for eu in EUROPE:
-    for us in USA:
-          
-        # print the parameters of wordpress tested
-        print str(eu) + ' & ' + str(us) + ' & ',
 
-        # create the input file for zephyrus
-        f = changefile(eu,us)
-        log.debug('File ' + f + " generated for testing combination " + unicode((eu,us)))
+  combinations = []
+  for i in itertools.product(*grid_ranges):
+      combinations.append(i)
+  log.debug("Combinations = " + unicode(combinations))
+  for i in combinations:
 
-        # run the solvers
-        for i in range(len(CMDS)):
-            cmd = CMDS[i] + OTHER_OPT + [ f ] + OTHER_ARGS
-            res = run(cmd)
-            print myprint(res),
-            sys.stdout.flush()
-        print '\\\\'
+    # print the parameters of wordpress tested
+    print unicode(i) + ' & ',
 
-        # remove file
-        if os.path.exists(f):
-            os.remove(f)
+    # create the input file for zephyrus
+    f = changefile(i)
+    log.debug('File ' + f + " generated for testing combination " + unicode(i))
+
+    # run the solvers
+    for j in range(len(CMDS)):
+        cmd = CMDS[j] + OTHER_OPT + [ f ] + OTHER_ARGS
+        res = run(cmd)
+        print myprint(res),
+        sys.stdout.flush()
+    print '\\\\'
+
+    # remove file
+    if os.path.exists(f):
+        os.remove(f)
 
 
 
