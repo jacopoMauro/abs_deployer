@@ -16,10 +16,10 @@ REPETITIONS = 1
 TEST_FILE = 'test_addquery.abs'
 
 # doing a grid search
-EUROPE = range(0,5)
-USA = range(0,10)
+EUROPE = range(0,12)
+USA = range(0,12)
 
-TIMEOUT = 120
+TIMEOUT = 600
 
 # OTHER_OPT
 OTHER_OPT = [ ]
@@ -27,9 +27,9 @@ OTHER_ARGS = [ 'Monitor.abs', 'Degradation.abs']
 
 CMDS = [
           # smt
-          # ['time', '-p', 'timeout', str(TIMEOUT),
-          # 'python', '../abs_deployer.py',
-          # '-s', 'smt'],
+          ['time', '-p', 'timeout', str(TIMEOUT),
+          'python', '../abs_deployer.py',
+           '-s', 'smt'],
 
           # chuffed
           ['time', '-p', 'timeout', str(TIMEOUT),
@@ -54,7 +54,7 @@ def changefile(eu,us):
                 line)
             line = re.sub(
                 r"\(sum\s\?x\sin\s'\.\*eu':\s\?x\.QueryServiceImpl\['live'\]\)\s=\s[0-9]+",
-                "(sum ?x in '.*eu': ?x.QueryServiceImpl['live']) = " + unicode(us),
+                "(sum ?x in '.*eu': ?x.QueryServiceImpl['live']) = " + unicode(eu),
                 line)
             f.write(line)
     return f_name
