@@ -1,7 +1,7 @@
 """
 abs_deployer.py:
 
-Usage: abs_deployer.py [<options>] <abs program file>
+Usage: abs_deployer.py [<options>] <abs program files>
   Options:
     -o, --ofile <file>
       file where to save the output
@@ -15,11 +15,9 @@ Usage: abs_deployer.py [<options>] <abs program file>
 
 It requires the installation of zephyrus2 available from git@bitbucket.org:jacopomauro/zephyrus2.git    
 
-Limitations:
-  - the definition of the deployment components need to be done in just on step
-    calling the setInstanceDescriptions on an object denoted as cloudProvider
-   
-Scenarios name have to differ from DC names
+Scenarios names have to differ from DC names
+
+The first abs file is the program containing all the resource cost annotations
 
 Requirements:
   Python packages
@@ -420,9 +418,21 @@ def main(argv):
 
   log.info("Parsing JSON costs annotations file " + annotation_file)
   annotation = remove_dots(read_json(annotation_file))
+  # if present, decompose the "method": "x,y" in "add_method": "x", "remove_method": "y"
+  for i in annotation["classes"]:
+    for j in i["activates"]:
+      if "optional_list" in j:
+        for k in j["optional_list"]:
+          ls = k["method"].split(",")
+          if len(ls) != 2:
+            log.critical("In optional list " + k["method"] + " was not possible to find two methods")
+            log.critical("Exiting")
+            sys.exit(1)
+          k["add_method"] = ls[0]
+          k["remove_method"] = ls[1]
+          del(k["method"])
   log.debug("Internal json representation extracted from the abs program")
   log.debug(json.dumps(annotation, indent=1))
-
   log.info("Extracting class, resource, interface")
   class_names, resouce_names, interface_names = get_abs_names(annotation)
   

@@ -73,16 +73,20 @@
                   "interface":{
                     "type":"string"
                   },
-                  "method":{
+                  "add_method":{
                     "type":"string"
                   },
+                  "remove_method":{
+                    "type":"string"
+                  }
                   "DC_as_additional_parameter":{
                     "type":"boolean"
                   }
                 },
                 "required":[
                   "interface",
-                  "method"
+                  "add_method",
+                  "remove_method"
                 ]
               }
             }
@@ -106,6 +110,26 @@
       },
       "add_method_priorities":{
         "description": "optional - define the priorities to call the add methods",
+        "type":"array",
+        "items":{
+          "type":"object",
+          "properties":{
+            "class":{
+              "description": "may be the class name or the name of an initial object",
+              "type":"string"
+            },
+            "method":{
+              "type":"string"
+            }
+          },
+          "required":[
+            "class",
+            "method"
+          ]
+        }
+      },
+      "remove_method_priorities":{
+        "description": "optional - define the priorities to call the remove methods",
         "type":"array",
         "items":{
           "type":"object",
