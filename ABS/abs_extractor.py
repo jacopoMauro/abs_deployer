@@ -36,163 +36,120 @@ class ABSParsingException(Exception):
 class MyABSVisitor(ABSVisitor):
   
   
-  def __init__(self):
-    """
-    classes to extract the annotations and smart deploy instances form the 
-    abs program
-    """    
-    ABSVisitor.__init__(self)
-    self.smart_dep_json = []
-    self.dc_json = {}
-    self.module_name = ""
+    def __init__(self):
+        """
+        classes to extract the annotations and smart deploy instances form the
+        abs program
+        """
+        ABSVisitor.__init__(self)
+        self.smart_dep_json = []
+        self.dc_json = {}
+        self.deploy_annotations = []
+        self.module_name = ""
+        self.classes = {}
+        self.interfaces = {}
   
     
-  def defaultResult(self):
-    return ""
+    def defaultResult(self):
+        return ""
   
   
-  def visitTerminal(self, node):
-    return node.getText()
+    def visitTerminal(self, node):
+        return node.getText()
   
   
-  def aggregateResult(self, aggregate, nextResult):
-    if isinstance(nextResult,list):
-      return aggregate + " " +  str(nextResult)
-    else:
-      return aggregate + " " + nextResult
+    def aggregateResult(self, aggregate, nextResult):
+        if isinstance(nextResult,list):
+            return aggregate + str(nextResult)
+        else:
+            return aggregate + nextResult
 
   
-  def visitErrorNode(self, node):
-    token = node.getSymbol()    
-    raise ABSParsingException("Erroneous Node at line "  +
-            str(token.line) + ", column " + str(token.column) + ": '" + 
-            str(token.text) + "'"  )
+    def visitErrorNode(self, node):
+        token = node.getSymbol()
+        raise ABSParsingException("Erroneous Node at line "  +
+                str(token.line) + ", column " + str(token.column) + ": '" +
+                str(token.text) + "'"  )
   
   
-  def visitModule_decl(self, ctx):
-    self.module_name = ctx.getChild(1).accept(self).strip()
-    for i in range(3,ctx.getChildCount()):
-      ctx.getChild(i).accept(self)
-    return ""
-  
-  
-  def visitAnnotation(self, ctx):
-    """
-    Collects the annotations [ SmartDeploy : "..." ]
-    """
-    if ctx.getChildCount() == 5:
-      name = ctx.getChild(1).accept(self).strip()
-      if name == "SmartDeploy":
-        data = ctx.getChild(3).accept(self).strip().decode("string-escape")[1:-1]
-        self.smart_dep_json.append(json.loads(data))
-      elif name == "SmartDeployCloudProvider":
-        data = ctx.getChild(3).accept(self).strip().decode("string-escape")[1:-1]
-        self.dc_json = json.loads(data)
-        fictional_resource_counter = 1
-        for i in self.dc_json.keys():
-          self.dc_json[i]["num"] = settings.DEFAULT_NUMBER_OF_DC
-          if "cost" not in self.dc_json[i]:
-            self.dc_json[i]["cost"] = 0
-          self.dc_json[i]["resources"]['fictional_res'] = fictional_resource_counter
-          fictional_resource_counter += 1
-    return ""
-  
-  
-  # def visitSyncCallExp(self, ctx):
-  #   """
-  #   Try to find synccall with name setInstanceDescriptions to get the DC
-  #   specification.
-  #   """
-  #   # TODO: handle removeInstanceDescription method
-  #   global fictional_resource_counter
-  #   # to allow the of symmetry breaking constraints add a fictional resource
-  #   # per type of component
-  #   method_name = ctx.getChild(2).accept(self).strip()
-  #   if method_name == "setInstanceDescriptions":
-  #     params = ctx.getChild(4).accept(self)[0]
-  #     try:
-  #       data = json.loads(params)
-  #     except ValueError:
-  #       raise ABSParsingException("CloudProvider parsing failed")
-  #     # example JSON from parser
-  #     # [{"c3.xlarge": [{"CostPerInterval": 210},{"Memory": 750}]}]
-  #     # transformed into JSON for Zephyrus "locations" : XXX
-  #     for i in data:
-  #       for j in i.keys():
-  #         self.dc_json[j] = {
-  #                 "num": settings.DEFAULT_NUMBER_OF_DC,
-  #                 "resources": {},
-  #                 "cost":0 }
-  #         for k in i[j]:
-  #           self.dc_json[j]["resources"]['fictional_res'] = fictional_resource_counter
-  #           fictional_resource_counter += 1
-  #           for h in k.keys():
-  #             if h == "CostPerInterval":
-  #               self.dc_json[j]["cost"] = k[h]
-  #             else:
-  #               self.dc_json[j]["resources"][h] = k[h]
-  #   elif method_name == "addInstanceDescription":
-  #     params = ctx.getChild(4).accept(self)[0]
-  #     try:
-  #       data = json.loads(params)
-  #     except ValueError:
-  #       raise ABSParsingException("CloudProvider parsing failed")
-  #     # example JSON from parser
-  #     # {'c3.xlarge': [{'CostPerInterval': 210}, {'Memory': 750}, {'Cores': 4}]}
-  #     for i in data.keys():
-  #       self.dc_json[i] = {
-  #                 "num": settings.DEFAULT_NUMBER_OF_DC,
-  #                 "resources": {},
-  #                 "cost":0 }
-  #       for j in data[i]:
-  #         for k in j.keys():
-  #           self.dc_json[i]["resources"]['fictional_res'] = fictional_resource_counter
-  #           fictional_resource_counter += 1
-  #           if k == "CostPerInterval":
-  #             self.dc_json[i]["cost"] = j[k]
-  #           else:
-  #             self.dc_json[i]["resources"][k] = j[k]
-  #   return ""
-  
-  
-  # def visitConstructorExp(self, ctx):
-  #   """
-  #   Dicriminate Pair and Map Constructors to transform an ABS string into a
-  #   JSON like string.
-  #   """
-  #   qualifier = ctx.getChild(0).accept(self).strip()
-  #   if qualifier == "Pair":
-  #     ls = ctx.getChild(2).accept(self)
-  #     return "{" + ls[0] + ": " + ls[1] + "}"
-  #   elif qualifier == "InsertAssoc":
-  #     ls = ctx.getChild(2).accept(self)
-  #     if ls[1] == '"EmptyMap"':
-  #       return  "["  + ls[0] + "]"
-  #     else:
-  #       return "[" + ls[0] + "," + ls[1][1:]
-  #   else:
-  #     return '"' + qualifier +'"'
-  #
-  #
-  # def visitPure_exp_list(self, ctx):
-  #   """
-  #   Pure expression lists return a list, not a string.
-  #   """
-  #   n = ctx.getChildCount()
-  #   ls = []
-  #   for i in range(0,n,2):
-  #     ls.append(ctx.getChild(i).accept(self).strip())
-  #   return ls
+    def visitModule_decl(self, ctx):
+        self.module_name = ctx.getChild(1).accept(self).strip()
+        for i in range(3,ctx.getChildCount()):
+          ctx.getChild(i).accept(self)
+        return ""
 
+    def visitClass_decl(self, ctx):
+        # visit annotations
+        if ctx.annotation():
+            for i in ctx.annotation():
+                i.accept(self)
+        class_name = ctx.qualified_type_identifier().accept(self)
+        interfaces = set()
+        if ctx.interface_name():
+            for i in ctx.interface_name():
+                interfaces.add(i.accept(self))
+        self.classes[class_name] = interfaces
+        return ""
+
+    def visitInterface_decl(self, ctx):
+        # visit annotations
+        if ctx.annotation():
+            for i in ctx.annotation():
+                i.accept(self)
+        interface_name = ctx.qualified_type_identifier().accept(self)
+        interfaces = set()
+        if ctx.interface_name():
+            for i in ctx.interface_name():
+                interfaces.add(i.accept(self))
+        self.interfaces[interface_name] = interfaces
+        return ""
+
+
+    def visitAnnotation(self, ctx):
+        """
+        Collects the annotations
+        """
+        def parse_json_string_in_annotation(s):
+            s = s.strip().decode("string-escape")[1:-1]
+            try:
+              data = json.loads(s)
+            except:
+              raise ABSParsingException("Error in parsing the annotation " + s)
+            return data
+
+        if ctx.type_use():
+            name = ctx.type_use().accept(self)
+            if name == "SmartDeploy":
+                self.smart_dep_json.append(parse_json_string_in_annotation(ctx.pure_exp().accept(self)))
+            elif name == "SmartDeployCloudProvider":
+                self.dc_json = parse_json_string_in_annotation(ctx.pure_exp().accept(self))
+                fictional_resource_counter = 1
+                for i in self.dc_json.keys():
+                  self.dc_json[i]["num"] = settings.DEFAULT_NUMBER_OF_DC
+                  if "cost" not in self.dc_json[i]:
+                    self.dc_json[i]["cost"] = 0
+                  self.dc_json[i]["resources"]['fictional_res'] = fictional_resource_counter
+                  fictional_resource_counter += 1
+            elif name == "Deploy":
+                self.smart_dep_json.append(parse_json_string_in_annotation(ctx.pure_exp().accept(self)))
+        return ""
+  
 
 def get_annotation_from_abs(abs_program_file):
-  lexer = ABSLexer(FileStream(abs_program_file))
-  stream = CommonTokenStream(lexer)
-  parser = ABSParser(stream)
-  tree = parser.goal()
-  visitor = MyABSVisitor()
-  visitor.visit(tree)
-  return (visitor.smart_dep_json, visitor.dc_json, visitor.module_name)
+    lexer = ABSLexer(FileStream(abs_program_file))
+    stream = CommonTokenStream(lexer)
+    parser = ABSParser(stream)
+    tree = parser.goal()
+    visitor = MyABSVisitor()
+    visitor.visit(tree)
+    return (
+        visitor.smart_dep_json,
+        visitor.dc_json,
+        visitor.deploy_annotations,
+        visitor.module_name,
+        visitor.classes,
+        visitor.interfaces
+    )
   
 
 def main(argv):

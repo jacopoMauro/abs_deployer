@@ -400,57 +400,75 @@ def main(argv):
   pid = str(os.getpgid(0))
   script_directory = os.path.dirname(os.path.realpath(__file__))
   
-  log.info("Extracting JSON cost annotations from ABS code")
-  annotation_file = "/tmp/" + pid + "_annotation.json"
-  TMP_FILES = [ annotation_file ]
-  proc = Popen( ["java", "autodeploy.Tester", "-JSON=" + annotation_file] + input_files,
-        cwd=script_directory, stdout=PIPE, stderr=PIPE )
-  out, err = proc.communicate()
-  log.debug('Stdout of JSON cost annotations extractor')
-  log.debug(out)
-  log.debug('Stderr of JSON cost annotations extractor')
-  log.debug(err)
+  # log.info("Extracting JSON hirearchy annotations from ABS code. Old code used.")
+  # annotation_file = "/tmp/" + pid + "_annotation.json"
+  # TMP_FILES = [ annotation_file ]
+  # proc = Popen( ["java", "autodeploy.Tester", "-JSON=" + annotation_file] + input_files,
+  #       cwd=script_directory, stdout=PIPE, stderr=PIPE )
+  # out, err = proc.communicate()
+  # log.debug('Stdout of JSON cost annotations extractor')
+  # log.debug(out)
+  # log.debug('Stderr of JSON cost annotations extractor')
+  # log.debug(err)
+  #
+  # if not os.path.isfile(annotation_file):
+  #   log.critical("absfrontend execution terminated without writing its output file")
+  #   log.critical("Exiting")
+  #   sys.exit(1)
+  #
+  # log.debug(json.dumps(read_json(annotation_file)))
+  # exit(0)
 
-  if not os.path.isfile(annotation_file): 
-    log.critical("absfrontend execution terminated without writing its output file")
-    log.critical("Exiting")
-    sys.exit(1)
-
-  log.info("Parsing JSON costs annotations file " + annotation_file)
-  annotation = remove_dots(read_json(annotation_file))
-  # if present, decompose the "method": "x,y" in "add_method": "x", "remove_method": "y"
-  for i in annotation["classes"]:
-    for j in i["activates"]:
-      if "optional_list" in j:
-        for k in j["optional_list"]:
-          ls = k["method"].split(",")
-          if len(ls) != 2:
-            log.critical("In optional list " + k["method"] + " was not possible to find two methods")
-            log.critical("Exiting")
-            sys.exit(1)
-          k["add_method"] = ls[0]
-          k["remove_method"] = ls[1]
-          del(k["method"])
-  log.debug("Internal json representation extracted from the abs program")
-  log.debug(json.dumps(annotation, indent=1))
-  log.info("Extracting class, resource, interface")
-  class_names, resouce_names, interface_names = get_abs_names(annotation)
+  # log.info("Parsing JSON costs annotations file " + annotation_file)
+  # annotation = remove_dots(read_json(annotation_file))
+  #
+  # # if present, decompose the "method": "x,y" in "add_method": "x", "remove_method": "y"
+  # for i in annotation["classes"]:
+  #   for j in i["activates"]:
+  #     if "optional_list" in j:
+  #       for k in j["optional_list"]:
+  #         ls = k["method"].split(",")
+  #         if len(ls) != 2:
+  #           log.critical("In optional list " + k["method"] + " was not possible to find two methods")
+  #           log.critical("Exiting")
+  #           sys.exit(1)
+  #         k["add_method"] = ls[0]
+  #         k["remove_method"] = ls[1]
+  #         del(k["method"])
+  # log.debug("Internal json representation extracted from the abs program")
+  # log.debug(json.dumps(annotation, indent=1))
+  # log.info("Extracting class, resource, interface")
+  # class_names, resouce_names, interface_names = get_abs_names(annotation)
+  #
+  # log.debug("Classes")
+  # log.debug(class_names)
+  # log.debug("Resources")
+  # log.debug(resouce_names)
+  # log.debug("Interfaces")
+  # log.debug(interface_names)
   
-  log.debug("Classes")
-  log.debug(class_names)
-  log.debug("Resources")
-  log.debug(resouce_names)
-  log.debug("Interfaces")
-  log.debug(interface_names)
-  
-  log.info("Extract smart deployment and dc annotations")
+  log.info("Extract SmartDeployment, SmartDeployCloudProvider, and Deploy annotations")
   try:
-    (smart_dep_json, dc_json, module_name) = abs_extractor.get_annotation_from_abs(input_files[0])
+    (smart_dep_json, dc_json, deploy_annotations, module_name,classes,interfaces) = abs_extractor.get_annotation_from_abs(input_files[0])
   except ValueError:
     log.critical("Parsing error in JSON smart deployment annotations")
     log.critical("Exiting")
     sys.exit(1)
-  
+
+  #transitive closure of interfaces.
+  for i in classes.keys():
+        to_process = set(classes[i])
+        classes[i]
+        while to_process:
+            interface = to_process.pop()
+            if interface in interfaces:
+                classes[i].update(interfaces[interface])
+                to_process.update(interfaces[interface] - classes[i])
+        classes[i] = list(classes[i])
+
+  log.debug((smart_dep_json, dc_json, deploy_annotations, module_name, classes))
+  sys.exit(0)
+
   log.debug("Smart deployment json annotation")
   log.debug(json.dumps(smart_dep_json, indent=1))
   log.debug("DC json annotation")
