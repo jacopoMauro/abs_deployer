@@ -287,12 +287,12 @@ def allow_incoming_bindings_for_initial_objects(annotation,name_into_obj,zep):
   :return: the zephyrus json specification
   """
   for i in annotation["obj"]:
-    if "may_add_reference_to" in i:
+    if "methods" in i:
       comp = zep["components"][name_into_obj[i["name"]]]
       comp["requires"] = {}
-      for j in i["may_add_reference_to"]:
+      for j in i["methods"]:
           # set value to -1 to allow the possible income of non mandatory bindings
-        comp["requires"][j["interface"]] = -1
+        comp["requires"][j["add"]["param_type"]] = -1
   return zep
 
 
@@ -422,16 +422,17 @@ def main(argv):
     log.critical("Exiting")
     sys.exit(1)
 
-  #compute the transitive closure of interfaces.
+  #compute the transitive closure of interfaces
+  # main interface stays in the first position
   for i in classes.keys():
         to_process = set(classes[i])
-        classes[i]
+        processed = set(classes[i])
         while to_process:
             interface = to_process.pop()
             if interface in interfaces:
-                classes[i].update(interfaces[interface])
-                to_process.update(interfaces[interface] - classes[i])
-        classes[i] = list(classes[i])
+              processed.update(interfaces[interface])
+              to_process.update(interfaces[interface] - processed)
+        classes[i] = list(classes[i]) + list(processed - set(classes[i]))
 
   # collect all the interface names
   interface_names = list(set(sum(classes.values(),[])))
@@ -442,9 +443,6 @@ def main(argv):
   log.debug("Smart deployment json annotation")
   log.debug(json.dumps(smart_dep_json, indent=1))
 
-  log.info("Printing common SmartDeployInterface interface and imports")
-  code_generation.print_interface(module_name,interface_names,out_stream)
-  
   log.info("Start generation of zephyrus json")
   
   initial_data = generate_zep_input_from_annotations(deploy_annotations,classes)
@@ -539,12 +537,12 @@ def main(argv):
     bindings_opt_out = read_json(binding_out_file)
     log.debug(json.dumps(binding_out_file,indent=1))
 
-    exit(0)
     log.info("Generating ABS code")
     code_generation.print_class(i,interface_names,
       zep_last_conf, bindings_opt_out,
-      deploy_annotations,
+      deploy_annotations,classes,
       dc_into_name, obj_into_name,
+      module_name,
       out_stream)
 
   log.info("Print code to add instances in CloudProvider")

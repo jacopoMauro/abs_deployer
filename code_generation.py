@@ -89,18 +89,16 @@ def get_map_dc_abs_names(zep_sol,initial_dc_into_name):
   return dc_to_abs_names
 
 
-def get_map_class_signature(cost_annotations):
+def get_map_class_signature(deploy_annotations):
   """
   Returns for every class its signature as defined in the cost annotations
   """
   class_to_signature = {}
-  for i in cost_annotations["classes"]:
-    class_name = i["name"]
-    for j in i["activates"]:
-      if j["scenarios"]:
-        class_to_signature[(class_name,j["scenarios"][0])] = j["sig"]
-      else:
-        class_to_signature[(class_name,settings.DEFAULT_SCENARIO_NAME)] = j["sig"]
+  for i in deploy_annotations:
+    class_name = i["class"]
+    for j in i["scenarios"]:
+      if j["name"]:
+        class_to_signature[(class_name,j["name"])] = j["sig"]
   return class_to_signature
 
 
@@ -136,7 +134,7 @@ def print_class_signature(smart_dep_annotation,out):
     out.write(", DeploymentComponent " + i["name"])
   for i in smart_dep_annotation["obj"]:
     out.write(", " + i["interface"] + " " + i["name"])
-  out.write(") implements SmartDeployInterface {\n")
+  out.write(") implements " + smart_dep_annotation["id"] + "{\n")
 
 
 def print_list_and_get_methods(interfaces,out):
@@ -144,11 +142,11 @@ def print_list_and_get_methods(interfaces,out):
   Print the definition of the lists to store the DC and the objs
   """
   for i in interfaces:
-    out.write("\tList<Pair<" + i + ",DeploymentComponent>> ls_" + i + " = Nil;\n")
+    out.write("\tList<" + i + "> ls_" + i + " = Nil;\n")
   out.write("\tList<DeploymentComponent> ls_DeploymentComponent = Nil;\n")
   out.write("\n")    
   for i in interfaces:
-    out.write("\tList<Pair<" + i + ",DeploymentComponent>> get" + i + "() { return ls_" + i + "; }\n")
+    out.write("\tList<" + i + "> get" + i + "() { return ls_" + i + "; }\n")
   out.write("\tList<DeploymentComponent> getDeploymentComponent() ")
   out.write("{ return ls_DeploymentComponent; }\n")
 
@@ -159,88 +157,63 @@ def print_undeploy_method(smart_dep_annotation,interfaces,out):
 
   out.write("\tUnit undeploy() {\n")
 
-  # add the execution of methods to remove bindings added
-  if "remove_method_priorities" in smart_dep_annotation:
-        for i in smart_dep_annotation["remove_method_priorities"]:
-            for (class_name,method,s) in list(to_remove_later_bindings):
-                if i["class"] == class_name and i["method"] == method:
-                    out.write(s)
-                    to_remove_later_bindings.remove((class_name,method,s))
-  for (_,_,s) in to_remove_later_bindings:
-        out.write(s)
-
-
-
-  # to delete an object we delete its references
-  for i in interfaces:
-    out.write("\t\tls_" + i + " = Nil;\n")
-  # we trigger the killInstance from the cloud provider
-  out.write("\t\twhile ( !isEmpty(ls_DeploymentComponent) ) {\n")    
-  out.write("\t\t\tcloudProvider.shutdownInstance(head(ls_DeploymentComponent));\n")
-  out.write("\t\t\tls_DeploymentComponent = tail(ls_DeploymentComponent);\n")
-  out.write("\t\t}\n")
 
 
 
   out.write("\t}\n") 
 
-def print_deploy_method(smart_dep_annotation, zep_last_conf,all_bindings,
+def print_deploy_undeploy_method(smart_dep_annotation, zep_last_conf,all_bindings,
       initial_dc_into_name, initial_obj_into_name,
-      cost_annotations,
+      deploy_annotations,classes_annotation,
       out):
 
-  global to_remove_later_bindings
+  dep = "\tUnit deploy() {\n"
+  undep = "\tUnit undeploy() {\n"
 
-  out.write("\tUnit deploy() {\n")
   # start by deploying new DC
   dc_to_abs_names = get_map_dc_abs_names(zep_last_conf,initial_dc_into_name)
   for i in zep_last_conf["locations"].keys():
     # default DC and already existing DC do not need to be created 
     if not i.startswith(settings.SEPARATOR):
       for j in zep_last_conf["locations"][i].keys():
-        out.write("\t\tDeploymentComponent " + dc_to_abs_names[(i,int(j))])
-        out.write(" = cloudProvider.prelaunchInstanceNamed(\"" + i + "\");\n")
-        out.write("\t\tls_DeploymentComponent = Cons(")
-        out.write(dc_to_abs_names[(i,int(j))] + ",ls_DeploymentComponent);\n")
+        dep += "\t\tDeploymentComponent " + dc_to_abs_names[(i,int(j))]
+        dep += " = cloudProvider.prelaunchInstanceNamed(\"" + i + "\");\n"
+        dep += "\t\tls_DeploymentComponent = Cons("
+        dep += dc_to_abs_names[(i,int(j))] + ",ls_DeploymentComponent);\n"
+
   # decide the order to create the obj and creating useful maps
   obj_to_abs_name = get_map_obj_abs_name(zep_last_conf,initial_obj_into_name)
-  class_to_signature = get_map_class_signature(cost_annotations)
+  class_to_signature = get_map_class_signature(deploy_annotations)
 
-  # differentiate bindings that are optional and can be added later invoking a method from required bindings
+  # differentiate bindings that are optional and can be added later invoking a method
   to_add_later_bindings = []
+  to_remove_later_bindings = []
   bindings = []
   for i in all_bindings:
       if i["req_comp"] not in initial_obj_into_name.keys():
         scenario_name = i["req_comp"].split(settings.SEPARATOR)[0]
         class_name = i["req_comp"].split(settings.SEPARATOR)[-1]
-        activates_ls = [x["activates"] for x in cost_annotations["classes"] if x["name"] == class_name]
-        if activates_ls:
-            activates = activates_ls[0]
-        else:
-            log.critical("Did not find the interface information for class " + unicode(class_name))
-            log.critical("Exiting")
-            exit(1)
-        if scenario_name == settings.DEFAULT_SCENARIO_NAME:
-          opt_list_interfaces = activates[0]["optional_list"]
-        else:
-          opt_list_interfaces = [ x["optional_list"] for x in activates if x["scenarios"][0] == scenario_name ][0]
-        if i["port"] in [x["interface"] for x in opt_list_interfaces]:
+        scenarios = [x["scenarios"] for x in deploy_annotations if x["class"] == class_name]
+        assert(len(scenarios) == 1)
+        methods = [x["methods"] for x in scenarios[0] if x["name"] == scenario_name]
+        assert(len(methods) == 1)
+        methods = methods[0]
+
+        if i["port"] in [x["add"]["param_type"] for x in methods]:
           prov = obj_to_abs_name[(i["prov_location"], i["prov_location_num"], i["prov_comp"], i["prov_comp_num"])]
           req = obj_to_abs_name[(i["req_location"], i["req_location_num"], i["req_comp"], i["req_comp_num"])]
-          method = [y["add_method"] for y in opt_list_interfaces if y["interface"] == i["port"]][0]
-          remove_method = [y["remove_method"] for y in opt_list_interfaces if y["interface"] == i["port"]][0]
+          add_rem = [y for y in methods if y["add"]["param_type"] == i["port"]][0]
           to_add_later_bindings.append((i["req_comp"].split(settings.SEPARATOR)[-1],
-                                       method,
-                                       "\t\t" + req + "." + method + "(" + prov + ");\n"))
-          to_remove_later_bindings.append((i["req_comp"].split(settings.SEPARATOR)[-1],
-                                       remove_method,
-                                       "\t\t" + req + "." + remove_method + "(" + prov + ");\n"))
+                                       add_rem["add"]["name"],
+                                       "\t\t" + req + "." + add_rem["add"]["name"] + "(" + prov + ");\n"))
+          if "remove" in add_rem:
+            to_remove_later_bindings.append((i["req_comp"].split(settings.SEPARATOR)[-1],
+                                           add_rem["remove"]["name"],
+                                           "\t\t" + req + "." + add_rem["remove"]["name"] + "(" + prov + ");\n"))
         else:
           bindings.append(i)
       else: # initial object as a requirer
         bindings.append(i)
-
-
 
   # perform the topological sort
   try:
@@ -250,6 +223,7 @@ def print_deploy_method(smart_dep_annotation, zep_last_conf,all_bindings,
     log.critical("Exiting")
     sys.exit(1)
 
+  counter = {} # counter of object per type inserted in type list
   for i in installing_order:
     for j in i:
       (dcname,dcnum,objname,_) = j
@@ -257,39 +231,40 @@ def print_deploy_method(smart_dep_annotation, zep_last_conf,all_bindings,
         scenario = objname.split(settings.SEPARATOR)[0]
         class_name = objname.split(settings.SEPARATOR)[-1]
         req_objects = get_providers(bindings,j)
-        # printing the new construct
-        out.write("\t\t[DC: " + dc_to_abs_names[(dcname,dcnum)] + "] ")
-        out.write(cost_annotations["hierarchy"][class_name][0] + " ")
-        out.write(obj_to_abs_name[j] + " = new ")
-        out.write(class_name + "(")
+        # printing the new construct for deployment
+        dep += "\t\t[DC: " + dc_to_abs_names[(dcname,dcnum)] + "] "
+        dep += classes_annotation[class_name][0] + " "
+        dep += obj_to_abs_name[j] + " = new "
+        dep += class_name + "("
+        # print list of paramters for deployment
         ls = []
         for k in class_to_signature[(class_name,scenario)]:
-          if k["type"] == "require":
-            ls.append(obj_to_abs_name[req_objects[k["value"]].pop()])
-          elif k["type"] == "user":
-            ls.append(settings.SEPARATOR + k["value"] + settings.SEPARATOR)
-          elif k["type"] == "default":
+          if k["kind"] == "require":
+            ls.append(obj_to_abs_name[req_objects[k["type"]].pop()])
+          elif k["kind"] == "user":
+            ls.append(settings.SEPARATOR + k["type"] + settings.SEPARATOR)
+          elif k["kind"] == "default":
             ls.append(k["value"])
-          elif k["type"] == "list":
-            arity = int(k["arity"])
+          elif k["kind"] == "list":
+            arity = int(k["num"])
             s = "list["
-            if k["value"] in req_objects and req_objects[k["value"]]: # add in the list the remaining objects
+            if k["type"] in req_objects and req_objects[k["type"]]: # add in the list the remaining objects
             # fixme -> may give problems when the new requires later other objects of the same type
-              s += obj_to_abs_name[req_objects[k["value"]].pop()]
-              while req_objects[k["value"]]:
+              s += obj_to_abs_name[req_objects[k["type"]].pop()]
+              while req_objects[k["type"]]:
                 s += ", " + obj_to_abs_name[req_objects[k["value"]].pop()]
             s += "]"
             ls.append(s)
-        for k in range(len(ls)-1):
-          out.write(ls[k] + ", ")
-        if ls:
-          out.write(ls[-1])
-        out.write(");\n")
+        dep += ", ".join(ls) + ");\n"
         # adding obj into the list
-        interfaces = cost_annotations["hierarchy"][class_name]
+        interfaces = classes_annotation[class_name]
         for k in interfaces:
-          out.write("\t\tls_" + k + " = Cons(Pair(" + obj_to_abs_name[j] + "," + dc_to_abs_names[(dcname,dcnum)] + \
-              "), ls_" + k + ");\n")
+          if k not in counter:
+            counter[k] = 0
+          else:
+            counter[k] += 1
+          dep += "\t\tls_" + k + " = Cons(" + obj_to_abs_name[j] + "), ls_" + k + ");\n"
+          undep += "\t\t" + k + " " + obj_to_abs_name[j] + " = nth(ls_" + k + "," + unicode(counter[k]) + ");\n"
       else: # initial object with possible new incoming links (store what to print for later)
         for k in bindings:
           if objname == k["req_comp"] and (not k["prov_comp"].startswith(settings.SEPARATOR)): # if new object to add
@@ -297,57 +272,78 @@ def print_deploy_method(smart_dep_annotation, zep_last_conf,all_bindings,
             interface = k["port"]
             real_objname = obj_to_abs_name[j]
             for l in smart_dep_annotation["obj"]:
-              if l["name"] == real_objname and "may_add_reference_to" in l:
-                try:
-                  method = next(x for x in l["may_add_reference_to"] if x["interface"] == interface)
-                except StopIteration:
-                  log.critical("The object " + real_objname + " requires a method to add " + obj_to_abs_name[prov])
-                  log.critical("The method was not found")
-                  log.critical("Exiting")
-                  sys.exit(1)
-            s = "\t\t" + real_objname + "." + method["add_method"] + "(" + obj_to_abs_name[prov]
-            if "DC_as_additional_parameter" in method and method["DC_as_additional_parameter"]:
-                s += "," + dc_to_abs_names[(k["prov_location"], k["prov_location_num"])]
-            s += ");\n"
+              if l["name"] == real_objname and "methods" in l and l["methods"]:
+                method = [i for i in l["methods"] if i["add"]["param_type"] == interface ]
+                assert len(method) == 1
+                method = method[0]
+            sdep = "\t\t" + real_objname + "." + method["add"]["name"] + "(" + obj_to_abs_name[prov] + ");\n"
+            sundep = "\t\t" + real_objname + "." + method["remove"]["name"] + "("
+            sundep += (method["remove"]["param_type"] if "param_type" in method else "") + ");\n"
             to_add_later_bindings.append((real_objname,
-                                         method["add_method"],
-                                         s))
+                                          method["add"]["name"],
+                                          sdep))
             to_remove_later_bindings.append((real_objname,
-                                        method["remove_method"],
-                                        s))
+                                             method["remove"]["name"],
+                                             sundep))
 
   # add the remaining optional bindings following the list priority
   if "add_method_priorities" in smart_dep_annotation:
         for i in smart_dep_annotation["add_method_priorities"]:
             for (class_name,method,s) in list(to_add_later_bindings):
                 if i["class"] == class_name and i["method"] == method:
-                    out.write(s)
+                    dep += s
                     to_add_later_bindings.remove((class_name,method,s))
   for (_,_,s) in to_add_later_bindings:
-        out.write(s)
+        dep += s
 
-  # ends deploy method
-  out.write("\t}\n") 
+  # add the execution of methods to remove bindings added
+  if "remove_method_priorities" in smart_dep_annotation:
+        for i in smart_dep_annotation["remove_method_priorities"]:
+            for (class_name,method,s) in list(to_remove_later_bindings):
+                if i["class"] == class_name and i["method"] == method:
+                    undep += s
+                    to_remove_later_bindings.remove((class_name,method,s))
+  for (_,_,s) in to_remove_later_bindings:
+        undep += s
+
+  # to delete an object we delete its references
+  for i in interfaces:
+    undep += "\t\tls_" + i + " = Nil;\n"
+  # we trigger the killInstance from the cloud provider
+  undep += "\t\twhile ( !isEmpty(ls_DeploymentComponent) ) {\n"
+  undep +="\t\t\tcloudProvider.shutdownInstance(head(ls_DeploymentComponent));\n"
+  undep +="\t\t\tls_DeploymentComponent = tail(ls_DeploymentComponent);\n"
+  undep +="\t\t}\n"
+
+  # ends
+  dep += "\t}\n"
+  undep += "\t}\n"
+
+  out.write(dep)
+  out.write("\n")
+  out.write(undep)
 
 
 def print_class(smart_dep_annotation,interfaces,
                 zep_last_conf, bindings_opt_out,
-                deploy_annotations,
+                deploy_annotations, classes_annotation,
                 initial_dc_into_name, initial_obj_into_name,
+                module_name,
                 out):
   """
   Prints the class implementing the SmartDeployInt interface
-  """  
-  out.write("adds ")
+  """
+  print_module_and_interface(module_name,interfaces,smart_dep_annotation["id"],out)
+  out.write("\n")
   print_class_signature(smart_dep_annotation,out)
   out.write("\n")
   print_list_and_get_methods(interfaces,out)
   out.write("\n")
-  print_deploy_method(smart_dep_annotation,zep_last_conf, bindings_opt_out,
-      initial_dc_into_name, initial_obj_into_name,
-      cost_annotations, out)
-  out.write("\n")
-  print_undeploy_method(smart_dep_annotation,interfaces,out)
+  undeploy_info = print_deploy_undeploy_method(smart_dep_annotation,zep_last_conf, bindings_opt_out,
+                      initial_dc_into_name, initial_obj_into_name,
+                      deploy_annotations, classes_annotation,
+                                               out)
+
   out.write("}\n")
 
 def print_cloud_provider_modification(annotations, out):
@@ -373,21 +369,16 @@ def print_cloud_provider_modification(annotations, out):
   out.write("\t}\n")
   out.write("}\n")
 
-def print_interface(module_name,interfaces,out):
+def print_module_and_interface(module_name,interfaces,name,out):
   """
-  Prints the delta for modifying the SmartDeployInterface interface
+  Prints the interface
   """
-  
-  out.write("module Delta" + uuid.uuid4().hex + ";\n")
+  out.write("module " + name + ";\n")
   out.write("import * from ABS.DC;\n")
   out.write("import * from " + module_name + ";\n\n")
-  out.write("delta SmartDeployDelta;\n")
-  out.write("uses ABS.SmartDeploy;\n")  
-  out.write("adds import * from " + module_name + ";\n")
-  out.write("adds import * from ABS.DC;\n")
-  out.write("modifies interface SmartDeployInterface {\n")
+  out.write("interface " + name + "{\n")
   for i in interfaces:
-    out.write("\tadds List<Pair<" + i + ",DeploymentComponent>> get" + i + "();\n")
+    out.write("\tadds List<" + i + "> get" + i + "();\n")
   out.write("\tadds List<DeploymentComponent> getDeploymentComponent();\n")
   out.write("\tadds Unit deploy();\n")
   out.write("\tadds Unit undeploy();\n")
