@@ -67,7 +67,8 @@ class MyVisitor(BindPreferenceGrammarVisitor):
         name = ctx.getChild(0).accept(self)
         if name in self.name_into_obj:
             return "'" + self.name_into_obj[name] + "'"
-        return "'" + settings.DEFAULT_SCENARIO_NAME + settings.SEPARATOR + name + "'"
+        assert(self.class_names[name])
+        return "'" + self.class_names[name][0] + settings.SEPARATOR + name + "'"
 
     def visitAobjIDScenario(self, ctx):
         return "'" + ctx.getChild(2).accept(self) + settings.SEPARATOR + ctx.getChild(0).accept(self) + "'"

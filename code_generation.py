@@ -332,7 +332,7 @@ def print_deploy_method(smart_dep_annotation, zep_last_conf,all_bindings,
 
 def print_class(smart_dep_annotation,interfaces,
                 zep_last_conf, bindings_opt_out,
-                cost_annotations,
+                deploy_annotations,
                 initial_dc_into_name, initial_obj_into_name,
                 out):
   """

@@ -12,7 +12,7 @@ __status__ = "Prototype"
 SEPARATOR = "___"
 
 #default scenario name
-DEFAULT_SCENARIO_NAME = "Def"
+#DEFAULT_SCENARIO_NAME = "default"
 
 # prefix for random generated DC
 DC_PREFIX = "DC_"

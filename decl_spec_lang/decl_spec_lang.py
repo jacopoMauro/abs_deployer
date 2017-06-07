@@ -124,8 +124,10 @@ class MyVisitor(DeclSpecLanguageVisitor):
   
   
   def visitAobjIDID(self, ctx):
-    return settings.DEFAULT_SCENARIO_NAME + settings.SEPARATOR + ctx.getChild(0).accept(self)
-  
+    name = ctx.getChild(0).accept(self)
+    assert self.class_names[name]
+    scenario_name = self.class_names[name][0]
+    return scenario_name + settings.SEPARATOR + name
   
   def visitAobjIDScenario(self, ctx):
     return ctx.getChild(2).accept(self) + settings.SEPARATOR + ctx.getChild(0).accept(self)

@@ -131,31 +131,38 @@ def clean():
         os.remove(f)
 
 
-def get_abs_names(data):
-  """Extract from the json generated parsing the ABS the names of the classes, resouces, and interfaces"""
-  classes = {}
-  resources = set([])
-  interfaces = set([])
-  
-  for i in data["classes"]:
-    classes[i["name"]] = []
-    for j in i["activates"]:
-      if len(j["scenarios"]) == 0:
-        classes[i["name"]].append(settings.DEFAULT_SCENARIO_NAME)
-      else:
-        classes[i["name"]].append(j["scenarios"][0])
-      
-      for k in j["cost"].keys():
-        resources.add(k)
-  
-  for i in data["hierarchy"]:
-    for j in data["hierarchy"][i]:
-      interfaces.add(j)
-    
-  return (classes,resources,interfaces)
+def get_abs_class_names(deploy_annotations):
+    classes = {}
+    for i in deploy_annotations:
+      classes[i["class"]] = [j["name"] for j in i["scenarios"]]
+    return classes
 
 
-def generate_zep_input_from_annotations(data):
+# def get_abs_names(data):
+#   """Extract from the json generated parsing the ABS the names of the classes, resouces, and interfaces"""
+#   classes = {}
+#   resources = set([])
+#   interfaces = set([])
+#
+#   for i in data["classes"]:
+#     classes[i["name"]] = []
+#     for j in i["activates"]:
+#       if len(j["scenarios"]) == 0:
+#         classes[i["name"]].append(settings.DEFAULT_SCENARIO_NAME)
+#       else:
+#         classes[i["name"]].append(j["scenarios"][0])
+#
+#       for k in j["cost"].keys():
+#         resources.add(k)
+#
+#   for i in data["hierarchy"]:
+#     for j in data["hierarchy"][i]:
+#       interfaces.add(j)
+#
+#   return (classes,resources,interfaces)
+
+
+def generate_zep_input_from_annotations(deploy_annotations,classes):
   """
   Generate the partial input for zephyrus starting from the json internal
   representation extracted from the abs program.
@@ -164,43 +171,34 @@ def generate_zep_input_from_annotations(data):
   """
 
   zep = {
-    "components" : {},
-    "locations" : {}
+    "components": {},
+    "locations": {}
     }
    
-  for i in data["classes"]:
-    component_name = i["name"]   
-    for j in i["activates"]:
+  for i in deploy_annotations:
+    component_name = i["class"]
+    for j in i["scenarios"]:
       comp = {
-            "provides" : [ {} ],
-            "requires" : {},
-            "resources" : {}}
+            "provides": [{}],
+            "requires": {},
+            "resources": {}}
              
       # handle provide-ports
-      if component_name in data["hierarchy"]:
-        comp["provides"][0]["ports"] = data["hierarchy"][component_name]
-      else:
-        log.critical("Component " + component_name + "not present in hierarchy")
-        exit(1)
-      comp["provides"][0]["num"] =  j["provide"]
+      comp["provides"][0]["ports"] = classes[component_name]
+      comp["provides"][0]["num"] = j["provide"]
         
       # handle require-ports
       for k in j["sig"]:
-        if k["type"] == "require" or k["type"] == "list":
-          comp["requires"][k["value"]] = k["arity"]
+        if k["kind"] == "require":
+          comp["requires"][k["type"]] = 1
+        elif k["kind"] == "list":
+          comp["requires"][k["type"]] = k["num"]
       
       # handle resources
       comp["resources"].update(j["cost"])
       
       # decide the name            
-      if len(j["scenarios"]) > 1:
-        log.critical("In internal json scenarios has more than one element")
-        log.critical("Exiting")
-        sys.exit(1)
-      elif len(j["scenarios"]) == 0:
-        name = settings.DEFAULT_SCENARIO_NAME + settings.SEPARATOR + component_name
-      else:
-        name = j["scenarios"][0] + settings.SEPARATOR + component_name
+      name = j["name"] + settings.SEPARATOR + component_name
       
       zep["components"][name] = comp
   return zep
@@ -298,7 +296,7 @@ def allow_incoming_bindings_for_initial_objects(annotation,name_into_obj,zep):
   return zep
 
 
-def allow_more_bindings_for_list_parameters(annotation, zep):
+def allow_more_bindings_for_list_parameters(deploy_annotations, zep):
     """
     this function inject a -1 as a requirer for the objects having as input paramter a list
     this allows the binder to add more than required number of bindings
@@ -306,18 +304,15 @@ def allow_more_bindings_for_list_parameters(annotation, zep):
     :param zep: the zephyrus json specification
     :return: the zephyrus json specification
     """
-    for i in annotation["classes"]:
-        for j in i["activates"]:
-            if len(j["scenarios"]) == 0:
-                name = settings.DEFAULT_SCENARIO_NAME + settings.SEPARATOR + i["name"]
-            else:
-                name = j["scenarios"][0] + settings.SEPARATOR + i["name"]
+    for i in deploy_annotations:
+        for j in i["scenarios"]:
+            name = j["name"] + settings.SEPARATOR + i["class"]
             for k in j["sig"]:
-                if k["type"] == "list":
-                    zep["components"][name]["requires"][k["value"]] = -1
-            for k in j["optional_list"]:
-                if k["interface"] not in zep["components"][name]["requires"]:
-                    zep["components"][name]["requires"][k["interface"]] = -1
+                if k["kind"] == "list":
+                    zep["components"][name]["requires"][k["type"]] = -1
+            for k in j["methods"]:
+                if k["add"]["param_type"] not in zep["components"][name]["requires"]:
+                    zep["components"][name]["requires"][k["add"]["param_type"]] = -1
     return zep
 
 
@@ -400,54 +395,7 @@ def main(argv):
   pid = str(os.getpgid(0))
   script_directory = os.path.dirname(os.path.realpath(__file__))
   
-  # log.info("Extracting JSON hirearchy annotations from ABS code. Old code used.")
-  # annotation_file = "/tmp/" + pid + "_annotation.json"
-  # TMP_FILES = [ annotation_file ]
-  # proc = Popen( ["java", "autodeploy.Tester", "-JSON=" + annotation_file] + input_files,
-  #       cwd=script_directory, stdout=PIPE, stderr=PIPE )
-  # out, err = proc.communicate()
-  # log.debug('Stdout of JSON cost annotations extractor')
-  # log.debug(out)
-  # log.debug('Stderr of JSON cost annotations extractor')
-  # log.debug(err)
-  #
-  # if not os.path.isfile(annotation_file):
-  #   log.critical("absfrontend execution terminated without writing its output file")
-  #   log.critical("Exiting")
-  #   sys.exit(1)
-  #
-  # log.debug(json.dumps(read_json(annotation_file)))
-  # exit(0)
-
-  # log.info("Parsing JSON costs annotations file " + annotation_file)
-  # annotation = remove_dots(read_json(annotation_file))
-  #
-  # # if present, decompose the "method": "x,y" in "add_method": "x", "remove_method": "y"
-  # for i in annotation["classes"]:
-  #   for j in i["activates"]:
-  #     if "optional_list" in j:
-  #       for k in j["optional_list"]:
-  #         ls = k["method"].split(",")
-  #         if len(ls) != 2:
-  #           log.critical("In optional list " + k["method"] + " was not possible to find two methods")
-  #           log.critical("Exiting")
-  #           sys.exit(1)
-  #         k["add_method"] = ls[0]
-  #         k["remove_method"] = ls[1]
-  #         del(k["method"])
-  # log.debug("Internal json representation extracted from the abs program")
-  # log.debug(json.dumps(annotation, indent=1))
-  # log.info("Extracting class, resource, interface")
-  # class_names, resouce_names, interface_names = get_abs_names(annotation)
-  #
-  # log.debug("Classes")
-  # log.debug(class_names)
-  # log.debug("Resources")
-  # log.debug(resouce_names)
-  # log.debug("Interfaces")
-  # log.debug(interface_names)
-  
-  log.info("Extract SmartDeployment, SmartDeployCloudProvider, and Deploy annotations")
+  log.info("Extract SmartDeployment, SmartDeployCloudProvider, Deploy annotations and classes info")
   try:
     (smart_dep_json, dc_json, deploy_annotations, module_name,classes,interfaces) = abs_extractor.get_annotation_from_abs(input_files[0])
   except ValueError:
@@ -455,7 +403,26 @@ def main(argv):
     log.critical("Exiting")
     sys.exit(1)
 
-  #transitive closure of interfaces.
+  # compute classes that have a Deploy annotation
+  classes_names = [i["class"] for i in deploy_annotations]
+  log.debug("Find Deploy annotation for the classes " + unicode(classes_names))
+  # remove classes that do not have a Deploy annotation
+  for i in classes.keys():
+    if i not in classes_names:
+      del(classes[i])
+
+  if set(classes_names) != set(classes.keys()):
+    log.critical("Deploy annotation and classes defined do not match: " +
+                 unicode(classes_names) + " differs from " + unicode(classes.keys()))
+    log.critical("Exiting")
+    sys.exit(1)
+
+  if not classes_names:
+    log.critical("No Deploy annotations found.")
+    log.critical("Exiting")
+    sys.exit(1)
+
+  #compute the transitive closure of interfaces.
   for i in classes.keys():
         to_process = set(classes[i])
         classes[i]
@@ -466,51 +433,54 @@ def main(argv):
                 to_process.update(interfaces[interface] - classes[i])
         classes[i] = list(classes[i])
 
-  log.debug((smart_dep_json, dc_json, deploy_annotations, module_name, classes))
-  sys.exit(0)
+  # collect all the interface names
+  interface_names = list(set(sum(classes.values(),[])))
+
+  log.debug("DC json annotation")
+  log.debug(json.dumps(dc_json, indent=1))
 
   log.debug("Smart deployment json annotation")
   log.debug(json.dumps(smart_dep_json, indent=1))
-  log.debug("DC json annotation")
-  log.debug(json.dumps(dc_json, indent=1))
-  
+
   log.info("Printing common SmartDeployInterface interface and imports")
   code_generation.print_interface(module_name,interface_names,out_stream)
   
   log.info("Start generation of zephyrus json")
   
-  initial_data = generate_zep_input_from_annotations(annotation)
-  (interface_to_classes,class_to_interfaces) = code_generation.get_maps_interface_class(initial_data)
+  initial_data = generate_zep_input_from_annotations(deploy_annotations,classes)
+  #(interface_to_classes,class_to_interfaces) = code_generation.get_maps_interface_class(initial_data)
   
   log.info("Add location into zephyrus json")
   initial_data["locations"] = dc_json
   log.info("Add default location for deploying intial objects")
   initial_data["locations"].update(settings.DEFAULT_INITIAL_DC)
+
+  log.debug("Zephyrus base file: " + json.dumps(initial_data))
   
   for i in smart_dep_json:
     log.info("Processing " + i["id"])
     data = copy.deepcopy(initial_data)
     
     log.info("Adding new DC")
-    newDC, dc_into_name, name_into_dc =  initialDC(i)
+    newDC, dc_into_name, name_into_dc = initialDC(i)
     data["locations"].update(newDC)
     
     log.info("Replace default number of DC if specified")
     replace_default_cloud_provider_DC(data,i)
     
     log.info("Adding new obj")
-    newObj, obj_into_name, name_into_obj =  initialObjects(i)
+    newObj, obj_into_name, name_into_obj = initialObjects(i)
     data["components"].update(newObj)
     
     log.info("Parsing and adding specification")
     data["specification"] = decl_spec_lang.translate_specification(
                 InputStream(i["specification"]),name_into_dc,
-                name_into_obj,class_names)
+                name_into_obj,get_abs_class_names(deploy_annotations))
 
     log.info("Parsing and adding bind preferences")
     if "bind preferences" in i:
       data["bind preferences"] = map(lambda x: bind_preferences_translator.translate_preference(x,name_into_dc,
-                name_into_obj,class_names),i["bind preferences"])
+                name_into_obj,get_abs_class_names(deploy_annotations)),i["bind preferences"])
 
     log.debug("Zephyrus input")
     log.debug(json.dumps(data,indent=1))
@@ -550,7 +520,7 @@ def main(argv):
 
     log.debug("Modified Zephyrus input for binding optimizer")
     data = allow_incoming_bindings_for_initial_objects(i, name_into_obj, data)
-    data = allow_more_bindings_for_list_parameters(annotation, data)
+    data = allow_more_bindings_for_list_parameters(deploy_annotations, data)
     log.debug(json.dumps(data,indent=1))
     with open(zephyrus_in_file, 'w') as f:
       json.dump(data,f,indent=1)
@@ -568,11 +538,12 @@ def main(argv):
     log.debug("Binding optimizer solution")
     bindings_opt_out = read_json(binding_out_file)
     log.debug(json.dumps(binding_out_file,indent=1))
-    
+
+    exit(0)
     log.info("Generating ABS code")
     code_generation.print_class(i,interface_names,
       zep_last_conf, bindings_opt_out,
-      annotation,
+      deploy_annotations,
       dc_into_name, obj_into_name,
       out_stream)
 
