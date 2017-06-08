@@ -1,4 +1,4 @@
-# Generated from ABS.g4 by ANTLR 4.5.1
+# Generated from ABS.g4 by ANTLR 4.6
 # encoding: utf-8
 from __future__ import print_function
 from antlr4 import *
@@ -32,10 +32,10 @@ def serializedATN():
         buf.write(u"\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\5\f\u010d\n\f\3")
         buf.write(u"\f\5\f\u0110\n\f\3\f\3\f\3\f\3\f\3\f\5\f\u0117\n\f\3")
         buf.write(u"\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3")
-        buf.write(u"\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3")
-        buf.write(u"\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\5\r\u013c\n\r\3\r")
-        buf.write(u"\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\7\r\u0147\n\r\f\r\16")
-        buf.write(u"\r\u014a\13\r\3\r\3\r\3\r\3\r\3\r\3\r\5\r\u0152\n\r\3")
+        buf.write(u"\r\3\r\3\r\5\r\u0129\n\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r")
+        buf.write(u"\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\7\r\u013d")
+        buf.write(u"\n\r\f\r\16\r\u0140\13\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r")
+        buf.write(u"\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\5\r\u0152\n\r\3")
         buf.write(u"\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3")
         buf.write(u"\r\3\r\3\r\3\r\3\r\7\r\u0166\n\r\f\r\16\r\u0169\13\r")
         buf.write(u"\3\16\3\16\3\16\3\16\3\16\3\17\3\17\3\17\3\17\3\17\3")
@@ -239,69 +239,69 @@ def serializedATN():
         buf.write(u"\7\6\2\2\u0115\u0117\3\2\2\2\u0116\u00ec\3\2\2\2\u0116")
         buf.write(u"\u00f0\3\2\2\2\u0116\u00fa\3\2\2\2\u0116\u0103\3\2\2")
         buf.write(u"\2\u0116\u010f\3\2\2\2\u0117\27\3\2\2\2\u0118\u0119\b")
-        buf.write(u"\r\1\2\u0119\u011a\t\2\2\2\u011a\u0152\5\30\r\22\u011b")
-        buf.write(u"\u011c\7\21\2\2\u011c\u011d\5\30\r\2\u011d\u011e\7\22")
-        buf.write(u"\2\2\u011e\u011f\5\30\r\2\u011f\u0120\7\23\2\2\u0120")
-        buf.write(u"\u0121\5\30\r\6\u0121\u0152\3\2\2\2\u0122\u0123\7\27")
-        buf.write(u"\2\2\u0123\u0124\7\5\2\2\u0124\u0125\5\b\5\2\u0125\u0126")
-        buf.write(u"\7Z\2\2\u0126\u0127\7\6\2\2\u0127\u0128\7\30\2\2\u0128")
-        buf.write(u"\u0129\5\30\r\2\u0129\u012a\7\31\2\2\u012a\u012b\5\30")
-        buf.write(u"\r\4\u012b\u0152\3\2\2\2\u012c\u012d\5\4\3\2\u012d\u012e")
-        buf.write(u"\7\5\2\2\u012e\u012f\5 \21\2\u012f\u0130\7\6\2\2\u0130")
-        buf.write(u"\u0152\3\2\2\2\u0131\u0132\5\4\3\2\u0132\u0133\7\r\2")
-        buf.write(u"\2\u0133\u0134\5 \21\2\u0134\u0135\7\16\2\2\u0135\u0152")
-        buf.write(u"\3\2\2\2\u0136\u013b\5\2\2\2\u0137\u0138\7\5\2\2\u0138")
-        buf.write(u"\u0139\5 \21\2\u0139\u013a\7\6\2\2\u013a\u013c\3\2\2")
-        buf.write(u"\2\u013b\u0137\3\2\2\2\u013b\u013c\3\2\2\2\u013c\u0152")
-        buf.write(u"\3\2\2\2\u013d\u0152\5\36\20\2\u013e\u0152\7\\\2\2\u013f")
-        buf.write(u"\u0152\7]\2\2\u0140\u0152\7\17\2\2\u0141\u0152\7\20\2")
-        buf.write(u"\2\u0142\u0143\7\24\2\2\u0143\u0144\5\30\r\2\u0144\u0148")
-        buf.write(u"\7\25\2\2\u0145\u0147\5\32\16\2\u0146\u0145\3\2\2\2\u0147")
-        buf.write(u"\u014a\3\2\2\2\u0148\u0146\3\2\2\2\u0148\u0149\3\2\2")
-        buf.write(u"\2\u0149\u014b\3\2\2\2\u014a\u0148\3\2\2\2\u014b\u014c")
-        buf.write(u"\7\26\2\2\u014c\u0152\3\2\2\2\u014d\u014e\7\5\2\2\u014e")
-        buf.write(u"\u014f\5\30\r\2\u014f\u0150\7\6\2\2\u0150\u0152\3\2\2")
-        buf.write(u"\2\u0151\u0118\3\2\2\2\u0151\u011b\3\2\2\2\u0151\u0122")
-        buf.write(u"\3\2\2\2\u0151\u012c\3\2\2\2\u0151\u0131\3\2\2\2\u0151")
-        buf.write(u"\u0136\3\2\2\2\u0151\u013d\3\2\2\2\u0151\u013e\3\2\2")
-        buf.write(u"\2\u0151\u013f\3\2\2\2\u0151\u0140\3\2\2\2\u0151\u0141")
-        buf.write(u"\3\2\2\2\u0151\u0142\3\2\2\2\u0151\u014d\3\2\2\2\u0152")
-        buf.write(u"\u0167\3\2\2\2\u0153\u0154\f\21\2\2\u0154\u0155\t\3\2")
-        buf.write(u"\2\u0155\u0166\5\30\r\22\u0156\u0157\f\20\2\2\u0157\u0158")
-        buf.write(u"\t\4\2\2\u0158\u0166\5\30\r\21\u0159\u015a\f\17\2\2\u015a")
-        buf.write(u"\u015b\t\5\2\2\u015b\u0166\5\30\r\20\u015c\u015d\f\16")
-        buf.write(u"\2\2\u015d\u015e\t\6\2\2\u015e\u0166\5\30\r\17\u015f")
-        buf.write(u"\u0160\f\r\2\2\u0160\u0161\7i\2\2\u0161\u0166\5\30\r")
-        buf.write(u"\16\u0162\u0163\f\f\2\2\u0163\u0164\7j\2\2\u0164\u0166")
-        buf.write(u"\5\30\r\r\u0165\u0153\3\2\2\2\u0165\u0156\3\2\2\2\u0165")
-        buf.write(u"\u0159\3\2\2\2\u0165\u015c\3\2\2\2\u0165\u015f\3\2\2")
-        buf.write(u"\2\u0165\u0162\3\2\2\2\u0166\u0169\3\2\2\2\u0167\u0165")
-        buf.write(u"\3\2\2\2\u0167\u0168\3\2\2\2\u0168\31\3\2\2\2\u0169\u0167")
-        buf.write(u"\3\2\2\2\u016a\u016b\5\34\17\2\u016b\u016c\7\32\2\2\u016c")
-        buf.write(u"\u016d\5\30\r\2\u016d\u016e\7\33\2\2\u016e\33\3\2\2\2")
-        buf.write(u"\u016f\u0183\7\34\2\2\u0170\u0183\7\\\2\2\u0171\u0183")
-        buf.write(u"\7]\2\2\u0172\u0183\7Z\2\2\u0173\u0180\5\2\2\2\u0174")
-        buf.write(u"\u017d\7\5\2\2\u0175\u017a\5\34\17\2\u0176\u0177\7\4")
-        buf.write(u"\2\2\u0177\u0179\5\34\17\2\u0178\u0176\3\2\2\2\u0179")
-        buf.write(u"\u017c\3\2\2\2\u017a\u0178\3\2\2\2\u017a\u017b\3\2\2")
-        buf.write(u"\2\u017b\u017e\3\2\2\2\u017c\u017a\3\2\2\2\u017d\u0175")
-        buf.write(u"\3\2\2\2\u017d\u017e\3\2\2\2\u017e\u017f\3\2\2\2\u017f")
-        buf.write(u"\u0181\7\6\2\2\u0180\u0174\3\2\2\2\u0180\u0181\3\2\2")
-        buf.write(u"\2\u0181\u0183\3\2\2\2\u0182\u016f\3\2\2\2\u0182\u0170")
-        buf.write(u"\3\2\2\2\u0182\u0171\3\2\2\2\u0182\u0172\3\2\2\2\u0182")
-        buf.write(u"\u0173\3\2\2\2\u0183\35\3\2\2\2\u0184\u0185\7\17\2\2")
-        buf.write(u"\u0185\u0187\7\3\2\2\u0186\u0184\3\2\2\2\u0186\u0187")
-        buf.write(u"\3\2\2\2\u0187\u0188\3\2\2\2\u0188\u0189\7Z\2\2\u0189")
-        buf.write(u"\37\3\2\2\2\u018a\u018f\5\30\r\2\u018b\u018c\7\4\2\2")
-        buf.write(u"\u018c\u018e\5\30\r\2\u018d\u018b\3\2\2\2\u018e\u0191")
-        buf.write(u"\3\2\2\2\u018f\u018d\3\2\2\2\u018f\u0190\3\2\2\2\u0190")
-        buf.write(u"\u0193\3\2\2\2\u0191\u018f\3\2\2\2\u0192\u018a\3\2\2")
-        buf.write(u"\2\u0192\u0193\3\2\2\2\u0193!\3\2\2\2\u0194\u0195\7\r")
-        buf.write(u"\2\2\u0195\u019a\5\30\r\2\u0196\u0197\7\4\2\2\u0197\u0199")
-        buf.write(u"\5\30\r\2\u0198\u0196\3\2\2\2\u0199\u019c\3\2\2\2\u019a")
-        buf.write(u"\u0198\3\2\2\2\u019a\u019b\3\2\2\2\u019b\u019d\3\2\2")
-        buf.write(u"\2\u019c\u019a\3\2\2\2\u019d\u019e\7\16\2\2\u019e#\3")
-        buf.write(u"\2\2\2\u019f\u01a3\7\r\2\2\u01a0\u01a1\5\b\5\2\u01a1")
+        buf.write(u"\r\1\2\u0119\u011a\5\4\3\2\u011a\u011b\7\5\2\2\u011b")
+        buf.write(u"\u011c\5 \21\2\u011c\u011d\7\6\2\2\u011d\u0152\3\2\2")
+        buf.write(u"\2\u011e\u011f\5\4\3\2\u011f\u0120\7\r\2\2\u0120\u0121")
+        buf.write(u"\5 \21\2\u0121\u0122\7\16\2\2\u0122\u0152\3\2\2\2\u0123")
+        buf.write(u"\u0128\5\2\2\2\u0124\u0125\7\5\2\2\u0125\u0126\5 \21")
+        buf.write(u"\2\u0126\u0127\7\6\2\2\u0127\u0129\3\2\2\2\u0128\u0124")
+        buf.write(u"\3\2\2\2\u0128\u0129\3\2\2\2\u0129\u0152\3\2\2\2\u012a")
+        buf.write(u"\u012b\t\2\2\2\u012b\u0152\5\30\r\22\u012c\u0152\5\36")
+        buf.write(u"\20\2\u012d\u0152\7\\\2\2\u012e\u0152\7]\2\2\u012f\u0152")
+        buf.write(u"\7\17\2\2\u0130\u0152\7\20\2\2\u0131\u0132\7\21\2\2\u0132")
+        buf.write(u"\u0133\5\30\r\2\u0133\u0134\7\22\2\2\u0134\u0135\5\30")
+        buf.write(u"\r\2\u0135\u0136\7\23\2\2\u0136\u0137\5\30\r\6\u0137")
+        buf.write(u"\u0152\3\2\2\2\u0138\u0139\7\24\2\2\u0139\u013a\5\30")
+        buf.write(u"\r\2\u013a\u013e\7\25\2\2\u013b\u013d\5\32\16\2\u013c")
+        buf.write(u"\u013b\3\2\2\2\u013d\u0140\3\2\2\2\u013e\u013c\3\2\2")
+        buf.write(u"\2\u013e\u013f\3\2\2\2\u013f\u0141\3\2\2\2\u0140\u013e")
+        buf.write(u"\3\2\2\2\u0141\u0142\7\26\2\2\u0142\u0152\3\2\2\2\u0143")
+        buf.write(u"\u0144\7\27\2\2\u0144\u0145\7\5\2\2\u0145\u0146\5\b\5")
+        buf.write(u"\2\u0146\u0147\7Z\2\2\u0147\u0148\7\6\2\2\u0148\u0149")
+        buf.write(u"\7\30\2\2\u0149\u014a\5\30\r\2\u014a\u014b\7\31\2\2\u014b")
+        buf.write(u"\u014c\5\30\r\4\u014c\u0152\3\2\2\2\u014d\u014e\7\5\2")
+        buf.write(u"\2\u014e\u014f\5\30\r\2\u014f\u0150\7\6\2\2\u0150\u0152")
+        buf.write(u"\3\2\2\2\u0151\u0118\3\2\2\2\u0151\u011e\3\2\2\2\u0151")
+        buf.write(u"\u0123\3\2\2\2\u0151\u012a\3\2\2\2\u0151\u012c\3\2\2")
+        buf.write(u"\2\u0151\u012d\3\2\2\2\u0151\u012e\3\2\2\2\u0151\u012f")
+        buf.write(u"\3\2\2\2\u0151\u0130\3\2\2\2\u0151\u0131\3\2\2\2\u0151")
+        buf.write(u"\u0138\3\2\2\2\u0151\u0143\3\2\2\2\u0151\u014d\3\2\2")
+        buf.write(u"\2\u0152\u0167\3\2\2\2\u0153\u0154\f\21\2\2\u0154\u0155")
+        buf.write(u"\t\3\2\2\u0155\u0166\5\30\r\22\u0156\u0157\f\20\2\2\u0157")
+        buf.write(u"\u0158\t\4\2\2\u0158\u0166\5\30\r\21\u0159\u015a\f\17")
+        buf.write(u"\2\2\u015a\u015b\t\5\2\2\u015b\u0166\5\30\r\20\u015c")
+        buf.write(u"\u015d\f\16\2\2\u015d\u015e\t\6\2\2\u015e\u0166\5\30")
+        buf.write(u"\r\17\u015f\u0160\f\r\2\2\u0160\u0161\7i\2\2\u0161\u0166")
+        buf.write(u"\5\30\r\16\u0162\u0163\f\f\2\2\u0163\u0164\7j\2\2\u0164")
+        buf.write(u"\u0166\5\30\r\r\u0165\u0153\3\2\2\2\u0165\u0156\3\2\2")
+        buf.write(u"\2\u0165\u0159\3\2\2\2\u0165\u015c\3\2\2\2\u0165\u015f")
+        buf.write(u"\3\2\2\2\u0165\u0162\3\2\2\2\u0166\u0169\3\2\2\2\u0167")
+        buf.write(u"\u0165\3\2\2\2\u0167\u0168\3\2\2\2\u0168\31\3\2\2\2\u0169")
+        buf.write(u"\u0167\3\2\2\2\u016a\u016b\5\34\17\2\u016b\u016c\7\32")
+        buf.write(u"\2\2\u016c\u016d\5\30\r\2\u016d\u016e\7\33\2\2\u016e")
+        buf.write(u"\33\3\2\2\2\u016f\u0183\7\34\2\2\u0170\u0183\7\\\2\2")
+        buf.write(u"\u0171\u0183\7]\2\2\u0172\u0183\7Z\2\2\u0173\u0180\5")
+        buf.write(u"\2\2\2\u0174\u017d\7\5\2\2\u0175\u017a\5\34\17\2\u0176")
+        buf.write(u"\u0177\7\4\2\2\u0177\u0179\5\34\17\2\u0178\u0176\3\2")
+        buf.write(u"\2\2\u0179\u017c\3\2\2\2\u017a\u0178\3\2\2\2\u017a\u017b")
+        buf.write(u"\3\2\2\2\u017b\u017e\3\2\2\2\u017c\u017a\3\2\2\2\u017d")
+        buf.write(u"\u0175\3\2\2\2\u017d\u017e\3\2\2\2\u017e\u017f\3\2\2")
+        buf.write(u"\2\u017f\u0181\7\6\2\2\u0180\u0174\3\2\2\2\u0180\u0181")
+        buf.write(u"\3\2\2\2\u0181\u0183\3\2\2\2\u0182\u016f\3\2\2\2\u0182")
+        buf.write(u"\u0170\3\2\2\2\u0182\u0171\3\2\2\2\u0182\u0172\3\2\2")
+        buf.write(u"\2\u0182\u0173\3\2\2\2\u0183\35\3\2\2\2\u0184\u0185\7")
+        buf.write(u"\17\2\2\u0185\u0187\7\3\2\2\u0186\u0184\3\2\2\2\u0186")
+        buf.write(u"\u0187\3\2\2\2\u0187\u0188\3\2\2\2\u0188\u0189\7Z\2\2")
+        buf.write(u"\u0189\37\3\2\2\2\u018a\u018f\5\30\r\2\u018b\u018c\7")
+        buf.write(u"\4\2\2\u018c\u018e\5\30\r\2\u018d\u018b\3\2\2\2\u018e")
+        buf.write(u"\u0191\3\2\2\2\u018f\u018d\3\2\2\2\u018f\u0190\3\2\2")
+        buf.write(u"\2\u0190\u0193\3\2\2\2\u0191\u018f\3\2\2\2\u0192\u018a")
+        buf.write(u"\3\2\2\2\u0192\u0193\3\2\2\2\u0193!\3\2\2\2\u0194\u0195")
+        buf.write(u"\7\r\2\2\u0195\u019a\5\30\r\2\u0196\u0197\7\4\2\2\u0197")
+        buf.write(u"\u0199\5\30\r\2\u0198\u0196\3\2\2\2\u0199\u019c\3\2\2")
+        buf.write(u"\2\u019a\u0198\3\2\2\2\u019a\u019b\3\2\2\2\u019b\u019d")
+        buf.write(u"\3\2\2\2\u019c\u019a\3\2\2\2\u019d\u019e\7\16\2\2\u019e")
+        buf.write(u"#\3\2\2\2\u019f\u01a3\7\r\2\2\u01a0\u01a1\5\b\5\2\u01a1")
         buf.write(u"\u01a2\7\35\2\2\u01a2\u01a4\3\2\2\2\u01a3\u01a0\3\2\2")
         buf.write(u"\2\u01a3\u01a4\3\2\2\2\u01a4\u01a5\3\2\2\2\u01a5\u01a6")
         buf.write(u"\5\30\r\2\u01a6\u01a7\7\16\2\2\u01a7%\3\2\2\2\u01a8\u01aa")
@@ -742,13 +742,13 @@ def serializedATN():
         buf.write(u"\u0595\u0596\7\35\2\2\u0596\u0597\7[\2\2\u0597\u0599")
         buf.write(u"\7\33\2\2\u0598\u0586\3\2\2\2\u0598\u058b\3\2\2\2\u0598")
         buf.write(u"\u0590\3\2\2\2\u0598\u0594\3\2\2\2\u0599\u0089\3\2\2")
-        buf.write(u"\2\u059a\u059b\bF\1\2\u059b\u059c\t\t\2\2\u059c\u05a8")
-        buf.write(u"\5\u008aF\13\u059d\u059e\7[\2\2\u059e\u059f\7\3\2\2\u059f")
-        buf.write(u"\u05a8\7Z\2\2\u05a0\u05a8\7[\2\2\u05a1\u05a8\7\\\2\2")
-        buf.write(u"\u05a2\u05a8\7Z\2\2\u05a3\u05a4\7\5\2\2\u05a4\u05a5\5")
-        buf.write(u"\u008aF\2\u05a5\u05a6\7\6\2\2\u05a6\u05a8\3\2\2\2\u05a7")
-        buf.write(u"\u059a\3\2\2\2\u05a7\u059d\3\2\2\2\u05a7\u05a0\3\2\2")
-        buf.write(u"\2\u05a7\u05a1\3\2\2\2\u05a7\u05a2\3\2\2\2\u05a7\u05a3")
+        buf.write(u"\2\u059a\u059b\bF\1\2\u059b\u059c\7[\2\2\u059c\u059d")
+        buf.write(u"\7\3\2\2\u059d\u05a8\7Z\2\2\u059e\u05a8\7[\2\2\u059f")
+        buf.write(u"\u05a8\7\\\2\2\u05a0\u05a8\7Z\2\2\u05a1\u05a2\t\t\2\2")
+        buf.write(u"\u05a2\u05a8\5\u008aF\13\u05a3\u05a4\7\5\2\2\u05a4\u05a5")
+        buf.write(u"\5\u008aF\2\u05a5\u05a6\7\6\2\2\u05a6\u05a8\3\2\2\2\u05a7")
+        buf.write(u"\u059a\3\2\2\2\u05a7\u059e\3\2\2\2\u05a7\u059f\3\2\2")
+        buf.write(u"\2\u05a7\u05a0\3\2\2\2\u05a7\u05a1\3\2\2\2\u05a7\u05a3")
         buf.write(u"\3\2\2\2\u05a8\u05c0\3\2\2\2\u05a9\u05aa\f\n\2\2\u05aa")
         buf.write(u"\u05ab\t\3\2\2\u05ab\u05bf\5\u008aF\13\u05ac\u05ad\f")
         buf.write(u"\t\2\2\u05ad\u05ae\t\4\2\2\u05ae\u05bf\5\u008aF\n\u05af")
@@ -791,7 +791,7 @@ def serializedATN():
         buf.write(u"\2\u05fd\u0093\3\2\2\2\u05fe\u05fc\3\2\2\2\u05ff\u0600")
         buf.write(u"\5\u0092J\2\u0600\u0095\3\2\2\2\u00af\u009a\u00a3\u00aa")
         buf.write(u"\u00af\u00b9\u00be\u00c7\u00cc\u00d4\u00d7\u00de\u00ea")
-        buf.write(u"\u00f2\u00fa\u010c\u010f\u0116\u013b\u0148\u0151\u0165")
+        buf.write(u"\u00f2\u00fa\u010c\u010f\u0116\u0128\u013e\u0151\u0165")
         buf.write(u"\u0167\u017a\u017d\u0180\u0182\u0186\u018f\u0192\u019a")
         buf.write(u"\u01a3\u01ab\u01b2\u01b9\u01c4\u01cc\u01d6\u01e0\u01e7")
         buf.write(u"\u01ee\u01f8\u01fd\u0209\u0213\u0219\u021e\u0228\u0230")
@@ -1083,7 +1083,7 @@ class ABSParser ( Parser ):
 
     def __init__(self, input):
         super(ABSParser, self).__init__(input)
-        self.checkVersion("4.5.1")
+        self.checkVersion("4.6")
         self._interp = ParserATNSimulator(self, self.atn, self.decisionsToDFA, self.sharedContextCache)
         self._predicates = None
 
@@ -1230,6 +1230,7 @@ class ABSParser ( Parser ):
         self.enterRule(localctx, 4, self.RULE_any_identifier)
         try:
             self.state = 168
+            self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,2,self._ctx)
             if la_ == 1:
                 self.enterOuterAlt(localctx, 1)
@@ -1311,6 +1312,7 @@ class ABSParser ( Parser ):
             self.state = 176
             localctx.n = self.qualified_type_identifier()
             self.state = 188
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==ABSParser.LT:
                 self.state = 177
@@ -1385,6 +1387,7 @@ class ABSParser ( Parser ):
             self.state = 190
             localctx.n = self.qualified_type_identifier()
             self.state = 202
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==ABSParser.LT:
                 self.state = 191
@@ -1452,6 +1455,7 @@ class ABSParser ( Parser ):
             self.state = 204
             self.match(ABSParser.T__2)
             self.state = 213
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==ABSParser.T__10 or _la==ABSParser.TYPE_IDENTIFIER:
                 self.state = 205
@@ -1673,6 +1677,7 @@ class ABSParser ( Parser ):
         self.enterRule(localctx, 18, self.RULE_exp)
         try:
             self.state = 232
+            self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,11,self._ctx)
             if la_ == 1:
                 localctx = ABSParser.EffExpContext(self, localctx)
@@ -1830,6 +1835,7 @@ class ABSParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.state = 276
+            self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,16,self._ctx)
             if la_ == 1:
                 localctx = ABSParser.GetExpContext(self, localctx)
@@ -1848,6 +1854,7 @@ class ABSParser ( Parser ):
                 self.state = 238
                 self.match(ABSParser.T__5)
                 self.state = 240
+                self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 if _la==ABSParser.T__6:
                     self.state = 239
@@ -1868,6 +1875,7 @@ class ABSParser ( Parser ):
                 localctx = ABSParser.AsyncCallExpContext(self, localctx)
                 self.enterOuterAlt(localctx, 3)
                 self.state = 248
+                self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 if _la==ABSParser.T__7:
                     self.state = 247
@@ -1909,18 +1917,20 @@ class ABSParser ( Parser ):
                 localctx = ABSParser.OriginalCallExpContext(self, localctx)
                 self.enterOuterAlt(localctx, 5)
                 self.state = 269
+                self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 if _la==ABSParser.T__8 or _la==ABSParser.TYPE_IDENTIFIER:
                     self.state = 266
+                    self._errHandler.sync(self)
                     token = self._input.LA(1)
                     if token in [ABSParser.TYPE_IDENTIFIER]:
                         self.state = 264
                         localctx.d = self.delta_id()
-
+                        pass
                     elif token in [ABSParser.T__8]:
                         self.state = 265
                         localctx.c = self.match(ABSParser.T__8)
-
+                        pass
                     else:
                         raise NoViableAltException(self)
 
@@ -2386,174 +2396,177 @@ class ABSParser ( Parser ):
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 335
+            self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,19,self._ctx)
             if la_ == 1:
-                localctx = ABSParser.UnaryExpContext(self, localctx)
+                localctx = ABSParser.FunctionExpContext(self, localctx)
                 self._ctx = localctx
                 _prevctx = localctx
 
                 self.state = 279
-                localctx.op = self._input.LT(1)
-                _la = self._input.LA(1)
-                if not(((((_la - 92)) & ~0x3f) == 0 and ((1 << (_la - 92)) & ((1 << (ABSParser.NEGATION_CREOL - 92)) | (1 << (ABSParser.NEGATION - 92)) | (1 << (ABSParser.MINUS - 92)))) != 0)):
-                    localctx.op = self._errHandler.recoverInline(self)
-                else:
-                    self.consume()
+                self.qualified_identifier()
                 self.state = 280
-                self.pure_exp(16)
+                self.match(ABSParser.T__2)
+                self.state = 281
+                self.pure_exp_list()
+                self.state = 282
+                self.match(ABSParser.T__3)
                 pass
 
             elif la_ == 2:
-                localctx = ABSParser.IfExpContext(self, localctx)
-                self._ctx = localctx
-                _prevctx = localctx
-                self.state = 281
-                self.match(ABSParser.T__14)
-                self.state = 282
-                localctx.c = self.pure_exp(0)
-                self.state = 283
-                self.match(ABSParser.T__15)
-                self.state = 284
-                localctx.l = self.pure_exp(0)
-                self.state = 285
-                self.match(ABSParser.T__16)
-                self.state = 286
-                localctx.r = self.pure_exp(4)
-                pass
-
-            elif la_ == 3:
-                localctx = ABSParser.LetExpContext(self, localctx)
-                self._ctx = localctx
-                _prevctx = localctx
-                self.state = 288
-                self.match(ABSParser.T__20)
-                self.state = 289
-                self.match(ABSParser.T__2)
-                self.state = 290
-                self.type_use()
-                self.state = 291
-                self.match(ABSParser.IDENTIFIER)
-                self.state = 292
-                self.match(ABSParser.T__3)
-                self.state = 293
-                self.match(ABSParser.T__21)
-                self.state = 294
-                localctx.i = self.pure_exp(0)
-                self.state = 295
-                self.match(ABSParser.T__22)
-                self.state = 296
-                localctx.b = self.pure_exp(2)
-                pass
-
-            elif la_ == 4:
-                localctx = ABSParser.FunctionExpContext(self, localctx)
-                self._ctx = localctx
-                _prevctx = localctx
-                self.state = 298
-                self.qualified_identifier()
-                self.state = 299
-                self.match(ABSParser.T__2)
-                self.state = 300
-                self.pure_exp_list()
-                self.state = 301
-                self.match(ABSParser.T__3)
-                pass
-
-            elif la_ == 5:
                 localctx = ABSParser.VariadicFunctionExpContext(self, localctx)
                 self._ctx = localctx
                 _prevctx = localctx
-                self.state = 303
+                self.state = 284
                 self.qualified_identifier()
-                self.state = 304
+                self.state = 285
                 self.match(ABSParser.T__10)
-                self.state = 305
+                self.state = 286
                 self.pure_exp_list()
-                self.state = 306
+                self.state = 287
                 self.match(ABSParser.T__11)
                 pass
 
-            elif la_ == 6:
+            elif la_ == 3:
                 localctx = ABSParser.ConstructorExpContext(self, localctx)
                 self._ctx = localctx
                 _prevctx = localctx
-                self.state = 308
+                self.state = 289
                 self.qualified_type_identifier()
-                self.state = 313
+                self.state = 294
+                self._errHandler.sync(self)
                 la_ = self._interp.adaptivePredict(self._input,17,self._ctx)
                 if la_ == 1:
-                    self.state = 309
+                    self.state = 290
                     self.match(ABSParser.T__2)
-                    self.state = 310
+                    self.state = 291
                     self.pure_exp_list()
-                    self.state = 311
+                    self.state = 292
                     self.match(ABSParser.T__3)
 
 
                 pass
 
-            elif la_ == 7:
+            elif la_ == 4:
+                localctx = ABSParser.UnaryExpContext(self, localctx)
+                self._ctx = localctx
+                _prevctx = localctx
+                self.state = 296
+                localctx.op = self._input.LT(1)
+                _la = self._input.LA(1)
+                if not(((((_la - 92)) & ~0x3f) == 0 and ((1 << (_la - 92)) & ((1 << (ABSParser.NEGATION_CREOL - 92)) | (1 << (ABSParser.NEGATION - 92)) | (1 << (ABSParser.MINUS - 92)))) != 0)):
+                    localctx.op = self._errHandler.recoverInline(self)
+                else:
+                    self._errHandler.reportMatch(self)
+                    self.consume()
+                self.state = 297
+                self.pure_exp(16)
+                pass
+
+            elif la_ == 5:
                 localctx = ABSParser.VarOrFieldExpContext(self, localctx)
                 self._ctx = localctx
                 _prevctx = localctx
-                self.state = 315
+                self.state = 298
                 self.var_or_field_ref()
                 pass
 
-            elif la_ == 8:
+            elif la_ == 6:
                 localctx = ABSParser.IntExpContext(self, localctx)
                 self._ctx = localctx
                 _prevctx = localctx
-                self.state = 316
+                self.state = 299
                 self.match(ABSParser.INTLITERAL)
                 pass
 
-            elif la_ == 9:
+            elif la_ == 7:
                 localctx = ABSParser.StringExpContext(self, localctx)
                 self._ctx = localctx
                 _prevctx = localctx
-                self.state = 317
+                self.state = 300
                 self.match(ABSParser.STRINGLITERAL)
                 pass
 
-            elif la_ == 10:
+            elif la_ == 8:
                 localctx = ABSParser.ThisExpContext(self, localctx)
                 self._ctx = localctx
                 _prevctx = localctx
-                self.state = 318
+                self.state = 301
                 self.match(ABSParser.T__12)
                 pass
 
-            elif la_ == 11:
+            elif la_ == 9:
                 localctx = ABSParser.NullExpContext(self, localctx)
                 self._ctx = localctx
                 _prevctx = localctx
-                self.state = 319
+                self.state = 302
                 self.match(ABSParser.T__13)
                 pass
 
-            elif la_ == 12:
+            elif la_ == 10:
+                localctx = ABSParser.IfExpContext(self, localctx)
+                self._ctx = localctx
+                _prevctx = localctx
+                self.state = 303
+                self.match(ABSParser.T__14)
+                self.state = 304
+                localctx.c = self.pure_exp(0)
+                self.state = 305
+                self.match(ABSParser.T__15)
+                self.state = 306
+                localctx.l = self.pure_exp(0)
+                self.state = 307
+                self.match(ABSParser.T__16)
+                self.state = 308
+                localctx.r = self.pure_exp(4)
+                pass
+
+            elif la_ == 11:
                 localctx = ABSParser.CaseExpContext(self, localctx)
                 self._ctx = localctx
                 _prevctx = localctx
-                self.state = 320
+                self.state = 310
                 self.match(ABSParser.T__17)
-                self.state = 321
+                self.state = 311
                 localctx.c = self.pure_exp(0)
-                self.state = 322
+                self.state = 312
                 self.match(ABSParser.T__18)
-                self.state = 326
+                self.state = 316
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 while _la==ABSParser.T__25 or ((((_la - 88)) & ~0x3f) == 0 and ((1 << (_la - 88)) & ((1 << (ABSParser.IDENTIFIER - 88)) | (1 << (ABSParser.TYPE_IDENTIFIER - 88)) | (1 << (ABSParser.INTLITERAL - 88)) | (1 << (ABSParser.STRINGLITERAL - 88)))) != 0):
-                    self.state = 323
+                    self.state = 313
                     self.casebranch()
-                    self.state = 328
+                    self.state = 318
                     self._errHandler.sync(self)
                     _la = self._input.LA(1)
 
-                self.state = 329
+                self.state = 319
                 self.match(ABSParser.T__19)
+                pass
+
+            elif la_ == 12:
+                localctx = ABSParser.LetExpContext(self, localctx)
+                self._ctx = localctx
+                _prevctx = localctx
+                self.state = 321
+                self.match(ABSParser.T__20)
+                self.state = 322
+                self.match(ABSParser.T__2)
+                self.state = 323
+                self.type_use()
+                self.state = 324
+                self.match(ABSParser.IDENTIFIER)
+                self.state = 325
+                self.match(ABSParser.T__3)
+                self.state = 326
+                self.match(ABSParser.T__21)
+                self.state = 327
+                localctx.i = self.pure_exp(0)
+                self.state = 328
+                self.match(ABSParser.T__22)
+                self.state = 329
+                localctx.b = self.pure_exp(2)
                 pass
 
             elif la_ == 13:
@@ -2579,6 +2592,7 @@ class ABSParser ( Parser ):
                         self.triggerExitRuleEvent()
                     _prevctx = localctx
                     self.state = 355
+                    self._errHandler.sync(self)
                     la_ = self._interp.adaptivePredict(self._input,20,self._ctx)
                     if la_ == 1:
                         localctx = ABSParser.MultExpContext(self, ABSParser.Pure_expContext(self, _parentctx, _parentState))
@@ -2594,6 +2608,7 @@ class ABSParser ( Parser ):
                         if not(((((_la - 95)) & ~0x3f) == 0 and ((1 << (_la - 95)) & ((1 << (ABSParser.MULT - 95)) | (1 << (ABSParser.DIV - 95)) | (1 << (ABSParser.MOD - 95)))) != 0)):
                             localctx.op = self._errHandler.recoverInline(self)
                         else:
+                            self._errHandler.reportMatch(self)
                             self.consume()
                         self.state = 339
                         localctx.r = self.pure_exp(16)
@@ -2613,6 +2628,7 @@ class ABSParser ( Parser ):
                         if not(_la==ABSParser.MINUS or _la==ABSParser.PLUS):
                             localctx.op = self._errHandler.recoverInline(self)
                         else:
+                            self._errHandler.reportMatch(self)
                             self.consume()
                         self.state = 342
                         localctx.r = self.pure_exp(15)
@@ -2632,6 +2648,7 @@ class ABSParser ( Parser ):
                         if not(((((_la - 99)) & ~0x3f) == 0 and ((1 << (_la - 99)) & ((1 << (ABSParser.LTEQ - 99)) | (1 << (ABSParser.GTEQ - 99)) | (1 << (ABSParser.LT - 99)) | (1 << (ABSParser.GT - 99)))) != 0)):
                             localctx.op = self._errHandler.recoverInline(self)
                         else:
+                            self._errHandler.reportMatch(self)
                             self.consume()
                         self.state = 345
                         localctx.r = self.pure_exp(14)
@@ -2651,6 +2668,7 @@ class ABSParser ( Parser ):
                         if not(_la==ABSParser.EQEQ or _la==ABSParser.NOTEQ):
                             localctx.op = self._errHandler.recoverInline(self)
                         else:
+                            self._errHandler.reportMatch(self)
                             self.consume()
                         self.state = 348
                         localctx.r = self.pure_exp(13)
@@ -2854,42 +2872,45 @@ class ABSParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.state = 384
+            self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [ABSParser.T__25]:
                 localctx = ABSParser.UnderscorePatternContext(self, localctx)
                 self.enterOuterAlt(localctx, 1)
                 self.state = 365
                 self.match(ABSParser.T__25)
-
+                pass
             elif token in [ABSParser.INTLITERAL]:
                 localctx = ABSParser.IntPatternContext(self, localctx)
                 self.enterOuterAlt(localctx, 2)
                 self.state = 366
                 self.match(ABSParser.INTLITERAL)
-
+                pass
             elif token in [ABSParser.STRINGLITERAL]:
                 localctx = ABSParser.StringPatternContext(self, localctx)
                 self.enterOuterAlt(localctx, 3)
                 self.state = 367
                 self.match(ABSParser.STRINGLITERAL)
-
+                pass
             elif token in [ABSParser.IDENTIFIER]:
                 localctx = ABSParser.VarPatternContext(self, localctx)
                 self.enterOuterAlt(localctx, 4)
                 self.state = 368
                 self.match(ABSParser.IDENTIFIER)
-
+                pass
             elif token in [ABSParser.TYPE_IDENTIFIER]:
                 localctx = ABSParser.ConstructorPatternContext(self, localctx)
                 self.enterOuterAlt(localctx, 5)
                 self.state = 369
                 self.qualified_type_identifier()
                 self.state = 382
+                self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 if _la==ABSParser.T__2:
                     self.state = 370
                     self.match(ABSParser.T__2)
                     self.state = 379
+                    self._errHandler.sync(self)
                     _la = self._input.LA(1)
                     if _la==ABSParser.T__25 or ((((_la - 88)) & ~0x3f) == 0 and ((1 << (_la - 88)) & ((1 << (ABSParser.IDENTIFIER - 88)) | (1 << (ABSParser.TYPE_IDENTIFIER - 88)) | (1 << (ABSParser.INTLITERAL - 88)) | (1 << (ABSParser.STRINGLITERAL - 88)))) != 0):
                         self.state = 371
@@ -2912,7 +2933,7 @@ class ABSParser ( Parser ):
                     self.match(ABSParser.T__3)
 
 
-
+                pass
             else:
                 raise NoViableAltException(self)
 
@@ -2953,6 +2974,7 @@ class ABSParser ( Parser ):
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 388
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==ABSParser.T__12:
                 self.state = 386
@@ -3004,6 +3026,7 @@ class ABSParser ( Parser ):
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 400
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if (((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << ABSParser.T__2) | (1 << ABSParser.T__12) | (1 << ABSParser.T__13) | (1 << ABSParser.T__14) | (1 << ABSParser.T__17) | (1 << ABSParser.T__20))) != 0) or ((((_la - 88)) & ~0x3f) == 0 and ((1 << (_la - 88)) & ((1 << (ABSParser.IDENTIFIER - 88)) | (1 << (ABSParser.TYPE_IDENTIFIER - 88)) | (1 << (ABSParser.INTLITERAL - 88)) | (1 << (ABSParser.STRINGLITERAL - 88)) | (1 << (ABSParser.NEGATION_CREOL - 88)) | (1 << (ABSParser.NEGATION - 88)) | (1 << (ABSParser.MINUS - 88)))) != 0):
                 self.state = 392
@@ -3125,6 +3148,7 @@ class ABSParser ( Parser ):
             self.state = 413
             self.match(ABSParser.T__10)
             self.state = 417
+            self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,30,self._ctx)
             if la_ == 1:
                 self.state = 414
@@ -3601,6 +3625,7 @@ class ABSParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.state = 625
+            self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,54,self._ctx)
             if la_ == 1:
                 localctx = ABSParser.VardeclStmtContext(self, localctx)
@@ -3620,6 +3645,7 @@ class ABSParser ( Parser ):
                 self.state = 429
                 self.match(ABSParser.IDENTIFIER)
                 self.state = 432
+                self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 if _la==ABSParser.T__21:
                     self.state = 430
@@ -3769,6 +3795,7 @@ class ABSParser ( Parser ):
                 self.state = 499
                 localctx.l = self.stmt()
                 self.state = 502
+                self._errHandler.sync(self)
                 la_ = self._interp.adaptivePredict(self._input,40,self._ctx)
                 if la_ == 1:
                     self.state = 500
@@ -3838,6 +3865,7 @@ class ABSParser ( Parser ):
                 self.state = 532
                 self.match(ABSParser.T__19)
                 self.state = 535
+                self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 if _la==ABSParser.T__33:
                     self.state = 533
@@ -4144,6 +4172,7 @@ class ABSParser ( Parser ):
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 639
+            self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,55,self._ctx)
             if la_ == 1:
                 localctx = ABSParser.ClaimGuardContext(self, localctx)
@@ -4326,6 +4355,7 @@ class ABSParser ( Parser ):
             self.state = 660
             localctx.n = self.match(ABSParser.TYPE_IDENTIFIER)
             self.state = 671
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==ABSParser.LT:
                 self.state = 661
@@ -4351,6 +4381,7 @@ class ABSParser ( Parser ):
 
 
             self.state = 682
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==ABSParser.T__21:
                 self.state = 673
@@ -4424,6 +4455,7 @@ class ABSParser ( Parser ):
             self.state = 686
             localctx.n = self.match(ABSParser.TYPE_IDENTIFIER)
             self.state = 698
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==ABSParser.T__2:
                 self.state = 687
@@ -4491,6 +4523,7 @@ class ABSParser ( Parser ):
             self.state = 700
             self.type_use()
             self.state = 702
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==ABSParser.IDENTIFIER:
                 self.state = 701
@@ -4632,6 +4665,7 @@ class ABSParser ( Parser ):
             self.state = 723
             localctx.n = self.match(ABSParser.TYPE_IDENTIFIER)
             self.state = 735
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==ABSParser.T__2:
                 self.state = 724
@@ -4740,6 +4774,7 @@ class ABSParser ( Parser ):
             self.state = 747
             localctx.n = self.match(ABSParser.IDENTIFIER)
             self.state = 758
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==ABSParser.LT:
                 self.state = 748
@@ -4769,15 +4804,16 @@ class ABSParser ( Parser ):
             self.state = 761
             self.match(ABSParser.T__21)
             self.state = 764
+            self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [ABSParser.T__46]:
                 self.state = 762
                 self.match(ABSParser.T__46)
-
+                pass
             elif token in [ABSParser.T__2, ABSParser.T__12, ABSParser.T__13, ABSParser.T__14, ABSParser.T__17, ABSParser.T__20, ABSParser.IDENTIFIER, ABSParser.TYPE_IDENTIFIER, ABSParser.INTLITERAL, ABSParser.STRINGLITERAL, ABSParser.NEGATION_CREOL, ABSParser.NEGATION, ABSParser.MINUS]:
                 self.state = 763
                 localctx.e = self.pure_exp(0)
-
+                pass
             else:
                 raise NoViableAltException(self)
 
@@ -4858,6 +4894,7 @@ class ABSParser ( Parser ):
             self.state = 775
             self.qualified_type_identifier()
             self.state = 785
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==ABSParser.T__48:
                 self.state = 776
@@ -5054,6 +5091,7 @@ class ABSParser ( Parser ):
             self.state = 814
             self.qualified_type_identifier()
             self.state = 816
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==ABSParser.T__2:
                 self.state = 815
@@ -5061,6 +5099,7 @@ class ABSParser ( Parser ):
 
 
             self.state = 827
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==ABSParser.T__50:
                 self.state = 818
@@ -5095,6 +5134,7 @@ class ABSParser ( Parser ):
                 _alt = self._interp.adaptivePredict(self._input,82,self._ctx)
 
             self.state = 844
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==ABSParser.T__18:
                 self.state = 836
@@ -5192,6 +5232,7 @@ class ABSParser ( Parser ):
             self.state = 861
             self.match(ABSParser.IDENTIFIER)
             self.state = 864
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==ABSParser.T__21:
                 self.state = 862
@@ -5391,6 +5432,7 @@ class ABSParser ( Parser ):
                 _alt = self._interp.adaptivePredict(self._input,92,self._ctx)
 
             self.state = 908
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==ABSParser.T__10 or _la==ABSParser.T__18:
                 self.state = 907
@@ -5447,11 +5489,12 @@ class ABSParser ( Parser ):
             self.state = 910
             self.match(ABSParser.T__52)
             self.state = 920
+            self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [ABSParser.MULT]:
                 self.state = 911
                 self.match(ABSParser.MULT)
-
+                pass
             elif token in [ABSParser.IDENTIFIER, ABSParser.TYPE_IDENTIFIER]:
                 self.state = 912
                 localctx._any_identifier = self.any_identifier()
@@ -5469,11 +5512,12 @@ class ABSParser ( Parser ):
                     self._errHandler.sync(self)
                     _la = self._input.LA(1)
 
-
+                pass
             else:
                 raise NoViableAltException(self)
 
             self.state = 924
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==ABSParser.T__53:
                 self.state = 922
@@ -5534,6 +5578,7 @@ class ABSParser ( Parser ):
             self.state = 928
             self.match(ABSParser.T__54)
             self.state = 956
+            self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,99,self._ctx)
             if la_ == 1:
                 self.state = 929
@@ -5649,6 +5694,7 @@ class ABSParser ( Parser ):
         self.enterRule(localctx, 70, self.RULE_decl)
         try:
             self.state = 964
+            self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,100,self._ctx)
             if la_ == 1:
                 self.enterOuterAlt(localctx, 1)
@@ -5751,6 +5797,7 @@ class ABSParser ( Parser ):
             self.state = 967
             self.match(ABSParser.TYPE_IDENTIFIER)
             self.state = 979
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==ABSParser.T__2:
                 self.state = 968
@@ -5865,6 +5912,7 @@ class ABSParser ( Parser ):
         self.enterRule(localctx, 74, self.RULE_delta_param)
         try:
             self.state = 998
+            self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,105,self._ctx)
             if la_ == 1:
                 localctx = ABSParser.DeltaFieldParamContext(self, localctx)
@@ -5968,6 +6016,7 @@ class ABSParser ( Parser ):
         self.enterRule(localctx, 76, self.RULE_has_condition)
         try:
             self.state = 1006
+            self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [ABSParser.T__56]:
                 localctx = ABSParser.DeltaHasFieldConditionContext(self, localctx)
@@ -5976,7 +6025,7 @@ class ABSParser ( Parser ):
                 self.match(ABSParser.T__56)
                 self.state = 1001
                 localctx.f = self.field_decl()
-
+                pass
             elif token in [ABSParser.T__57]:
                 localctx = ABSParser.DeltaHasMethodConditionContext(self, localctx)
                 self.enterOuterAlt(localctx, 2)
@@ -5984,7 +6033,7 @@ class ABSParser ( Parser ):
                 self.match(ABSParser.T__57)
                 self.state = 1003
                 localctx.m = self.methodsig()
-
+                pass
             elif token in [ABSParser.T__58]:
                 localctx = ABSParser.DeltaHasInterfaceConditionContext(self, localctx)
                 self.enterOuterAlt(localctx, 3)
@@ -5992,7 +6041,7 @@ class ABSParser ( Parser ):
                 self.match(ABSParser.T__58)
                 self.state = 1005
                 localctx.i = self.interface_name()
-
+                pass
             else:
                 raise NoViableAltException(self)
 
@@ -6082,6 +6131,7 @@ class ABSParser ( Parser ):
         self.enterRule(localctx, 80, self.RULE_module_modifier)
         try:
             self.state = 1015
+            self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,107,self._ctx)
             if la_ == 1:
                 self.enterOuterAlt(localctx, 1)
@@ -6218,6 +6268,7 @@ class ABSParser ( Parser ):
         self.enterRule(localctx, 82, self.RULE_functional_modifier)
         try:
             self.state = 1027
+            self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,108,self._ctx)
             if la_ == 1:
                 localctx = ABSParser.DeltaAddFunctionModifierContext(self, localctx)
@@ -6421,6 +6472,7 @@ class ABSParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.state = 1089
+            self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,115,self._ctx)
             if la_ == 1:
                 localctx = ABSParser.DeltaAddClassModifierContext(self, localctx)
@@ -6454,6 +6506,7 @@ class ABSParser ( Parser ):
                 self.state = 1038
                 localctx.n = self.qualified_type_identifier()
                 self.state = 1048
+                self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 if _la==ABSParser.T__60:
                     self.state = 1039
@@ -6477,6 +6530,7 @@ class ABSParser ( Parser ):
 
 
                 self.state = 1059
+                self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 if _la==ABSParser.T__62:
                     self.state = 1050
@@ -6679,6 +6733,7 @@ class ABSParser ( Parser ):
         self.enterRule(localctx, 86, self.RULE_class_modifier_fragment)
         try:
             self.state = 1101
+            self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,116,self._ctx)
             if la_ == 1:
                 localctx = ABSParser.DeltaAddFieldFragmentContext(self, localctx)
@@ -6791,6 +6846,7 @@ class ABSParser ( Parser ):
         self.enterRule(localctx, 88, self.RULE_interface_modifier_fragment)
         try:
             self.state = 1107
+            self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [ABSParser.T__60]:
                 localctx = ABSParser.DeltaAddMethodsigFragmentContext(self, localctx)
@@ -6799,7 +6855,7 @@ class ABSParser ( Parser ):
                 self.match(ABSParser.T__60)
                 self.state = 1104
                 self.methodsig()
-
+                pass
             elif token in [ABSParser.T__62]:
                 localctx = ABSParser.DeltaRemoveMethodsigFragmentContext(self, localctx)
                 self.enterOuterAlt(localctx, 2)
@@ -6807,7 +6863,7 @@ class ABSParser ( Parser ):
                 self.match(ABSParser.T__62)
                 self.state = 1106
                 self.methodsig()
-
+                pass
             else:
                 raise NoViableAltException(self)
 
@@ -6876,6 +6932,7 @@ class ABSParser ( Parser ):
         self.enterRule(localctx, 90, self.RULE_namespace_modifier)
         try:
             self.state = 1113
+            self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,118,self._ctx)
             if la_ == 1:
                 localctx = ABSParser.DeltaAddModuleImportFragmentContext(self, localctx)
@@ -7333,6 +7390,7 @@ class ABSParser ( Parser ):
             self.state = 1180
             self.match(ABSParser.TYPE_IDENTIFIER)
             self.state = 1182
+            self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,125,self._ctx)
             if la_ == 1:
                 self.state = 1181
@@ -7340,6 +7398,7 @@ class ABSParser ( Parser ):
 
 
             self.state = 1195
+            self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,127,self._ctx)
             if la_ == 1:
                 self.state = 1184
@@ -7416,6 +7475,7 @@ class ABSParser ( Parser ):
             self.state = 1198
             self.deltaspec()
             self.state = 1200
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==ABSParser.T__69:
                 self.state = 1199
@@ -7423,6 +7483,7 @@ class ABSParser ( Parser ):
 
 
             self.state = 1203
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==ABSParser.T__53:
                 self.state = 1202
@@ -7430,6 +7491,7 @@ class ABSParser ( Parser ):
 
 
             self.state = 1206
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==ABSParser.T__70 or _la==ABSParser.T__71:
                 self.state = 1205
@@ -7484,6 +7546,7 @@ class ABSParser ( Parser ):
             self.state = 1210
             self.match(ABSParser.TYPE_IDENTIFIER)
             self.state = 1222
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==ABSParser.T__2:
                 self.state = 1211
@@ -7587,6 +7650,7 @@ class ABSParser ( Parser ):
         self.enterRule(localctx, 108, self.RULE_deltaspec_param)
         try:
             self.state = 1229
+            self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,133,self._ctx)
             if la_ == 1:
                 localctx = ABSParser.FIDAIDDeltaspecParamContext(self, localctx)
@@ -7752,6 +7816,7 @@ class ABSParser ( Parser ):
             if not(_la==ABSParser.T__70 or _la==ABSParser.T__71):
                 self._errHandler.recoverInline(self)
             else:
+                self._errHandler.reportMatch(self)
                 self.consume()
             self.state = 1244
             self.application_condition(0)
@@ -7893,6 +7958,7 @@ class ABSParser ( Parser ):
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 1254
+            self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [ABSParser.NEGATION_CREOL, ABSParser.NEGATION]:
                 localctx = ABSParser.NotApplicationConditionContext(self, localctx)
@@ -7904,10 +7970,11 @@ class ABSParser ( Parser ):
                 if not(_la==ABSParser.NEGATION_CREOL or _la==ABSParser.NEGATION):
                     self._errHandler.recoverInline(self)
                 else:
+                    self._errHandler.reportMatch(self)
                     self.consume()
                 self.state = 1248
                 self.application_condition(5)
-
+                pass
             elif token in [ABSParser.T__2]:
                 localctx = ABSParser.ParenApplicationConditionContext(self, localctx)
                 self._ctx = localctx
@@ -7918,14 +7985,14 @@ class ABSParser ( Parser ):
                 self.application_condition(0)
                 self.state = 1251
                 self.match(ABSParser.T__3)
-
+                pass
             elif token in [ABSParser.TYPE_IDENTIFIER]:
                 localctx = ABSParser.FeatureApplicationConditionContext(self, localctx)
                 self._ctx = localctx
                 _prevctx = localctx
                 self.state = 1253
                 self.feature()
-
+                pass
             else:
                 raise NoViableAltException(self)
 
@@ -7939,6 +8006,7 @@ class ABSParser ( Parser ):
                         self.triggerExitRuleEvent()
                     _prevctx = localctx
                     self.state = 1262
+                    self._errHandler.sync(self)
                     la_ = self._interp.adaptivePredict(self._input,136,self._ctx)
                     if la_ == 1:
                         localctx = ABSParser.AndApplicationConditionContext(self, ABSParser.Application_conditionContext(self, _parentctx, _parentState))
@@ -8025,19 +8093,20 @@ class ABSParser ( Parser ):
             self.state = 1268
             self.match(ABSParser.T__21)
             self.state = 1272
+            self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [ABSParser.INTLITERAL]:
                 self.state = 1269
                 localctx.i = self.match(ABSParser.INTLITERAL)
-
+                pass
             elif token in [ABSParser.TYPE_IDENTIFIER]:
                 self.state = 1270
                 localctx.b = self.match(ABSParser.TYPE_IDENTIFIER)
-
+                pass
             elif token in [ABSParser.STRINGLITERAL]:
                 self.state = 1271
                 localctx.s = self.match(ABSParser.STRINGLITERAL)
-
+                pass
             else:
                 raise NoViableAltException(self)
 
@@ -8098,6 +8167,7 @@ class ABSParser ( Parser ):
             self.state = 1276
             self.match(ABSParser.T__2)
             self.state = 1285
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==ABSParser.TYPE_IDENTIFIER:
                 self.state = 1277
@@ -8119,6 +8189,7 @@ class ABSParser ( Parser ):
             self.state = 1287
             self.match(ABSParser.T__3)
             self.state = 1297
+            self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [ABSParser.T__18]:
                 self.state = 1288
@@ -8135,11 +8206,11 @@ class ABSParser ( Parser ):
 
                 self.state = 1295
                 self.match(ABSParser.T__19)
-
+                pass
             elif token in [ABSParser.T__24]:
                 self.state = 1296
                 self.match(ABSParser.T__24)
-
+                pass
             else:
                 raise NoViableAltException(self)
 
@@ -8274,6 +8345,7 @@ class ABSParser ( Parser ):
             self.state = 1314
             self.match(ABSParser.T__18)
             self.state = 1316
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==ABSParser.T__73:
                 self.state = 1315
@@ -8285,6 +8357,7 @@ class ABSParser ( Parser ):
             _la = self._input.LA(1)
             while _la==ABSParser.T__2 or ((((_la - 79)) & ~0x3f) == 0 and ((1 << (_la - 79)) & ((1 << (ABSParser.T__78 - 79)) | (1 << (ABSParser.T__79 - 79)) | (1 << (ABSParser.T__80 - 79)) | (1 << (ABSParser.T__81 - 79)) | (1 << (ABSParser.IDENTIFIER - 79)) | (1 << (ABSParser.TYPE_IDENTIFIER - 79)) | (1 << (ABSParser.INTLITERAL - 79)) | (1 << (ABSParser.NEGATION - 79)) | (1 << (ABSParser.MINUS - 79)))) != 0):
                 self.state = 1320
+                self._errHandler.sync(self)
                 la_ = self._interp.adaptivePredict(self._input,145,self._ctx)
                 if la_ == 1:
                     self.state = 1318
@@ -8360,11 +8433,13 @@ class ABSParser ( Parser ):
             self.state = 1327
             self.match(ABSParser.TYPE_IDENTIFIER)
             self.state = 1340
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==ABSParser.T__18:
                 self.state = 1328
                 self.match(ABSParser.T__18)
                 self.state = 1330
+                self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 if _la==ABSParser.T__73:
                     self.state = 1329
@@ -8376,6 +8451,7 @@ class ABSParser ( Parser ):
                 _la = self._input.LA(1)
                 while _la==ABSParser.T__2 or ((((_la - 79)) & ~0x3f) == 0 and ((1 << (_la - 79)) & ((1 << (ABSParser.T__78 - 79)) | (1 << (ABSParser.T__79 - 79)) | (1 << (ABSParser.T__80 - 79)) | (1 << (ABSParser.T__81 - 79)) | (1 << (ABSParser.IDENTIFIER - 79)) | (1 << (ABSParser.TYPE_IDENTIFIER - 79)) | (1 << (ABSParser.INTLITERAL - 79)) | (1 << (ABSParser.NEGATION - 79)) | (1 << (ABSParser.MINUS - 79)))) != 0):
                     self.state = 1334
+                    self._errHandler.sync(self)
                     la_ = self._interp.adaptivePredict(self._input,148,self._ctx)
                     if la_ == 1:
                         self.state = 1332
@@ -8450,15 +8526,16 @@ class ABSParser ( Parser ):
             self.state = 1342
             self.match(ABSParser.T__73)
             self.state = 1353
+            self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [ABSParser.T__74]:
                 self.state = 1343
                 localctx.o = self.match(ABSParser.T__74)
-
+                pass
             elif token in [ABSParser.T__75]:
                 self.state = 1344
                 localctx.a = self.match(ABSParser.T__75)
-
+                pass
             elif token in [ABSParser.T__10]:
                 self.state = 1345
                 self.match(ABSParser.T__10)
@@ -8467,21 +8544,22 @@ class ABSParser ( Parser ):
                 self.state = 1347
                 self.match(ABSParser.T__76)
                 self.state = 1350
+                self._errHandler.sync(self)
                 token = self._input.LA(1)
                 if token in [ABSParser.INTLITERAL]:
                     self.state = 1348
                     localctx.u = self.match(ABSParser.INTLITERAL)
-
+                    pass
                 elif token in [ABSParser.MULT]:
                     self.state = 1349
                     localctx.s = self.match(ABSParser.MULT)
-
+                    pass
                 else:
                     raise NoViableAltException(self)
 
                 self.state = 1352
                 self.match(ABSParser.T__11)
-
+                pass
             else:
                 raise NoViableAltException(self)
 
@@ -8542,6 +8620,7 @@ class ABSParser ( Parser ):
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 1367
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==ABSParser.T__77:
                 self.state = 1366
@@ -8605,6 +8684,7 @@ class ABSParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.state = 1408
+            self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,156,self._ctx)
             if la_ == 1:
                 self.enterOuterAlt(localctx, 1)
@@ -8787,11 +8867,13 @@ class ABSParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.state = 1430
+            self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [ABSParser.T__2, ABSParser.T__78, ABSParser.IDENTIFIER, ABSParser.TYPE_IDENTIFIER, ABSParser.INTLITERAL, ABSParser.NEGATION, ABSParser.MINUS]:
                 localctx = ABSParser.FeatureDeclConstraintIfInContext(self, localctx)
                 self.enterOuterAlt(localctx, 1)
                 self.state = 1412
+                self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 if _la==ABSParser.T__78:
                     self.state = 1410
@@ -8804,7 +8886,7 @@ class ABSParser ( Parser ):
                 self.mexp(0)
                 self.state = 1415
                 self.match(ABSParser.T__24)
-
+                pass
             elif token in [ABSParser.T__79]:
                 localctx = ABSParser.FeatureDeclConstraintIfOutContext(self, localctx)
                 self.enterOuterAlt(localctx, 2)
@@ -8816,7 +8898,7 @@ class ABSParser ( Parser ):
                 self.mexp(0)
                 self.state = 1420
                 self.match(ABSParser.T__24)
-
+                pass
             elif token in [ABSParser.T__80]:
                 localctx = ABSParser.FeatureDeclConstraintExcludeContext(self, localctx)
                 self.enterOuterAlt(localctx, 3)
@@ -8828,7 +8910,7 @@ class ABSParser ( Parser ):
                 self.match(ABSParser.TYPE_IDENTIFIER)
                 self.state = 1425
                 self.match(ABSParser.T__24)
-
+                pass
             elif token in [ABSParser.T__81]:
                 localctx = ABSParser.FeatureDeclConstraintRequireContext(self, localctx)
                 self.enterOuterAlt(localctx, 4)
@@ -8840,7 +8922,7 @@ class ABSParser ( Parser ):
                 self.match(ABSParser.TYPE_IDENTIFIER)
                 self.state = 1429
                 self.match(ABSParser.T__24)
-
+                pass
             else:
                 raise NoViableAltException(self)
 
@@ -8862,6 +8944,15 @@ class ABSParser ( Parser ):
             self.a = None # MexpContext
             self.r = None # MexpContext
 
+        def TYPE_IDENTIFIER(self):
+            return self.getToken(ABSParser.TYPE_IDENTIFIER, 0)
+
+        def IDENTIFIER(self):
+            return self.getToken(ABSParser.IDENTIFIER, 0)
+
+        def INTLITERAL(self):
+            return self.getToken(ABSParser.INTLITERAL, 0)
+
         def mexp(self, i=None):
             if i is None:
                 return self.getTypedRuleContexts(ABSParser.MexpContext)
@@ -8874,15 +8965,6 @@ class ABSParser ( Parser ):
 
         def MINUS(self):
             return self.getToken(ABSParser.MINUS, 0)
-
-        def TYPE_IDENTIFIER(self):
-            return self.getToken(ABSParser.TYPE_IDENTIFIER, 0)
-
-        def IDENTIFIER(self):
-            return self.getToken(ABSParser.IDENTIFIER, 0)
-
-        def INTLITERAL(self):
-            return self.getToken(ABSParser.INTLITERAL, 0)
 
         def MULT(self):
             return self.getToken(ABSParser.MULT, 0)
@@ -8948,41 +9030,43 @@ class ABSParser ( Parser ):
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 1445
+            self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,159,self._ctx)
             if la_ == 1:
                 self.state = 1433
+                self.match(ABSParser.TYPE_IDENTIFIER)
+                self.state = 1434
+                self.match(ABSParser.T__0)
+                self.state = 1435
+                self.match(ABSParser.IDENTIFIER)
+                pass
+
+            elif la_ == 2:
+                self.state = 1436
+                self.match(ABSParser.TYPE_IDENTIFIER)
+                pass
+
+            elif la_ == 3:
+                self.state = 1437
+                self.match(ABSParser.INTLITERAL)
+                pass
+
+            elif la_ == 4:
+                self.state = 1438
+                self.match(ABSParser.IDENTIFIER)
+                pass
+
+            elif la_ == 5:
+                self.state = 1439
                 localctx.op = self._input.LT(1)
                 _la = self._input.LA(1)
                 if not(_la==ABSParser.NEGATION or _la==ABSParser.MINUS):
                     localctx.op = self._errHandler.recoverInline(self)
                 else:
+                    self._errHandler.reportMatch(self)
                     self.consume()
-                self.state = 1434
-                localctx.a = self.mexp(9)
-                pass
-
-            elif la_ == 2:
-                self.state = 1435
-                self.match(ABSParser.TYPE_IDENTIFIER)
-                self.state = 1436
-                self.match(ABSParser.T__0)
-                self.state = 1437
-                self.match(ABSParser.IDENTIFIER)
-                pass
-
-            elif la_ == 3:
-                self.state = 1438
-                self.match(ABSParser.TYPE_IDENTIFIER)
-                pass
-
-            elif la_ == 4:
-                self.state = 1439
-                self.match(ABSParser.INTLITERAL)
-                pass
-
-            elif la_ == 5:
                 self.state = 1440
-                self.match(ABSParser.IDENTIFIER)
+                localctx.a = self.mexp(9)
                 pass
 
             elif la_ == 6:
@@ -9005,6 +9089,7 @@ class ABSParser ( Parser ):
                         self.triggerExitRuleEvent()
                     _prevctx = localctx
                     self.state = 1468
+                    self._errHandler.sync(self)
                     la_ = self._interp.adaptivePredict(self._input,160,self._ctx)
                     if la_ == 1:
                         localctx = ABSParser.MexpContext(self, _parentctx, _parentState)
@@ -9020,6 +9105,7 @@ class ABSParser ( Parser ):
                         if not(((((_la - 95)) & ~0x3f) == 0 and ((1 << (_la - 95)) & ((1 << (ABSParser.MULT - 95)) | (1 << (ABSParser.DIV - 95)) | (1 << (ABSParser.MOD - 95)))) != 0)):
                             localctx.op = self._errHandler.recoverInline(self)
                         else:
+                            self._errHandler.reportMatch(self)
                             self.consume()
                         self.state = 1449
                         localctx.r = self.mexp(9)
@@ -9039,6 +9125,7 @@ class ABSParser ( Parser ):
                         if not(_la==ABSParser.MINUS or _la==ABSParser.PLUS):
                             localctx.op = self._errHandler.recoverInline(self)
                         else:
+                            self._errHandler.reportMatch(self)
                             self.consume()
                         self.state = 1452
                         localctx.r = self.mexp(8)
@@ -9058,6 +9145,7 @@ class ABSParser ( Parser ):
                         if not(((((_la - 99)) & ~0x3f) == 0 and ((1 << (_la - 99)) & ((1 << (ABSParser.LTEQ - 99)) | (1 << (ABSParser.GTEQ - 99)) | (1 << (ABSParser.LT - 99)) | (1 << (ABSParser.GT - 99)))) != 0)):
                             localctx.op = self._errHandler.recoverInline(self)
                         else:
+                            self._errHandler.reportMatch(self)
                             self.consume()
                         self.state = 1455
                         localctx.r = self.mexp(7)
@@ -9077,6 +9165,7 @@ class ABSParser ( Parser ):
                         if not(_la==ABSParser.EQEQ or _la==ABSParser.NOTEQ):
                             localctx.op = self._errHandler.recoverInline(self)
                         else:
+                            self._errHandler.reportMatch(self)
                             self.consume()
                         self.state = 1458
                         localctx.r = self.mexp(6)
@@ -9096,6 +9185,7 @@ class ABSParser ( Parser ):
                         if not(_la==ABSParser.IMPLIES or _la==ABSParser.EQUIV):
                             localctx.op = self._errHandler.recoverInline(self)
                         else:
+                            self._errHandler.reportMatch(self)
                             self.consume()
                         self.state = 1461
                         localctx.r = self.mexp(5)
@@ -9171,17 +9261,18 @@ class ABSParser ( Parser ):
         self.enterRule(localctx, 138, self.RULE_boundary_int)
         try:
             self.state = 1475
+            self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [ABSParser.MULT]:
                 self.enterOuterAlt(localctx, 1)
                 self.state = 1473
                 localctx.star = self.match(ABSParser.MULT)
-
+                pass
             elif token in [ABSParser.INTLITERAL, ABSParser.MINUS]:
                 self.enterOuterAlt(localctx, 2)
                 self.state = 1474
                 self.boundary_val()
-
+                pass
             else:
                 raise NoViableAltException(self)
 
@@ -9224,6 +9315,7 @@ class ABSParser ( Parser ):
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 1478
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==ABSParser.MINUS:
                 self.state = 1477
@@ -9413,6 +9505,7 @@ class ABSParser ( Parser ):
                 _la = self._input.LA(1)
 
             self.state = 1516
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==ABSParser.T__66:
                 self.state = 1515
@@ -9434,19 +9527,20 @@ class ABSParser ( Parser ):
             _la = self._input.LA(1)
             while _la==ABSParser.T__82 or _la==ABSParser.T__83:
                 self.state = 1528
+                self._errHandler.sync(self)
                 token = self._input.LA(1)
                 if token in [ABSParser.T__82]:
                     self.state = 1524
                     self.match(ABSParser.T__82)
                     self.state = 1525
                     self.feature_decl()
-
+                    pass
                 elif token in [ABSParser.T__83]:
                     self.state = 1526
                     self.match(ABSParser.T__83)
                     self.state = 1527
                     self.fextension()
-
+                    pass
                 else:
                     raise NoViableAltException(self)
 
