@@ -130,7 +130,7 @@ class MyABSVisitor(ABSVisitor):
                     self.dc_json[i]["cost"] = 0
                   self.dc_json[i]["resources"]['fictional_res'] = fictional_resource_counter
                   fictional_resource_counter += 1
-            elif name == "Deploy":
+            elif name == "SmartDeployCost":
                 self.deploy_annotations.append(parse_json_string_in_annotation(ctx.pure_exp().accept(self)))
         return ""
   

@@ -395,7 +395,7 @@ def main(argv):
   pid = str(os.getpgid(0))
   script_directory = os.path.dirname(os.path.realpath(__file__))
   
-  log.info("Extract SmartDeployment, SmartDeployCloudProvider, Deploy annotations and classes info")
+  log.info("Extract SmartDeployment, SmartDeployCloudProvider, SmartDeployCost  annotations and classes info")
   try:
     (smart_dep_json, dc_json, deploy_annotations, module_name,classes,interfaces) = abs_extractor.get_annotation_from_abs(input_files[0])
   except ValueError:
@@ -405,14 +405,14 @@ def main(argv):
 
   # compute classes that have a Deploy annotation
   classes_names = [i["class"] for i in deploy_annotations]
-  log.debug("Find Deploy annotation for the classes " + unicode(classes_names))
+  log.debug("Find SmartDeployCost annotation for classes " + unicode(classes_names))
   # remove classes that do not have a Deploy annotation
   for i in classes.keys():
     if i not in classes_names:
       del(classes[i])
 
   if set(classes_names) != set(classes.keys()):
-    log.critical("Deploy annotation and classes defined do not match: " +
+    log.critical("SmartDeployCost annotation and classes defined do not match: " +
                  unicode(classes_names) + " differs from " + unicode(classes.keys()))
     log.critical("Exiting")
     sys.exit(1)
@@ -493,10 +493,15 @@ def main(argv):
     cmd = []
     if KEEP:
       cmd += ['-k']
-      
+
+    # run zephyrus redirecting stdout in stderr
+    # to avoid in stdout error messages if the wrong version of antlr runtime is used
+    temp = sys.stdout
+    sys.stdout = sys.stderr
     cmd += ["-o",zephyrus_out_file,'-s',zephyrus_solver, zephyrus_in_file]
     zephyrus2.zephyrus2.main(cmd)
-    
+    sys.stdout = temp
+
     log.info("Exctracting last solution")
     binding_in_file = "/tmp/" + pid + i["id"] + "_binding_in.json"
     TMP_FILES.append(binding_in_file)
@@ -527,11 +532,15 @@ def main(argv):
     log.info("Running bind optimizer")
     binding_out_file = "/tmp/" + pid + i["id"] + "_binding_out.json"
     TMP_FILES.append(binding_out_file)
+
+    temp = sys.stdout
+    sys.stdout = sys.stderr
     if dot_file_prefix:
       zephyrus2.bindings_optimizer.main(
         ["-o", binding_out_file, "-d", dot_file_prefix + i["id"] + ".dot", zephyrus_in_file, binding_in_file])
     else:
       zephyrus2.bindings_optimizer.main(["-o",binding_out_file,zephyrus_in_file,binding_in_file])
+    sys.stdout = temp
 
     log.debug("Binding optimizer solution")
     bindings_opt_out = read_json(binding_out_file)
@@ -542,7 +551,7 @@ def main(argv):
       zep_last_conf, bindings_opt_out,
       deploy_annotations,classes,
       dc_into_name, obj_into_name,
-      module_name,
+      module_name,dc_json,
       out_stream)
 
   # log.info("Print code to add instances in CloudProvider")
