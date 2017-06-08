@@ -1,4 +1,4 @@
-# Generated from BindPreferenceGrammar.g4 by ANTLR 4.5.1
+# Generated from BindPreferenceGrammar.g4 by ANTLR 4.6
 # encoding: utf-8
 from __future__ import print_function
 from antlr4 import *
@@ -155,7 +155,7 @@ class BindPreferenceGrammarParser ( Parser ):
 
     def __init__(self, input):
         super(BindPreferenceGrammarParser, self).__init__(input)
-        self.checkVersion("4.5.1")
+        self.checkVersion("4.6")
         self._interp = ParserATNSimulator(self, self.atn, self.decisionsToDFA, self.sharedContextCache)
         self._predicates = None
 
@@ -258,19 +258,20 @@ class BindPreferenceGrammarParser ( Parser ):
         self.enterRule(localctx, 2, self.RULE_preference)
         try:
             self.state = 41
+            self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [BindPreferenceGrammarParser.T__0]:
                 localctx = BindPreferenceGrammarParser.ApreferenceLocalContext(self, localctx)
                 self.enterOuterAlt(localctx, 1)
                 self.state = 39
                 self.match(BindPreferenceGrammarParser.T__0)
-
+                pass
             elif token in [BindPreferenceGrammarParser.T__7, BindPreferenceGrammarParser.EXISTS, BindPreferenceGrammarParser.FORALL, BindPreferenceGrammarParser.SUM, BindPreferenceGrammarParser.ABS, BindPreferenceGrammarParser.VARIABLE, BindPreferenceGrammarParser.INT]:
                 localctx = BindPreferenceGrammarParser.ApreferenceExprContext(self, localctx)
                 self.enterOuterAlt(localctx, 2)
                 self.state = 40
                 self.expr()
-
+                pass
             else:
                 raise NoViableAltException(self)
 
@@ -377,6 +378,7 @@ class BindPreferenceGrammarParser ( Parser ):
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 53
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==BindPreferenceGrammarParser.NOT:
                 self.state = 52
@@ -425,17 +427,18 @@ class BindPreferenceGrammarParser ( Parser ):
         self.enterRule(localctx, 8, self.RULE_b_factor)
         try:
             self.state = 59
+            self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [BindPreferenceGrammarParser.TRUE, BindPreferenceGrammarParser.FALSE]:
                 self.enterOuterAlt(localctx, 1)
                 self.state = 57
                 self.boolFact()
-
+                pass
             elif token in [BindPreferenceGrammarParser.T__7, BindPreferenceGrammarParser.EXISTS, BindPreferenceGrammarParser.FORALL, BindPreferenceGrammarParser.SUM, BindPreferenceGrammarParser.ABS, BindPreferenceGrammarParser.VARIABLE, BindPreferenceGrammarParser.INT]:
                 self.enterOuterAlt(localctx, 2)
                 self.state = 58
                 self.relation()
-
+                pass
             else:
                 raise NoViableAltException(self)
 
@@ -485,6 +488,7 @@ class BindPreferenceGrammarParser ( Parser ):
             self.state = 61
             self.expr()
             self.state = 65
+            self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,4,self._ctx)
             if la_ == 1:
                 self.state = 62
@@ -717,6 +721,7 @@ class BindPreferenceGrammarParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.state = 113
+            self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [BindPreferenceGrammarParser.EXISTS, BindPreferenceGrammarParser.FORALL]:
                 localctx = BindPreferenceGrammarParser.AexprQuantifierContext(self, localctx)
@@ -726,10 +731,12 @@ class BindPreferenceGrammarParser ( Parser ):
                 if not(_la==BindPreferenceGrammarParser.EXISTS or _la==BindPreferenceGrammarParser.FORALL):
                     self._errHandler.recoverInline(self)
                 else:
+                    self._errHandler.reportMatch(self)
                     self.consume()
                 self.state = 77
                 self.variable()
                 self.state = 81
+                self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 if _la==BindPreferenceGrammarParser.T__1:
                     self.state = 78
@@ -748,13 +755,13 @@ class BindPreferenceGrammarParser ( Parser ):
                 self.match(BindPreferenceGrammarParser.T__4)
                 self.state = 86
                 self.b_expr()
-
+                pass
             elif token in [BindPreferenceGrammarParser.INT]:
                 localctx = BindPreferenceGrammarParser.AexprIntContext(self, localctx)
                 self.enterOuterAlt(localctx, 2)
                 self.state = 88
                 self.match(BindPreferenceGrammarParser.INT)
-
+                pass
             elif token in [BindPreferenceGrammarParser.VARIABLE]:
                 localctx = BindPreferenceGrammarParser.AexprBindContext(self, localctx)
                 self.enterOuterAlt(localctx, 3)
@@ -766,7 +773,7 @@ class BindPreferenceGrammarParser ( Parser ):
                 self.match(BindPreferenceGrammarParser.T__6)
                 self.state = 92
                 self.variable()
-
+                pass
             elif token in [BindPreferenceGrammarParser.SUM]:
                 localctx = BindPreferenceGrammarParser.AexprSumContext(self, localctx)
                 self.enterOuterAlt(localctx, 4)
@@ -775,6 +782,7 @@ class BindPreferenceGrammarParser ( Parser ):
                 self.state = 95
                 self.variable()
                 self.state = 99
+                self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 if _la==BindPreferenceGrammarParser.T__1:
                     self.state = 96
@@ -793,7 +801,7 @@ class BindPreferenceGrammarParser ( Parser ):
                 self.match(BindPreferenceGrammarParser.T__4)
                 self.state = 104
                 self.expr()
-
+                pass
             elif token in [BindPreferenceGrammarParser.ABS]:
                 localctx = BindPreferenceGrammarParser.AexprUnaryArithmeticContext(self, localctx)
                 self.enterOuterAlt(localctx, 5)
@@ -801,7 +809,7 @@ class BindPreferenceGrammarParser ( Parser ):
                 self.arith_unary_op()
                 self.state = 107
                 self.expr()
-
+                pass
             elif token in [BindPreferenceGrammarParser.T__7]:
                 localctx = BindPreferenceGrammarParser.AexprBracketsContext(self, localctx)
                 self.enterOuterAlt(localctx, 6)
@@ -811,7 +819,7 @@ class BindPreferenceGrammarParser ( Parser ):
                 self.b_expr()
                 self.state = 111
                 self.match(BindPreferenceGrammarParser.T__8)
-
+                pass
             else:
                 raise NoViableAltException(self)
 
@@ -917,6 +925,7 @@ class BindPreferenceGrammarParser ( Parser ):
         self.enterRule(localctx, 16, self.RULE_objId)
         try:
             self.state = 126
+            self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,9,self._ctx)
             if la_ == 1:
                 localctx = BindPreferenceGrammarParser.AobjIDIDContext(self, localctx)
@@ -998,17 +1007,18 @@ class BindPreferenceGrammarParser ( Parser ):
         self.enterRule(localctx, 18, self.RULE_typeV)
         try:
             self.state = 130
+            self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [BindPreferenceGrammarParser.DC]:
                 self.enterOuterAlt(localctx, 1)
                 self.state = 128
                 self.match(BindPreferenceGrammarParser.DC)
-
+                pass
             elif token in [BindPreferenceGrammarParser.RE]:
                 self.enterOuterAlt(localctx, 2)
                 self.state = 129
                 self.re()
-
+                pass
             else:
                 raise NoViableAltException(self)
 
@@ -1062,6 +1072,7 @@ class BindPreferenceGrammarParser ( Parser ):
             if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << BindPreferenceGrammarParser.AND) | (1 << BindPreferenceGrammarParser.OR) | (1 << BindPreferenceGrammarParser.IMPL) | (1 << BindPreferenceGrammarParser.IFF))) != 0)):
                 self._errHandler.recoverInline(self)
             else:
+                self._errHandler.reportMatch(self)
                 self.consume()
         except RecognitionException as re:
             localctx.exception = re
@@ -1110,6 +1121,7 @@ class BindPreferenceGrammarParser ( Parser ):
             if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << BindPreferenceGrammarParser.PLUS) | (1 << BindPreferenceGrammarParser.MINUS) | (1 << BindPreferenceGrammarParser.TIMES))) != 0)):
                 self._errHandler.recoverInline(self)
             else:
+                self._errHandler.reportMatch(self)
                 self.consume()
         except RecognitionException as re:
             localctx.exception = re
@@ -1204,6 +1216,7 @@ class BindPreferenceGrammarParser ( Parser ):
             if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << BindPreferenceGrammarParser.LEQ) | (1 << BindPreferenceGrammarParser.EQ) | (1 << BindPreferenceGrammarParser.GEQ) | (1 << BindPreferenceGrammarParser.LT) | (1 << BindPreferenceGrammarParser.GT) | (1 << BindPreferenceGrammarParser.NEQ))) != 0)):
                 self._errHandler.recoverInline(self)
             else:
+                self._errHandler.reportMatch(self)
                 self.consume()
         except RecognitionException as re:
             localctx.exception = re
@@ -1286,6 +1299,7 @@ class BindPreferenceGrammarParser ( Parser ):
             if not(_la==BindPreferenceGrammarParser.TRUE or _la==BindPreferenceGrammarParser.FALSE):
                 self._errHandler.recoverInline(self)
             else:
+                self._errHandler.reportMatch(self)
                 self.consume()
         except RecognitionException as re:
             localctx.exception = re

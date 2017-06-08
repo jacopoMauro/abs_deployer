@@ -1,4 +1,4 @@
-# Generated from DeclSpecLanguage.g4 by ANTLR 4.5.1
+# Generated from DeclSpecLanguage.g4 by ANTLR 4.6
 # encoding: utf-8
 from __future__ import print_function
 from antlr4 import *
@@ -140,7 +140,7 @@ class DeclSpecLanguageParser ( Parser ):
 
     def __init__(self, input):
         super(DeclSpecLanguageParser, self).__init__(input)
-        self.checkVersion("4.5.1")
+        self.checkVersion("4.6")
         self._interp = ParserATNSimulator(self, self.atn, self.decisionsToDFA, self.sharedContextCache)
         self._predicates = None
 
@@ -284,6 +284,7 @@ class DeclSpecLanguageParser ( Parser ):
         try:
             self.enterOuterAlt(localctx, 1)
             self.state = 47
+            self._errHandler.sync(self)
             _la = self._input.LA(1)
             if _la==DeclSpecLanguageParser.NOT:
                 self.state = 46
@@ -332,17 +333,18 @@ class DeclSpecLanguageParser ( Parser ):
         self.enterRule(localctx, 6, self.RULE_b_factor)
         try:
             self.state = 53
+            self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [DeclSpecLanguageParser.TRUE, DeclSpecLanguageParser.FALSE]:
                 self.enterOuterAlt(localctx, 1)
                 self.state = 51
                 self.boolFact()
-
+                pass
             elif token in [DeclSpecLanguageParser.T__3, DeclSpecLanguageParser.EXISTS, DeclSpecLanguageParser.FORALL, DeclSpecLanguageParser.SUM, DeclSpecLanguageParser.ABS, DeclSpecLanguageParser.VARIABLE, DeclSpecLanguageParser.ID, DeclSpecLanguageParser.INT]:
                 self.enterOuterAlt(localctx, 2)
                 self.state = 52
                 self.relation()
-
+                pass
             else:
                 raise NoViableAltException(self)
 
@@ -392,6 +394,7 @@ class DeclSpecLanguageParser ( Parser ):
             self.state = 55
             self.expr()
             self.state = 59
+            self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,3,self._ctx)
             if la_ == 1:
                 self.state = 56
@@ -635,6 +638,7 @@ class DeclSpecLanguageParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.state = 97
+            self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,5,self._ctx)
             if la_ == 1:
                 localctx = DeclSpecLanguageParser.AtermQuantifierContext(self, localctx)
@@ -644,6 +648,7 @@ class DeclSpecLanguageParser ( Parser ):
                 if not(_la==DeclSpecLanguageParser.EXISTS or _la==DeclSpecLanguageParser.FORALL):
                     self._errHandler.recoverInline(self)
                 else:
+                    self._errHandler.reportMatch(self)
                     self.consume()
                 self.state = 71
                 self.variable()
@@ -767,6 +772,7 @@ class DeclSpecLanguageParser ( Parser ):
             if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << DeclSpecLanguageParser.RE) | (1 << DeclSpecLanguageParser.OBJ) | (1 << DeclSpecLanguageParser.DC))) != 0)):
                 self._errHandler.recoverInline(self)
             else:
+                self._errHandler.reportMatch(self)
                 self.consume()
         except RecognitionException as re:
             localctx.exception = re
@@ -850,6 +856,7 @@ class DeclSpecLanguageParser ( Parser ):
         self.enterRule(localctx, 16, self.RULE_dcId)
         try:
             self.state = 107
+            self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,6,self._ctx)
             if la_ == 1:
                 localctx = DeclSpecLanguageParser.AdcIDIDContext(self, localctx)
@@ -980,6 +987,7 @@ class DeclSpecLanguageParser ( Parser ):
         self.enterRule(localctx, 18, self.RULE_objId)
         try:
             self.state = 119
+            self._errHandler.sync(self)
             la_ = self._interp.adaptivePredict(self._input,7,self._ctx)
             if la_ == 1:
                 localctx = DeclSpecLanguageParser.AobjIDIDContext(self, localctx)
@@ -1122,6 +1130,7 @@ class DeclSpecLanguageParser ( Parser ):
             if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << DeclSpecLanguageParser.AND) | (1 << DeclSpecLanguageParser.OR) | (1 << DeclSpecLanguageParser.IMPL) | (1 << DeclSpecLanguageParser.IFF))) != 0)):
                 self._errHandler.recoverInline(self)
             else:
+                self._errHandler.reportMatch(self)
                 self.consume()
         except RecognitionException as re:
             localctx.exception = re
@@ -1170,6 +1179,7 @@ class DeclSpecLanguageParser ( Parser ):
             if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << DeclSpecLanguageParser.PLUS) | (1 << DeclSpecLanguageParser.MINUS) | (1 << DeclSpecLanguageParser.TIMES))) != 0)):
                 self._errHandler.recoverInline(self)
             else:
+                self._errHandler.reportMatch(self)
                 self.consume()
         except RecognitionException as re:
             localctx.exception = re
@@ -1264,6 +1274,7 @@ class DeclSpecLanguageParser ( Parser ):
             if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << DeclSpecLanguageParser.LEQ) | (1 << DeclSpecLanguageParser.EQ) | (1 << DeclSpecLanguageParser.GEQ) | (1 << DeclSpecLanguageParser.LT) | (1 << DeclSpecLanguageParser.GT) | (1 << DeclSpecLanguageParser.NEQ))) != 0)):
                 self._errHandler.recoverInline(self)
             else:
+                self._errHandler.reportMatch(self)
                 self.consume()
         except RecognitionException as re:
             localctx.exception = re
@@ -1346,6 +1357,7 @@ class DeclSpecLanguageParser ( Parser ):
             if not(_la==DeclSpecLanguageParser.TRUE or _la==DeclSpecLanguageParser.FALSE):
                 self._errHandler.recoverInline(self)
             else:
+                self._errHandler.reportMatch(self)
                 self.consume()
         except RecognitionException as re:
             localctx.exception = re
