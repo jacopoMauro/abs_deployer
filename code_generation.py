@@ -166,10 +166,18 @@ def print_list_and_get_methods(interfaces,dc_json,out):
   out.write("\t\tif (ls_ls_DeploymentComponent != Nil) {\n")
   out.write("\t\t\tthis.undeploy_aux();\n")
   for i in interfaces:
-    out.write("\t\tls_" + i + " = head(ls_ls_" + i + ");\n")
+    #out.write("\t\tls_" + i + " = head(ls_ls_" + i + ");\n")
     out.write("\t\t\tls_ls_" + i + " = tail(ls_ls_" + i + ");\n")
-  out.write("\t\t\tls_DeploymentComponent = head(ls_ls_DeploymentComponent);\n")
   out.write("\t\t\tls_ls_DeploymentComponent = tail(ls_ls_DeploymentComponent);\n")
+  out.write("\t\t\tif (ls_ls_DeploymentComponent != Nil) {\n")
+  for i in interfaces:
+    out.write("\t\t\t\tls_" + i + " = head(ls_ls_" + i + ");\n")
+  out.write("\t\t\t\tls_DeploymentComponent = head(ls_ls_DeploymentComponent);\n")
+  out.write("\t\t\t} else {\n")
+  for i in interfaces:
+    out.write("\t\t\t\tls_" + i + " = Nil;\n")
+  out.write("\t\t\t\tls_DeploymentComponent = Nil;\n")
+  out.write("\t\t\t}\n")
   out.write("\t\t}\n")
   out.write("\t}\n\n")
 
@@ -331,9 +339,6 @@ def print_deploy_undeploy_method(smart_dep_annotation, zep_last_conf,all_binding
   for (_,_,s) in to_remove_later_bindings:
         undep += s
 
-  # to delete an object we delete its references
-  for i in interfaces:
-    undep += "\t\tls_" + i + " = Nil;\n"
   # we trigger the killInstance from the cloud provider
   undep += "\t\twhile ( !isEmpty(ls_DeploymentComponent) ) {\n"
   undep +="\t\t\tcloudProvider.shutdownInstance(head(ls_DeploymentComponent));\n"
