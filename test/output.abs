@@ -169,7 +169,6 @@ class MainSmartDeployer(CloudProvider cloudProvider) implements MainSmartDeploye
 				ls_DeploymentService = head(ls_ls_DeploymentService);
 				ls_PlatformService = head(ls_ls_PlatformService);
 				ls_MonitorPlatformService = head(ls_ls_MonitorPlatformService);
-				ls_DeploymentComponent = head(ls_ls_DeploymentComponent);
 			} else {
 				ls_EndPoint = Nil;
 				ls_IQueryService = Nil;
@@ -181,7 +180,6 @@ class MainSmartDeployer(CloudProvider cloudProvider) implements MainSmartDeploye
 				ls_DeploymentService = Nil;
 				ls_PlatformService = Nil;
 				ls_MonitorPlatformService = Nil;
-				ls_DeploymentComponent = Nil;
 			}
 		}
 	}
@@ -489,7 +487,6 @@ class AddQueryDeployer(CloudProvider cloudProvider, MonitorPlatformService platf
 				ls_DeploymentService = head(ls_ls_DeploymentService);
 				ls_PlatformService = head(ls_ls_PlatformService);
 				ls_MonitorPlatformService = head(ls_ls_MonitorPlatformService);
-				ls_DeploymentComponent = head(ls_ls_DeploymentComponent);
 			} else {
 				ls_EndPoint = Nil;
 				ls_IQueryService = Nil;
@@ -501,7 +498,6 @@ class AddQueryDeployer(CloudProvider cloudProvider, MonitorPlatformService platf
 				ls_DeploymentService = Nil;
 				ls_PlatformService = Nil;
 				ls_MonitorPlatformService = Nil;
-				ls_DeploymentComponent = Nil;
 			}
 		}
 	}
