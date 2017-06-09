@@ -8,14 +8,15 @@ https://github.com/abstools/abstools
 Limitations
 -----------
 
-The input file needs to be a abs program that can be parsed following the ABS grammar.
+The input file needs to be a abs program that can be parsed, following the ABS grammar.
 
-All the annotaitons and the classes needs to be defined in one abs file.
-SmartDeployCost classes and all the interfaces that they extend need to be defined in the same module
-(module.name to define their name is allowed)
+All the annotations and the classes need to be defined in one abs file.
+SmartDeployCost classes (i.e., the classes that are referred using a SmartDeployCost annotation)
+and all their interfaces (including the extended ones) need to be defined in the file.
+These classes and interfaces need to have a simple name, i.e., the notation module_name.interface_name or 
+module_name.class_name is not allowed.
 
 SmartDeployCost classes can not have a add/remove method to add a reference to an object of interface I if they have
-arguments requiring an object or a list of objects of interface I.
-
+paramteters requiring an object or a list of objects of interface I.
 
 
