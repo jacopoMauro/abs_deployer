@@ -16,14 +16,14 @@ REPETITIONS = 1
 TEST_FILE = 'test_addquery.abs'
 
 # doing a grid search
-EUROPE = range(0,12)
-USA = range(0,12)
+EUROPE = range(0,11)
+USA = range(0,21)
 
-TIMEOUT = 600
+TIMEOUT = 900
 
 # OTHER_OPT
-OTHER_OPT = [ ]
-OTHER_ARGS = [ 'Monitor.abs', 'Degradation.abs']
+OTHER_OPT = []
+OTHER_ARGS = []
 
 CMDS = [
           # smt

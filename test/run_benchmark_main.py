@@ -31,16 +31,13 @@ DCs = [ "c4_2xlarge_us2",
           "m4_large_eu",
           "m4_xlarge_eu" ]
 
-grid_ranges = []
-for i in DCs:
-    grid_ranges.append(range(2,3))
-grid_ranges[0] = range(3,5)
+grid_ranges = range(2,20)
 
-TIMEOUT = 3600
+TIMEOUT = 900
 
 # OTHER_OPT
-OTHER_OPT = [ ]
-OTHER_ARGS = [ 'Monitor.abs', 'Degradation.abs']
+OTHER_OPT = []
+OTHER_ARGS = []
 
 CMDS = [
           # smt
@@ -69,7 +66,7 @@ def changefile(param):
             for i in DCs:
                 line = re.sub(
                     '\\\\"' + i + '\\\\":[0-9]+',
-                    '\\\\"' + i + '\\\\":' + unicode(param[counter]),
+                    '\\\\"' + i + '\\\\":' + unicode(param),
                     line)
                 counter += 1
             f.write(line)
@@ -133,7 +130,8 @@ def main():
   # start performing the grid search
 
   combinations = []
-  for i in itertools.product(*grid_ranges):
+  #for i in itertools.product(*grid_ranges):
+  for i in grid_ranges:
       combinations.append(i)
   log.debug("Combinations = " + unicode(combinations))
   for i in combinations:
