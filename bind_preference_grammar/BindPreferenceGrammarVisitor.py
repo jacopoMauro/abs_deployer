@@ -1,4 +1,4 @@
-# Generated from BindPreferenceGrammar.g4 by ANTLR 4.6
+# Generated from BindPreferenceGrammar.g4 by ANTLR 4.7
 from antlr4 import *
 
 # This class defines a complete generic visitor for a parse tree produced by BindPreferenceGrammarParser.

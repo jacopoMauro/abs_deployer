@@ -1,13 +1,14 @@
-# Generated from BindPreferenceGrammar.g4 by ANTLR 4.6
+# Generated from BindPreferenceGrammar.g4 by ANTLR 4.7
 # encoding: utf-8
 from __future__ import print_function
 from antlr4 import *
 from io import StringIO
+import sys
 
 
 def serializedATN():
     with StringIO() as buf:
-        buf.write(u"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\2")
+        buf.write(u"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\2")
         buf.write(u")\u00ef\b\1\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4")
         buf.write(u"\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t\13\4\f\t\f\4\r")
         buf.write(u"\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22")
@@ -33,20 +34,20 @@ def serializedATN():
         buf.write(u"#\23%\24\'\25)\26+\27-\30/\31\61\32\63\33\65\34\67\35")
         buf.write(u"9\36;\37= ?!A\"C#E$G%I&K\'M(O)\3\2\7\n\2&&**,-/\60\62")
         buf.write(u";AACac\177\5\2C\\aac|\6\2\62;C\\aac|\3\2\62;\5\2\13\f")
-        buf.write(u"\17\17\"\"\u00f4\2\3\3\2\2\2\2\5\3\2\2\2\2\7\3\2\2\2")
-        buf.write(u"\2\t\3\2\2\2\2\13\3\2\2\2\2\r\3\2\2\2\2\17\3\2\2\2\2")
-        buf.write(u"\21\3\2\2\2\2\23\3\2\2\2\2\25\3\2\2\2\2\27\3\2\2\2\2")
-        buf.write(u"\31\3\2\2\2\2\33\3\2\2\2\2\35\3\2\2\2\2\37\3\2\2\2\2")
-        buf.write(u"!\3\2\2\2\2#\3\2\2\2\2%\3\2\2\2\2\'\3\2\2\2\2)\3\2\2")
-        buf.write(u"\2\2+\3\2\2\2\2-\3\2\2\2\2/\3\2\2\2\2\61\3\2\2\2\2\63")
-        buf.write(u"\3\2\2\2\2\65\3\2\2\2\2\67\3\2\2\2\29\3\2\2\2\2;\3\2")
-        buf.write(u"\2\2\2=\3\2\2\2\2?\3\2\2\2\2A\3\2\2\2\2C\3\2\2\2\2E\3")
-        buf.write(u"\2\2\2\2G\3\2\2\2\2I\3\2\2\2\2K\3\2\2\2\2M\3\2\2\2\2")
-        buf.write(u"O\3\2\2\2\3Q\3\2\2\2\5W\3\2\2\2\7Z\3\2\2\2\t_\3\2\2\2")
-        buf.write(u"\13b\3\2\2\2\rd\3\2\2\2\17i\3\2\2\2\21l\3\2\2\2\23n\3")
-        buf.write(u"\2\2\2\25p\3\2\2\2\27r\3\2\2\2\31t\3\2\2\2\33~\3\2\2")
-        buf.write(u"\2\35\u0082\3\2\2\2\37\u0085\3\2\2\2!\u0089\3\2\2\2#")
-        buf.write(u"\u008e\3\2\2\2%\u0094\3\2\2\2\'\u0099\3\2\2\2)\u009d")
+        buf.write(u"\17\17\"\"\2\u00f4\2\3\3\2\2\2\2\5\3\2\2\2\2\7\3\2\2")
+        buf.write(u"\2\2\t\3\2\2\2\2\13\3\2\2\2\2\r\3\2\2\2\2\17\3\2\2\2")
+        buf.write(u"\2\21\3\2\2\2\2\23\3\2\2\2\2\25\3\2\2\2\2\27\3\2\2\2")
+        buf.write(u"\2\31\3\2\2\2\2\33\3\2\2\2\2\35\3\2\2\2\2\37\3\2\2\2")
+        buf.write(u"\2!\3\2\2\2\2#\3\2\2\2\2%\3\2\2\2\2\'\3\2\2\2\2)\3\2")
+        buf.write(u"\2\2\2+\3\2\2\2\2-\3\2\2\2\2/\3\2\2\2\2\61\3\2\2\2\2")
+        buf.write(u"\63\3\2\2\2\2\65\3\2\2\2\2\67\3\2\2\2\29\3\2\2\2\2;\3")
+        buf.write(u"\2\2\2\2=\3\2\2\2\2?\3\2\2\2\2A\3\2\2\2\2C\3\2\2\2\2")
+        buf.write(u"E\3\2\2\2\2G\3\2\2\2\2I\3\2\2\2\2K\3\2\2\2\2M\3\2\2\2")
+        buf.write(u"\2O\3\2\2\2\3Q\3\2\2\2\5W\3\2\2\2\7Z\3\2\2\2\t_\3\2\2")
+        buf.write(u"\2\13b\3\2\2\2\rd\3\2\2\2\17i\3\2\2\2\21l\3\2\2\2\23")
+        buf.write(u"n\3\2\2\2\25p\3\2\2\2\27r\3\2\2\2\31t\3\2\2\2\33~\3\2")
+        buf.write(u"\2\2\35\u0082\3\2\2\2\37\u0085\3\2\2\2!\u0089\3\2\2\2")
+        buf.write(u"#\u008e\3\2\2\2%\u0094\3\2\2\2\'\u0099\3\2\2\2)\u009d")
         buf.write(u"\3\2\2\2+\u00a4\3\2\2\2-\u00ab\3\2\2\2/\u00af\3\2\2\2")
         buf.write(u"\61\u00b4\3\2\2\2\63\u00b7\3\2\2\2\65\u00b9\3\2\2\2\67")
         buf.write(u"\u00bc\3\2\2\29\u00be\3\2\2\2;\u00c0\3\2\2\2=\u00c3\3")
@@ -111,7 +112,6 @@ class BindPreferenceGrammarLexer(Lexer):
 
     decisionsToDFA = [ DFA(ds, i) for i, ds in enumerate(atn.decisionToState) ]
 
-
     T__0 = 1
     T__1 = 2
     T__2 = 3
@@ -152,6 +152,8 @@ class BindPreferenceGrammarLexer(Lexer):
     INT = 38
     WS = 39
 
+    channelNames = [ u"DEFAULT_TOKEN_CHANNEL", u"HIDDEN" ]
+
     modeNames = [ u"DEFAULT_MODE" ]
 
     literalNames = [ u"<INVALID>",
@@ -177,9 +179,9 @@ class BindPreferenceGrammarLexer(Lexer):
 
     grammarFileName = u"BindPreferenceGrammar.g4"
 
-    def __init__(self, input=None):
-        super(BindPreferenceGrammarLexer, self).__init__(input)
-        self.checkVersion("4.6")
+    def __init__(self, input=None, output=sys.stdout):
+        super(BindPreferenceGrammarLexer, self).__init__(input, output=output)
+        self.checkVersion("4.7")
         self._interp = LexerATNSimulator(self, self.atn, self.decisionsToDFA, PredictionContextCache())
         self._actions = None
         self._predicates = None

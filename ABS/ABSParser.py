@@ -1,12 +1,13 @@
-# Generated from ABS.g4 by ANTLR 4.6
+# Generated from ABS.g4 by ANTLR 4.7
 # encoding: utf-8
 from __future__ import print_function
 from antlr4 import *
 from io import StringIO
+import sys
 
 def serializedATN():
     with StringIO() as buf:
-        buf.write(u"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3")
+        buf.write(u"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3")
         buf.write(u"n\u0602\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t")
         buf.write(u"\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t\13\4\f\t\f\4\r\t\r")
         buf.write(u"\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22\4")
@@ -160,7 +161,7 @@ def serializedATN():
         buf.write(u"\26\30\32\34\36 \"$&(*,.\60\62\64\668:<>@BDFHJLNPRTV")
         buf.write(u"XZ\\^`bdfhjlnprtvxz|~\u0080\u0082\u0084\u0086\u0088\u008a")
         buf.write(u"\u008c\u008e\u0090\u0092\u0094\2\13\3\2^`\3\2ac\4\2`")
-        buf.write(u"`dd\3\2eh\3\2kl\3\2IJ\3\2^_\3\2_`\3\2mn\u06ab\2\u009a")
+        buf.write(u"`dd\3\2eh\3\2kl\3\2IJ\3\2^_\3\2_`\3\2mn\2\u06ab\2\u009a")
         buf.write(u"\3\2\2\2\4\u00a3\3\2\2\2\6\u00aa\3\2\2\2\b\u00af\3\2")
         buf.write(u"\2\2\n\u00c0\3\2\2\2\f\u00ce\3\2\2\2\16\u00de\3\2\2\2")
         buf.write(u"\20\u00e4\3\2\2\2\22\u00e6\3\2\2\2\24\u00ea\3\2\2\2\26")
@@ -1081,9 +1082,9 @@ class ABSParser ( Parser ):
     IMPLIES=107
     EQUIV=108
 
-    def __init__(self, input):
-        super(ABSParser, self).__init__(input)
-        self.checkVersion("4.6")
+    def __init__(self, input, output=sys.stdout):
+        super(ABSParser, self).__init__(input, output=output)
+        self.checkVersion("4.7")
         self._interp = ParserATNSimulator(self, self.atn, self.decisionsToDFA, self.sharedContextCache)
         self._predicates = None
 

@@ -1,12 +1,13 @@
-# Generated from BindPreferenceGrammar.g4 by ANTLR 4.6
+# Generated from BindPreferenceGrammar.g4 by ANTLR 4.7
 # encoding: utf-8
 from __future__ import print_function
 from antlr4 import *
 from io import StringIO
+import sys
 
 def serializedATN():
     with StringIO() as buf:
-        buf.write(u"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3")
+        buf.write(u"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3")
         buf.write(u")\u0097\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t")
         buf.write(u"\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t\13\4\f\t\f\4\r\t\r")
         buf.write(u"\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22\4")
@@ -21,9 +22,9 @@ def serializedATN():
         buf.write(u"\n\13\3\f\3\f\3\r\3\r\3\16\3\16\3\17\3\17\3\20\3\20\3")
         buf.write(u"\21\3\21\3\22\3\22\3\23\3\23\3\23\2\2\24\2\4\6\b\n\f")
         buf.write(u"\16\20\22\24\26\30\32\34\36 \"$\2\7\3\2\26\27\4\2\17")
-        buf.write(u"\20\24\25\3\2 \"\3\2\32\37\3\2\22\23\u0095\2&\3\2\2\2")
-        buf.write(u"\4+\3\2\2\2\6-\3\2\2\2\b\67\3\2\2\2\n=\3\2\2\2\f?\3\2")
-        buf.write(u"\2\2\16E\3\2\2\2\20s\3\2\2\2\22\u0080\3\2\2\2\24\u0084")
+        buf.write(u"\20\24\25\3\2 \"\3\2\32\37\3\2\22\23\2\u0095\2&\3\2\2")
+        buf.write(u"\2\4+\3\2\2\2\6-\3\2\2\2\b\67\3\2\2\2\n=\3\2\2\2\f?\3")
+        buf.write(u"\2\2\2\16E\3\2\2\2\20s\3\2\2\2\22\u0080\3\2\2\2\24\u0084")
         buf.write(u"\3\2\2\2\26\u0086\3\2\2\2\30\u0088\3\2\2\2\32\u008a\3")
         buf.write(u"\2\2\2\34\u008c\3\2\2\2\36\u008e\3\2\2\2 \u0090\3\2\2")
         buf.write(u"\2\"\u0092\3\2\2\2$\u0094\3\2\2\2&\'\5\4\3\2\'(\7\2\2")
@@ -153,9 +154,9 @@ class BindPreferenceGrammarParser ( Parser ):
     INT=38
     WS=39
 
-    def __init__(self, input):
-        super(BindPreferenceGrammarParser, self).__init__(input)
-        self.checkVersion("4.6")
+    def __init__(self, input, output=sys.stdout):
+        super(BindPreferenceGrammarParser, self).__init__(input, output=output)
+        self.checkVersion("4.7")
         self._interp = ParserATNSimulator(self, self.atn, self.decisionsToDFA, self.sharedContextCache)
         self._predicates = None
 
