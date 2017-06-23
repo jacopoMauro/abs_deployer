@@ -10,7 +10,7 @@ import fileinput
 import re
 import os
 
-log.basicConfig(format="%(levelname)s: %(message)s", level=log.DEBUG)
+#log.basicConfig(format="%(levelname)s: %(message)s", level=log.DEBUG)
 
 REPETITIONS = 5
 TEST_FILE = 'test_addquery.abs'
