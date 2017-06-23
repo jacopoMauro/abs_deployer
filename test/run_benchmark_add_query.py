@@ -10,14 +10,14 @@ import fileinput
 import re
 import os
 
-# log.basicConfig(format="%(levelname)s: %(message)s", level=log.DEBUG)
+log.basicConfig(format="%(levelname)s: %(message)s", level=log.DEBUG)
 
-REPETITIONS = 1
+REPETITIONS = 5
 TEST_FILE = 'test_addquery.abs'
 
 # doing a grid search
-EUROPE = range(0,11)
-USA = range(0,21)
+EUROPE = range(8,11)
+USA = range(10,21)
 
 TIMEOUT = 900
 
@@ -98,20 +98,20 @@ def run(cmd):
 
 def myprint(res):
   if res[2] > 0:
-    return("& error" + str(res[2]) + " & error" + str(res[2]))
+    return(",error" + str(res[2]) + ",error" + str(res[2]))
   else:
-    return(' & ' + str(res[0]) + ' & ' + str(res[1]))
+    return(',' + str(res[0]) + ',' + str(res[1]))
  
 def main():
   
   # print first line of the table
-  print 'eu & usa &',
+  print 'eu,usa,',
   for i in CMDS:
     for j in range(len(i)):
       if i[j] == '-s':
         s = i[j+1]
         break
-    print '& ' + s + ' & err',
+    print ',' + s + ',err',
   print '\\\\'
 
   # start performing the grid search
@@ -119,7 +119,7 @@ def main():
     for us in USA:
           
         # print the parameters of wordpress tested
-        print str(eu) + ' & ' + str(us) + ' & ',
+        print str(eu) + ',' + str(us) + ',',
 
         # create the input file for zephyrus
         f = changefile(eu,us)
@@ -131,7 +131,7 @@ def main():
             res = run(cmd)
             print myprint(res),
             sys.stdout.flush()
-        print '\\\\'
+        print ''
 
         # remove file
         if os.path.exists(f):

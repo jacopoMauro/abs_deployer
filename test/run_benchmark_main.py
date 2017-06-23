@@ -13,7 +13,7 @@ import itertools
 
 # log.basicConfig(format="%(levelname)s: %(message)s", level=log.DEBUG)
 
-REPETITIONS = 1
+REPETITIONS = 5
 TEST_FILE = 'test_mainquery.abs'
 
 # doing a grid search
@@ -111,20 +111,20 @@ def run(cmd):
 
 def myprint(res):
   if res[2] > 0:
-    return("& error" + str(res[2]) + " & error" + str(res[2]))
+    return(",error" + str(res[2]) + ",error" + str(res[2]))
   else:
-    return(' & ' + str(res[0]) + ' & ' + str(res[1]))
+    return(',' + str(res[0]) + ',' + str(res[1]))
  
 def main():
   
   # print first line of the table
-  print 'param &',
+  print 'param,',
   for i in CMDS:
     for j in range(len(i)):
       if i[j] == '-s':
         s = i[j+1]
         break
-    print '& ' + s + ' & err',
+    print ',' + s + ',err',
   print '\\\\'
 
   # start performing the grid search
@@ -137,7 +137,7 @@ def main():
   for i in combinations:
 
     # print the parameters of wordpress tested
-    print unicode(i) + ' & ',
+    print unicode(i) + ',',
 
     # create the input file for zephyrus
     f = changefile(i)
@@ -149,7 +149,7 @@ def main():
         res = run(cmd)
         print myprint(res),
         sys.stdout.flush()
-    print '\\\\'
+    print ''
 
     # remove file
     if os.path.exists(f):

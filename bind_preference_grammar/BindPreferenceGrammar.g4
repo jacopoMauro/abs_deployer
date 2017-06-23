@@ -5,7 +5,7 @@
 
 grammar BindPreferenceGrammar;
 
-// To generate files run antlr4 -Dlanguage=Python2 -visitor -no-listener
+// To generate files run antlr4 -Dlanguage=Python2 -visitor -no-listener SpecificationGrammar.g4
 
 
 statement : preference EOF;
