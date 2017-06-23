@@ -31,7 +31,7 @@ DCs = [ "c4_2xlarge_us2",
           "m4_large_eu",
           "m4_xlarge_eu" ]
 
-grid_ranges = range(2,20)
+grid_ranges = range(2,21)
 
 TIMEOUT = 900
 
@@ -125,7 +125,7 @@ def main():
         s = i[j+1]
         break
     print ',' + s + ',err',
-  print '\\\\'
+  print ''
 
   # start performing the grid search
 

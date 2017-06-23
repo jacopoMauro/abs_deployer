@@ -16,8 +16,8 @@ REPETITIONS = 5
 TEST_FILE = 'test_addquery.abs'
 
 # doing a grid search
-EUROPE = range(8,11)
-USA = range(10,21)
+EUROPE = range(0,11)
+USA = range(0,21)
 
 TIMEOUT = 900
 
@@ -112,7 +112,7 @@ def main():
         s = i[j+1]
         break
     print ',' + s + ',err',
-  print '\\\\'
+  print ''
 
   # start performing the grid search
   for eu in EUROPE:
