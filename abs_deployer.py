@@ -346,7 +346,7 @@ def main(argv):
   generates the ABS code
   """   
   output_file = ''
-  zephyrus_solver = 'lex-gecode'
+  zephyrus_solver = 'lex-chuffed'
   dot_file_prefix = ''
   
   try:
