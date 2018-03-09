@@ -387,6 +387,7 @@ def print_cloud_provider_modification(dc_json, out):
       out.write('\t\tcloudProvider.addInstanceDescription(Pair("' + unicode(i) + '",\n')
       out.write('\t\t\tmap[')
       out.write('Pair(CostPerInterval,' + unicode(dc_json[i]["cost"]) + ")\n")
+      out.write('\t\t\t,Pair(PaymentInterval,' + unicode(dc_json[i]["payment_interval"]) + ")\n")
       for j in dc_json[i]["resources"].keys():
         if j != "fictional_res":
           out.write('\t\t\t,Pair(' + j + ',' + unicode(dc_json[i]["resources"][j]) + ")\n")

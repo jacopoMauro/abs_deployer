@@ -46,61 +46,73 @@ class MainSmartDeployer(CloudProvider cloudProvider) implements MainSmartDeploye
 	{
 		cloudProvider.addInstanceDescription(Pair("c4_2xlarge_eu",
 			map[Pair(CostPerInterval,419)
+			,Pair(PaymentInterval,1)
 			,Pair(Cores,8)
 			,Pair(Memory,1500)
 			]));
 		cloudProvider.addInstanceDescription(Pair("m4_large_eu",
 			map[Pair(CostPerInterval,120)
+			,Pair(PaymentInterval,1)
 			,Pair(Cores,2)
 			,Pair(Memory,800)
 			]));
 		cloudProvider.addInstanceDescription(Pair("m4_xlarge_eu",
 			map[Pair(CostPerInterval,239)
+			,Pair(PaymentInterval,1)
 			,Pair(Cores,4)
 			,Pair(Memory,1600)
 			]));
 		cloudProvider.addInstanceDescription(Pair("m4_large_us2",
 			map[Pair(CostPerInterval,120)
+			,Pair(PaymentInterval,1)
 			,Pair(Cores,2)
 			,Pair(Memory,800)
 			]));
 		cloudProvider.addInstanceDescription(Pair("c4_2xlarge_us1",
 			map[Pair(CostPerInterval,419)
+			,Pair(PaymentInterval,1)
 			,Pair(Cores,8)
 			,Pair(Memory,1500)
 			]));
 		cloudProvider.addInstanceDescription(Pair("c4_2xlarge_us2",
 			map[Pair(CostPerInterval,419)
+			,Pair(PaymentInterval,1)
 			,Pair(Cores,8)
 			,Pair(Memory,1500)
 			]));
 		cloudProvider.addInstanceDescription(Pair("m4_large_us1",
 			map[Pair(CostPerInterval,120)
+			,Pair(PaymentInterval,1)
 			,Pair(Cores,2)
 			,Pair(Memory,800)
 			]));
 		cloudProvider.addInstanceDescription(Pair("c4_xlarge_eu",
 			map[Pair(CostPerInterval,209)
+			,Pair(PaymentInterval,1)
 			,Pair(Cores,4)
 			,Pair(Memory,750)
 			]));
 		cloudProvider.addInstanceDescription(Pair("c4_xlarge_us1",
 			map[Pair(CostPerInterval,209)
+			,Pair(PaymentInterval,1)
 			,Pair(Cores,4)
 			,Pair(Memory,750)
 			]));
 		cloudProvider.addInstanceDescription(Pair("c4_xlarge_us2",
 			map[Pair(CostPerInterval,209)
+			,Pair(PaymentInterval,1)
 			,Pair(Cores,4)
 			,Pair(Memory,750)
 			]));
 		cloudProvider.addInstanceDescription(Pair("m4_xlarge_us2",
 			map[Pair(CostPerInterval,239)
+			,Pair(PaymentInterval,1)
 			,Pair(Cores,4)
 			,Pair(Memory,1600)
 			]));
 		cloudProvider.addInstanceDescription(Pair("m4_xlarge_us1",
 			map[Pair(CostPerInterval,239)
+			,Pair(PaymentInterval,1)
 			,Pair(Cores,4)
 			,Pair(Memory,1600)
 			]));
@@ -364,61 +376,73 @@ class AddQueryDeployer(CloudProvider cloudProvider, MonitorPlatformService platf
 	{
 		cloudProvider.addInstanceDescription(Pair("c4_2xlarge_eu",
 			map[Pair(CostPerInterval,419)
+			,Pair(PaymentInterval,1)
 			,Pair(Cores,8)
 			,Pair(Memory,1500)
 			]));
 		cloudProvider.addInstanceDescription(Pair("m4_large_eu",
 			map[Pair(CostPerInterval,120)
+			,Pair(PaymentInterval,1)
 			,Pair(Cores,2)
 			,Pair(Memory,800)
 			]));
 		cloudProvider.addInstanceDescription(Pair("m4_xlarge_eu",
 			map[Pair(CostPerInterval,239)
+			,Pair(PaymentInterval,1)
 			,Pair(Cores,4)
 			,Pair(Memory,1600)
 			]));
 		cloudProvider.addInstanceDescription(Pair("m4_large_us2",
 			map[Pair(CostPerInterval,120)
+			,Pair(PaymentInterval,1)
 			,Pair(Cores,2)
 			,Pair(Memory,800)
 			]));
 		cloudProvider.addInstanceDescription(Pair("c4_2xlarge_us1",
 			map[Pair(CostPerInterval,419)
+			,Pair(PaymentInterval,1)
 			,Pair(Cores,8)
 			,Pair(Memory,1500)
 			]));
 		cloudProvider.addInstanceDescription(Pair("c4_2xlarge_us2",
 			map[Pair(CostPerInterval,419)
+			,Pair(PaymentInterval,1)
 			,Pair(Cores,8)
 			,Pair(Memory,1500)
 			]));
 		cloudProvider.addInstanceDescription(Pair("m4_large_us1",
 			map[Pair(CostPerInterval,120)
+			,Pair(PaymentInterval,1)
 			,Pair(Cores,2)
 			,Pair(Memory,800)
 			]));
 		cloudProvider.addInstanceDescription(Pair("c4_xlarge_eu",
 			map[Pair(CostPerInterval,209)
+			,Pair(PaymentInterval,1)
 			,Pair(Cores,4)
 			,Pair(Memory,750)
 			]));
 		cloudProvider.addInstanceDescription(Pair("c4_xlarge_us1",
 			map[Pair(CostPerInterval,209)
+			,Pair(PaymentInterval,1)
 			,Pair(Cores,4)
 			,Pair(Memory,750)
 			]));
 		cloudProvider.addInstanceDescription(Pair("c4_xlarge_us2",
 			map[Pair(CostPerInterval,209)
+			,Pair(PaymentInterval,1)
 			,Pair(Cores,4)
 			,Pair(Memory,750)
 			]));
 		cloudProvider.addInstanceDescription(Pair("m4_xlarge_us2",
 			map[Pair(CostPerInterval,239)
+			,Pair(PaymentInterval,1)
 			,Pair(Cores,4)
 			,Pair(Memory,1600)
 			]));
 		cloudProvider.addInstanceDescription(Pair("m4_xlarge_us1",
 			map[Pair(CostPerInterval,239)
+			,Pair(PaymentInterval,1)
 			,Pair(Cores,4)
 			,Pair(Memory,1600)
 			]));
@@ -508,43 +532,77 @@ class AddQueryDeployer(CloudProvider cloudProvider, MonitorPlatformService platf
 		ls_DeploymentComponent = Cons(m4_large_us2_0,ls_DeploymentComponent);
 		DeploymentComponent m4_large_us1_0 = cloudProvider.prelaunchInstanceNamed("m4_large_us1");
 		ls_DeploymentComponent = Cons(m4_large_us1_0,ls_DeploymentComponent);
+		DeploymentComponent m4_large_eu_1 = cloudProvider.prelaunchInstanceNamed("m4_large_eu");
+		ls_DeploymentComponent = Cons(m4_large_eu_1,ls_DeploymentComponent);
+		DeploymentComponent m4_large_eu_0 = cloudProvider.prelaunchInstanceNamed("m4_large_eu");
+		ls_DeploymentComponent = Cons(m4_large_eu_0,ls_DeploymentComponent);
 		[DC: m4_large_us2_0] DeploymentAgent odefault___DeploymentAgentImpl_0_m4_large_us2_0 = new DeploymentAgentImpl();
 		ls_DeploymentAgent = Cons(odefault___DeploymentAgentImpl_0_m4_large_us2_0, ls_DeploymentAgent);
+		[DC: m4_large_eu_0] DeploymentAgent odefault___DeploymentAgentImpl_0_m4_large_eu_0 = new DeploymentAgentImpl();
+		ls_DeploymentAgent = Cons(odefault___DeploymentAgentImpl_0_m4_large_eu_0, ls_DeploymentAgent);
+		[DC: m4_large_eu_1] DeploymentAgent odefault___DeploymentAgentImpl_0_m4_large_eu_1 = new DeploymentAgentImpl();
+		ls_DeploymentAgent = Cons(odefault___DeploymentAgentImpl_0_m4_large_eu_1, ls_DeploymentAgent);
 		[DC: m4_large_us1_0] DeploymentAgent odefault___DeploymentAgentImpl_0_m4_large_us1_0 = new DeploymentAgentImpl();
 		ls_DeploymentAgent = Cons(odefault___DeploymentAgentImpl_0_m4_large_us1_0, ls_DeploymentAgent);
-		[DC: m4_large_us1_0] IQueryService olive___QueryServiceImpl_0_m4_large_us1_0 = new QueryServiceImpl(odefault___DeploymentAgentImpl_0_m4_large_us1_0, "Customer X", False);
-		ls_IQueryService = Cons(olive___QueryServiceImpl_0_m4_large_us1_0, ls_IQueryService);
-		ls_Service = Cons(olive___QueryServiceImpl_0_m4_large_us1_0, ls_Service);
 		[DC: m4_large_us2_0] IQueryService olive___QueryServiceImpl_0_m4_large_us2_0 = new QueryServiceImpl(odefault___DeploymentAgentImpl_0_m4_large_us2_0, "Customer X", False);
 		ls_IQueryService = Cons(olive___QueryServiceImpl_0_m4_large_us2_0, ls_IQueryService);
 		ls_Service = Cons(olive___QueryServiceImpl_0_m4_large_us2_0, ls_Service);
+		[DC: m4_large_eu_1] IQueryService olive___QueryServiceImpl_0_m4_large_eu_1 = new QueryServiceImpl(odefault___DeploymentAgentImpl_0_m4_large_eu_1, "Customer X", False);
+		ls_IQueryService = Cons(olive___QueryServiceImpl_0_m4_large_eu_1, ls_IQueryService);
+		ls_Service = Cons(olive___QueryServiceImpl_0_m4_large_eu_1, ls_Service);
+		[DC: m4_large_us1_0] IQueryService olive___QueryServiceImpl_0_m4_large_us1_0 = new QueryServiceImpl(odefault___DeploymentAgentImpl_0_m4_large_us1_0, "Customer X", False);
+		ls_IQueryService = Cons(olive___QueryServiceImpl_0_m4_large_us1_0, ls_IQueryService);
+		ls_Service = Cons(olive___QueryServiceImpl_0_m4_large_us1_0, ls_Service);
+		[DC: m4_large_eu_0] IQueryService olive___QueryServiceImpl_0_m4_large_eu_0 = new QueryServiceImpl(odefault___DeploymentAgentImpl_0_m4_large_eu_0, "Customer X", False);
+		ls_IQueryService = Cons(olive___QueryServiceImpl_0_m4_large_eu_0, ls_IQueryService);
+		ls_Service = Cons(olive___QueryServiceImpl_0_m4_large_eu_0, ls_Service);
+		loadBalancerEndPointObjEu1.addLBE(olive___QueryServiceImpl_0_m4_large_eu_1);
+		loadBalancerEndPointObjEu1.addLBE(olive___QueryServiceImpl_0_m4_large_eu_0);
 		loadBalancerEndPointObjUs1.addLBE(olive___QueryServiceImpl_0_m4_large_us2_0);
 		loadBalancerEndPointObjUs1.addLBE(olive___QueryServiceImpl_0_m4_large_us1_0);
 		loadBalancerEndPointObjUs2.addLBE(olive___QueryServiceImpl_0_m4_large_us2_0);
 		loadBalancerEndPointObjUs2.addLBE(olive___QueryServiceImpl_0_m4_large_us1_0);
+		platformServiceObjEu.addServiceInstance(olive___QueryServiceImpl_0_m4_large_eu_1);
+		platformServiceObjEu.addServiceInstance(olive___QueryServiceImpl_0_m4_large_eu_0);
 		platformServiceObjUs.addServiceInstance(olive___QueryServiceImpl_0_m4_large_us2_0);
 		platformServiceObjUs.addServiceInstance(olive___QueryServiceImpl_0_m4_large_us1_0);
 		odefault___DeploymentAgentImpl_0_m4_large_us2_0.installDA(olive___QueryServiceImpl_0_m4_large_us2_0);
 		odefault___DeploymentAgentImpl_0_m4_large_us1_0.installDA(olive___QueryServiceImpl_0_m4_large_us1_0);
+		odefault___DeploymentAgentImpl_0_m4_large_eu_1.installDA(olive___QueryServiceImpl_0_m4_large_eu_1);
+		odefault___DeploymentAgentImpl_0_m4_large_eu_0.installDA(olive___QueryServiceImpl_0_m4_large_eu_0);
+		deploymentServiceObjEu.addDS(odefault___DeploymentAgentImpl_0_m4_large_eu_1);
+		deploymentServiceObjEu.addDS(odefault___DeploymentAgentImpl_0_m4_large_eu_0);
 		deploymentServiceObjUs.addDS(odefault___DeploymentAgentImpl_0_m4_large_us2_0);
 		deploymentServiceObjUs.addDS(odefault___DeploymentAgentImpl_0_m4_large_us1_0);
 	}
 
 	Unit undeploy_aux() {
 		DeploymentAgent odefault___DeploymentAgentImpl_0_m4_large_us2_0 = nth(ls_DeploymentAgent,0);
-		DeploymentAgent odefault___DeploymentAgentImpl_0_m4_large_us1_0 = nth(ls_DeploymentAgent,1);
-		IQueryService olive___QueryServiceImpl_0_m4_large_us1_0 = nth(ls_IQueryService,0);
-		IQueryService olive___QueryServiceImpl_0_m4_large_us2_0 = nth(ls_IQueryService,1);
+		DeploymentAgent odefault___DeploymentAgentImpl_0_m4_large_eu_0 = nth(ls_DeploymentAgent,1);
+		DeploymentAgent odefault___DeploymentAgentImpl_0_m4_large_eu_1 = nth(ls_DeploymentAgent,2);
+		DeploymentAgent odefault___DeploymentAgentImpl_0_m4_large_us1_0 = nth(ls_DeploymentAgent,3);
+		IQueryService olive___QueryServiceImpl_0_m4_large_us2_0 = nth(ls_IQueryService,0);
+		IQueryService olive___QueryServiceImpl_0_m4_large_eu_1 = nth(ls_IQueryService,1);
+		IQueryService olive___QueryServiceImpl_0_m4_large_us1_0 = nth(ls_IQueryService,2);
+		IQueryService olive___QueryServiceImpl_0_m4_large_eu_0 = nth(ls_IQueryService,3);
 		deploymentServiceObjUs.removeDS(odefault___DeploymentAgentImpl_0_m4_large_us2_0);
 		deploymentServiceObjUs.removeDS(odefault___DeploymentAgentImpl_0_m4_large_us1_0);
+		deploymentServiceObjEu.removeDS(odefault___DeploymentAgentImpl_0_m4_large_eu_1);
+		deploymentServiceObjEu.removeDS(odefault___DeploymentAgentImpl_0_m4_large_eu_0);
 		odefault___DeploymentAgentImpl_0_m4_large_us2_0.uninstallDA();
 		odefault___DeploymentAgentImpl_0_m4_large_us1_0.uninstallDA();
+		odefault___DeploymentAgentImpl_0_m4_large_eu_1.uninstallDA();
+		odefault___DeploymentAgentImpl_0_m4_large_eu_0.uninstallDA();
 		platformServiceObjUs.removeServiceInstance(olive___QueryServiceImpl_0_m4_large_us2_0);
 		platformServiceObjUs.removeServiceInstance(olive___QueryServiceImpl_0_m4_large_us1_0);
+		platformServiceObjEu.removeServiceInstance(olive___QueryServiceImpl_0_m4_large_eu_1);
+		platformServiceObjEu.removeServiceInstance(olive___QueryServiceImpl_0_m4_large_eu_0);
 		loadBalancerEndPointObjUs2.removeLBE(olive___QueryServiceImpl_0_m4_large_us2_0);
 		loadBalancerEndPointObjUs2.removeLBE(olive___QueryServiceImpl_0_m4_large_us1_0);
 		loadBalancerEndPointObjUs1.removeLBE(olive___QueryServiceImpl_0_m4_large_us2_0);
 		loadBalancerEndPointObjUs1.removeLBE(olive___QueryServiceImpl_0_m4_large_us1_0);
+		loadBalancerEndPointObjEu1.removeLBE(olive___QueryServiceImpl_0_m4_large_eu_1);
+		loadBalancerEndPointObjEu1.removeLBE(olive___QueryServiceImpl_0_m4_large_eu_0);
 		while ( !isEmpty(ls_DeploymentComponent) ) {
 			cloudProvider.shutdownInstance(head(ls_DeploymentComponent));
 			ls_DeploymentComponent = tail(ls_DeploymentComponent);

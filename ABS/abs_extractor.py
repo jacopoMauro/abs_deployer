@@ -130,6 +130,8 @@ class MyABSVisitor(ABSVisitor):
                     self.dc_json[i]["cost"] = 0
                   self.dc_json[i]["resources"]['fictional_res'] = fictional_resource_counter
                   fictional_resource_counter += 1
+                  if "payment_interval" not in self.dc_json[i]:
+                      self.dc_json[i]["payment_interval"] = 1
             elif name == "SmartDeployCost":
                 self.deploy_annotations.append(parse_json_string_in_annotation(ctx.pure_exp().accept(self)))
         return ""

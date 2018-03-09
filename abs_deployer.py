@@ -46,6 +46,7 @@ import psutil
 import copy
 from antlr4 import *
 import zephyrus2
+import fractions
 
 import settings
 import code_generation
@@ -70,6 +71,11 @@ KEEP = False
 def usage():
   """Print usage"""
   print(__doc__)
+
+
+def lcm(a, b):
+    """Return lowest common multiple."""
+    return a * b // fractions.gcd(a, b)
 
 
 def remove_dots(obj):
@@ -402,6 +408,13 @@ def main(argv):
     log.critical("Parsing error in JSON smart deployment annotations")
     log.critical("Exiting")
     sys.exit(1)
+
+  # uniform the cost of the Cloud instances
+  payment_interval = [dc_json[i]["payment_interval"] for i in dc_json]
+  mul = reduce(lcm, payment_interval, 1)
+  for i in dc_json:
+    dc_json[i]["cost"] = mul /dc_json[i]["payment_interval"] * dc_json[i]["cost"]
+    dc_json[i]["payment_interval"] = mul
 
   # compute classes that have a Deploy annotation
   classes_names = [i["class"] for i in deploy_annotations]
