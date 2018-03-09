@@ -212,6 +212,7 @@ import * from MainSmartDeployer;
 {  
   "c4_xlarge_us1":{  
     "cost":209,
+		"payment_interval":1,
     "resources":{  
       "Cores":4,
       "Memory":750
@@ -296,7 +297,7 @@ import * from MainSmartDeployer;
   }
 }
 */
-[SmartDeployCloudProvider: "{\"c4_xlarge_us1\":{\"cost\":209,\"resources\":{\"Cores\":4,\"Memory\":750}},\"c4_2xlarge_us1\":{\"cost\":419,\"resources\":{\"Cores\":8,\"Memory\":1500}},\"m4_xlarge_us1\":{\"cost\":239,\"resources\":{\"Cores\":4,\"Memory\":1600}},\"m4_large_us1\":{\"cost\":120,\"resources\":{\"Cores\":2,\"Memory\":800}},\"c4_xlarge_us2\":{\"cost\":209,\"resources\":{\"Cores\":4,\"Memory\":750}},\"c4_2xlarge_us2\":{\"cost\":419,\"resources\":{\"Cores\":8,\"Memory\":1500}},\"m4_xlarge_us2\":{\"cost\":239,\"resources\":{\"Cores\":4,\"Memory\":1600}},\"m4_large_us2\":{\"cost\":120,\"resources\":{\"Cores\":2,\"Memory\":800}},\"c4_xlarge_eu\":{\"cost\":209,\"resources\":{\"Cores\":4,\"Memory\":750}},\"c4_2xlarge_eu\":{\"cost\":419,\"resources\":{\"Cores\":8,\"Memory\":1500}},\"m4_xlarge_eu\":{\"cost\":239,\"resources\":{\"Cores\":4,\"Memory\":1600}},\"m4_large_eu\":{\"cost\":120,\"resources\":{\"Cores\":2,\"Memory\":800}}}"]
+[SmartDeployCloudProvider: "{\"c4_xlarge_us1\":{\"cost\":209,\"payment_interval\":1,\"resources\":{\"Cores\":4,\"Memory\":750}},\"c4_2xlarge_us1\":{\"cost\":419,\"resources\":{\"Cores\":8,\"Memory\":1500}},\"m4_xlarge_us1\":{\"cost\":239,\"resources\":{\"Cores\":4,\"Memory\":1600}},\"m4_large_us1\":{\"cost\":120,\"resources\":{\"Cores\":2,\"Memory\":800}},\"c4_xlarge_us2\":{\"cost\":209,\"resources\":{\"Cores\":4,\"Memory\":750}},\"c4_2xlarge_us2\":{\"cost\":419,\"resources\":{\"Cores\":8,\"Memory\":1500}},\"m4_xlarge_us2\":{\"cost\":239,\"resources\":{\"Cores\":4,\"Memory\":1600}},\"m4_large_us2\":{\"cost\":120,\"resources\":{\"Cores\":2,\"Memory\":800}},\"c4_xlarge_eu\":{\"cost\":209,\"resources\":{\"Cores\":4,\"Memory\":750}},\"c4_2xlarge_eu\":{\"cost\":419,\"resources\":{\"Cores\":8,\"Memory\":1500}},\"m4_xlarge_eu\":{\"cost\":239,\"resources\":{\"Cores\":4,\"Memory\":1600}},\"m4_large_eu\":{\"cost\":120,\"resources\":{\"Cores\":2,\"Memory\":800}}}"]
 
 /////////////////////////////////////
 // SmartDeploy ANNOTATION FOR SMART DEPLOYER: Main block
