@@ -217,6 +217,7 @@ def print_deploy_undeploy_method(smart_dep_annotation, zep_last_conf,all_binding
   to_add_later_bindings = []
   to_remove_later_bindings = []
   bindings = []
+
   for i in all_bindings:
       if i["req_comp"] not in initial_obj_into_name.keys():
         scenario_name = i["req_comp"].split(settings.SEPARATOR)[0]
