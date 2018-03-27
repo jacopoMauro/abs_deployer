@@ -558,7 +558,6 @@ def main(argv):
     log.debug("Binding optimizer solution")
     bindings_opt_out = read_json(binding_out_file)
 
-    print bindings_opt_out
     bindings_opt_out = bindings_opt_out["optimized_bindings"]
     log.debug(json.dumps(binding_out_file,indent=1))
 
