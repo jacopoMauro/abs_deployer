@@ -73,19 +73,7 @@ RUN cd /solvers_exec && \
 ENV PATH /solvers_exec/abs_deployer:$PATH
 
 # install abs-tools
-RUN cd /solvers_exec && \
-	apt-get update && \
-    apt-get install -y \
-		openjdk-8-jdk \
-		ant \
-		cmake \
-		bison \
-		flex && \
-    rm -rf /var/lib/apt/lists/* && \
-	cd /solvers_exec && \
-	git clone --depth=1 https://github.com/abstools/abstools.git && \
-    cd /solvers_exec/abstools/frontend && ant
-
+copy --from=abslang/collaboratory usr/local/lib/frontend/dist/absfrontend.jar /solvers_exec/abstools/frontend/dist/absfrontend.jar
 ENV CLASSPATH=/solvers_exec/abstools/frontend/dist/absfrontend.jar:$CLASSPATH
 	
 WORKDIR /solvers_exec/abs_deployer
