@@ -15,8 +15,8 @@ RUN apt-get update && \
 
 # download and install zephyrus with all its solvers
 # see Zephyrus Docker file for more info
-COPY --from=jacopomauro/zephyrus2 /tool /tool
-#COPY --from=jacopomauro/zephyrus2:v2.0.1 /tool/ /tool/
+#COPY --from=jacopomauro/zephyrus2 /tool /tool
+COPY --from=jacopomauro/zephyrus2:v2.0.1 /tool/ /tool/
 # minizinc
 ENV PATH "$PATH:/tool/MiniZincIDE/bin"
 ENV LD_LIBRARY_PATH "$LD_LIBRARY_PATH:/tool/MiniZincIDE/lib"
@@ -32,8 +32,8 @@ RUN ln -s /tool/or-tools/ortools/flatzinc/mznlib_sat /tool/MiniZincIDE/share/min
     pip install -e /tool/zephyrus2
 
 # install abs-tools
-COPY --from=abslang/collaboratory usr/local/lib/frontend/dist/absfrontend.jar /solvers_exec/abstools/frontend/dist/absfrontend.jar
-ENV CLASSPATH=/solvers_exec/abstools/frontend/dist/absfrontend.jar:$CLASSPATH
+COPY --from=abslang/collaboratory:1.5.6 usr/local/lib/frontend/dist/absfrontend.jar /tool/abstools/absfrontend.jar
+ENV CLASSPATH=/tool/abstools/absfrontend.jar:$CLASSPATH
 
 # clone abs_deployer
 RUN cd /tool && \
