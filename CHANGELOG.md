@@ -1,5 +1,10 @@
 # SmartDepl CHANGELOG
 
+#### latest
+Major changes:
+* fix bug in undeploy code generated (retrieve value before tail)
+
+
 #### v0.4.1
 Minor changes and bug fixes:
 * New dockerfile reusing Zephyrus docker image

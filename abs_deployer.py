@@ -517,7 +517,7 @@ def main(argv):
     zephyrus2.zephyrus2.main(cmd)
     sys.stdout = temp
 
-    log.info("Exctracting last solution")
+    log.info("Extracting last solution")
     binding_in_file = "/tmp/" + pid + i["id"] + "_binding_in.json"
     TMP_FILES.append(binding_in_file)
     if not extract_last_solution(zephyrus_out_file,binding_in_file):
