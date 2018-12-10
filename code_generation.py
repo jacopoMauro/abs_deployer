@@ -165,14 +165,15 @@ def print_list_and_get_methods(interfaces,dc_json,out):
   out.write("\tUnit undeploy() {\n")
   out.write("\t\tif (ls_ls_DeploymentComponent != Nil) {\n")
   out.write("\t\t\tthis.undeploy_aux();\n")
+  out.write("\t\t\tls_DeploymentComponent = head(ls_ls_DeploymentComponent);\n")
   out.write("\t\t\tls_ls_DeploymentComponent = tail(ls_ls_DeploymentComponent);\n")
-  out.write("\t\t\tif (ls_ls_DeploymentComponent != Nil) {\n")
+  # out.write("\t\t\tif (ls_ls_DeploymentComponent != Nil) {\n")
   for i in interfaces:
     out.write("\t\t\t\tls_" + i + " = head(ls_ls_" + i + ");\n")
-  out.write("\t\t\t} else {\n")
-  for i in interfaces:
-    out.write("\t\t\t\tls_" + i + " = Nil;\n")
-  out.write("\t\t\t}\n")
+  # out.write("\t\t\t} else {\n")
+  # for i in interfaces:
+  #   out.write("\t\t\t\tls_" + i + " = Nil;\n")
+  # out.write("\t\t\t}\n")
   for i in interfaces:
     # out.write("\t\tls_" + i + " = head(ls_ls_" + i + ");\n")
     out.write("\t\t\tls_ls_" + i + " = tail(ls_ls_" + i + ");\n")
