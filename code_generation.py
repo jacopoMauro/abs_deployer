@@ -206,7 +206,7 @@ def print_deploy_undeploy_method(smart_dep_annotation, zep_last_conf,all_binding
     if not i.startswith(settings.SEPARATOR):
       for j in zep_last_conf["locations"][i].keys():
         dep += "\t\tDeploymentComponent " + dc_to_abs_names[(i,int(j))]
-        dep += " = cloudProvider.prelaunchInstanceNamed(\"" + i + "\");\n"
+        dep += " = cloudProvider.launchInstanceNamed(\"" + i + "\");\n"
         dep += "\t\tls_DeploymentComponent = Cons("
         dep += dc_to_abs_names[(i,int(j))] + ",ls_DeploymentComponent);\n"
 
