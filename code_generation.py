@@ -197,6 +197,7 @@ def print_deploy_undeploy_method(smart_dep_annotation, zep_last_conf,all_binding
       out):
 
   dep = "\tUnit deploy_aux() {\n"
+  dep += "\t\tMap<DeploymentComponent,Rat> speedPatchMap = map[];\n"
   undep = "\tUnit undeploy_aux() {\n"
 
   # start by deploying new DC
@@ -209,7 +210,9 @@ def print_deploy_undeploy_method(smart_dep_annotation, zep_last_conf,all_binding
         dep += " = cloudProvider.launchInstanceNamed(\"" + i + "\");\n"
         dep += "\t\tls_DeploymentComponent = Cons("
         dep += dc_to_abs_names[(i,int(j))] + ",ls_DeploymentComponent);\n"
-
+############################################ runtime patch ###########################
+        dep += "\t\tspeedPatchMap = put(speedPatchMap," + dc_to_abs_names[(i,int(j))] + ",0);\n"
+######################################################################################
   # decide the order to create the obj and creating useful maps
   obj_to_abs_name = get_map_obj_abs_name(zep_last_conf,initial_obj_into_name)
   class_to_signature = get_map_class_signature(deploy_annotations)
@@ -287,6 +290,9 @@ def print_deploy_undeploy_method(smart_dep_annotation, zep_last_conf,all_binding
             s += "]"
             ls.append(s)
         dep += ", ".join(ls) + ");\n"
+        cores = [x["scenarios"][0]["cost"]["Cores"] for x in deploy_annotations if x["class"] == class_name]
+        dep += "\t\tRat coreRequired_" + obj_to_abs_name[j] + " = " + str(cores[0]) + ";\n"
+        dep += "\t\tspeedPatchMap = put(speedPatchMap, " + dc_to_abs_names[(dcname,dcnum)] + ", fromJust(lookup(speedPatchMap," + dc_to_abs_names[(dcname,dcnum)] + ")) + coreRequired_" + obj_to_abs_name[j] + ");\n"
         # adding obj into the list
         interfaces = classes_annotation[class_name]
         for k in interfaces:
@@ -318,7 +324,10 @@ def print_deploy_undeploy_method(smart_dep_annotation, zep_last_conf,all_binding
             to_remove_later_bindings.append((real_objname,
                                              method["remove"]["name"],
                                              sundep))
-
+  ####################### PATCH #######################
+  dep += "\t\tthis!patchSpeed(speedPatchMap);\n"
+  dep += "\t\tawait duration(waiting_time,waiting_time);\n"
+  ######################################################
   # add the remaining optional bindings following the list priority
   if "add_method_priorities" in smart_dep_annotation:
         for i in smart_dep_annotation["add_method_priorities"]:
@@ -369,31 +378,38 @@ def print_class(smart_dep_annotation,interfaces,
   out.write("\n")
   print_list_and_get_methods(interfaces,dc_json,out)
   out.write("\n")
-  undeploy_info = print_deploy_undeploy_method(smart_dep_annotation,zep_last_conf, bindings_opt_out,
-                      initial_dc_into_name, initial_obj_into_name,
-                      deploy_annotations, classes_annotation,
-                                               out)
-
+  print_deploy_undeploy_method(smart_dep_annotation,zep_last_conf, bindings_opt_out, initial_dc_into_name, initial_obj_into_name, deploy_annotations, classes_annotation,out)
+  ######  runtime patch ########
+  print_patch_speed(out)
+  ############################
   out.write("}\n")
-  out.write("\n")
 
 def print_cloud_provider_modification(dc_json, out):
   """
   Prints the class used to create the main deployer
   The name of this class is SmartDeployerCloudProviderImpl
   """
-  out.write("\t{\n")
-
+  ############# modified for time patching #############
+  dcDescription = "\t{\n"
+  max_time = 0
   for i in dc_json.keys():
     if "initial_DC" not in i:
-      out.write('\t\tcloudProvider.addInstanceDescription(Pair("' + unicode(i) + '",\n')
-      out.write('\t\t\tmap[')
-      out.write('Pair(CostPerInterval,' + unicode(dc_json[i]["cost"]) + ")\n")
-      out.write('\t\t\t,Pair(PaymentInterval,' + unicode(dc_json[i]["payment_interval"]) + ")\n")
+      dcDescription += '\t\tcloudProvider.addInstanceDescription(Pair("' + unicode(i) + '",\n'
+      dcDescription += '\t\t\tmap['
+      dcDescription += 'Pair(CostPerInterval,' + unicode(dc_json[i]["cost"]) + ")\n"
+      dcDescription += '\t\t\t,Pair(PaymentInterval,' + unicode(dc_json[i]["payment_interval"]) + ")\n"
       for j in dc_json[i]["resources"].keys():
-        if j != "fictional_res":
-          out.write('\t\t\t,Pair(' + j + ',' + unicode(dc_json[i]["resources"][j]) + ")\n")
-      out.write('\t\t\t]));\n')
+  ######### find max startup duration ############
+        if j == "Startupduration":
+          time = int(unicode(dc_json[i]["resources"][j]))
+          if time > max_time:
+            max_time = time
+##############can't specify startup duration into deployment components description it causes sequentialization of startup duration times#################################
+        if j != "fictional_res" and j != "Startupduration":
+          dcDescription += '\t\t\t,Pair(' + j + ',' + unicode(dc_json[i]["resources"][j]) + ")\n"
+      dcDescription += '\t\t\t]));\n'
+  out.write('\tRat waiting_time = ' + str(max_time) + ';\n') ####max waiting time
+  out.write(dcDescription)
   out.write("\t}\n")
 
 def print_module_and_interface(module_name,interfaces,name,out):
@@ -411,3 +427,26 @@ def print_module_and_interface(module_name,interfaces,name,out):
   out.write("\tUnit deploy();\n")
   out.write("\tUnit undeploy();\n")
   out.write("}\n")
+
+################################  runtime patch  ############################################
+def print_patch_speed(out):
+  method = "\n\tUnit patchSpeed(Map<DeploymentComponent,Rat> dcs) {\n"
+  method += "\t\tforeach(entry in entries(dcs)) {\n"
+  method += "\t\t\tDeploymentComponent dc = fst(entry);\n"
+  method += "\t\t\tRat coreUsed = snd(entry);\n"
+  method += "\t\t\tInfRat speed_aux = await dc!total(Speed);\n"
+  method += "\t\t\tRat total_speed = case speed_aux {\n"
+  method += "\t\t\t\tFin(x) => x;\n"
+  method += "\t\t\t\t_ => -1;\n"
+  method += "\t\t\t};\n"
+  method += "\t\t\tif(total_speed != -1) {\n"
+  method += "\t\t\t\tRat totalCore = await dc!getNumberOfCores();\n"
+  method += "\t\t\t\tRat speedPerCore = total_speed / totalCore;\n"
+  method += "\t\t\t\tdc!decrementResources(total_speed - (speedPerCore * coreUsed), Speed);\n"
+  method += "\t\t\t}\n"
+  method += "\t\t}\n"
+  method += "\t}\n"
+  out.write(method)
+
+
+
